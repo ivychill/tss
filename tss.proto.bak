@@ -1,0 +1,127 @@
+package tss;
+
+message Coordinate {
+    required double lng = 1;
+    required double lat= 2;
+}
+
+message Location {
+    required double lng = 1;
+    required double lat = 2;
+    optional string name = 3;
+    optional string adt = 11;	//additive information, e.g. ... 路口.
+}
+
+message Segment {
+    required Coordinate start = 1;
+    required Coordinate end = 2;
+    optional string road = 3;
+}
+
+message Route {
+    repeated Segment segments = 1;
+}
+
+enum Direction {
+    UNKNOWN = 0;
+    EAST = 1; NORTHEAST = 2;
+    NORTH = 3; NORTHWEST = 4;
+    WEST = 5; SOUTHWEST = 6; 
+    SOUTH = 7; SOUTHEAST = 8;
+}
+
+message TrafficProbe {
+    optional Segment segment = 1;
+    optional Coordinate location = 2;
+    optional int64 timestamp = 3;
+    required Direction direction = 4;
+    required int32 speed = 5;
+    optional int32 acceleration = 6;
+}
+
+message SegmentTraffic {
+    required Segment segment = 1;
+    optional int64 timestamp = 3;
+    required Direction direction = 4;
+    required int32 speed = 5;
+    optional string details = 11;
+}
+
+message RoadTraffic {
+    required string road = 1;
+    optional int64 timestamp = 2;
+    repeated SegmentTraffic segment_traffics = 3;
+    optional string href = 12;
+    optional string desc = 11;
+}
+
+message CityTraffic {
+    optional string city = 1;
+    optional int64 timestamp = 2;
+    repeated RoadTraffic road_traffics = 3;
+}
+
+enum CmdType {
+    GET = 1; CREATE = 2; UPDATE = 3; DELETE = 4; // client to server
+    RETURN_SUC = 0x11; RETURN_ERR = 0x12; PUBLICATE = 0x13; // server to client
+}
+
+enum PldType {
+    VOID = 0X01;
+    LOCATION = 0x02; 
+    SEGMENT = 0x03; 
+    ROUTE = 0x04;
+    ROAD = 0x05;
+    CITY = 0x06;
+    SEGMENT_TRAFFIC = 0x11;
+    ROAD_TRAFFIC = 0x12;
+    CITY_TRAFFIC = 0x13;
+    TRAFFIC_PROBE = 0x21;
+    DEVICE_TOKEN = 0x31;
+}
+
+// 错误代码说明
+// 0: sucess //unused indeed
+// 0xABC. A:level:1.FATAL 2.ERROR 3.WARN 4.INFO 9.general
+//        B:type:0.gerneral 1.version 2.cmd_type 3.snd_type 4.rcv_type 5.timeout 6.user_token
+//        C:No.:0.general
+// 目前仅用到:
+// 0x111:版本不兼容，必须升级
+// 0x311:版本号过低，建议升级
+// 0x220:命令字错
+// 0x350:超时
+// 0x900:相当于其它
+// 客户端显示给客户的信息，请自行定义。
+enum ErrCode {
+    VERSION_IMCOMPATIBLE = 0x111;
+    VERSION_LOW = 0x311;
+    CMD_ERR = 0x220;
+    TIMEOUT = 0x350;
+    OTHERS = 0x900;
+}
+
+message Package {
+    required int32 version = 1; //only value 1 supported till 2012-08-30, 2012-12-30 hopehully
+    required CmdType cmd_type = 3;
+    required PldType snd_type = 4;
+    optional PldType rcv_type = 5; //not required by S2C reply, C2S report and S2C publication
+    required int64 timestamp = 6;
+    optional int32 expires = 7 [default = 30]; //minute
+    optional bytes user_token = 8;
+
+    extensions 128 to 255;
+
+    optional int32 id = 0x11;
+    optional string name = 0x12;
+    optional bytes token = 0x13;
+
+    optional Location location = 0x21;
+    optional Segment segment = 0x22;
+    optional Route route = 0x23;
+
+    optional SegmentTraffic segment_traffic = 0x31;
+    optional RoadTraffic road_traffic = 0x32;
+    optional CityTraffic city_traffic = 0x33;
+
+    optional TrafficProbe traffic_probe = 0x41;
+}

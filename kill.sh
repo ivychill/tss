@@ -1,0 +1,6 @@
+killall test_client
+killall test_probe
+killall traffic_apns
+killall traffic_feed
+killall traffic_forward
+killall traffic_router

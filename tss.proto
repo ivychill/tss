@@ -1,0 +1,169 @@
+package tss;
+
+option java_package = "com.luyun.easyway95.shared";
+option java_outer_classname = "TSSProtos";
+
+message LYCoordinate {
+    required double lng = 1;
+    required double lat= 2;
+}
+
+message LYLocation {
+    required double lng = 1;
+    required double lat = 2;
+    optional string name = 3;
+    optional string adt = 11;	//additive information, e.g. ... 路口.
+}
+
+message LYSegment {
+    required LYCoordinate start = 1;
+    required LYCoordinate end = 2;
+    optional string road = 3;
+}
+
+//与segment group同义,identity的部分取值范围保留
+message LYRoute {
+    required int32 identity = 1;
+    repeated LYSegment segments = 2;
+}
+
+enum LYDirection {
+    LY_UNKNOWN = 0;
+    LY_EAST = 1; LY_NORTHEAST = 2;
+    LY_NORTH = 3; LY_NORTHWEST = 4;
+    LY_WEST = 5; LY_SOUTHWEST = 6; 
+    LY_SOUTH = 7; LY_SOUTHEAST = 8;
+}
+
+message LYTrafficReport {
+    optional LYSegment segment = 1;
+    optional LYCoordinate location = 2;
+    optional int64 timestamp = 3;
+    required LYDirection direction = 4;
+    required int32 speed = 5;
+    optional int32 acceleration = 6;
+}
+
+message LYSegmentTraffic {
+    required LYSegment segment = 1;
+    optional int64 timestamp = 3;
+    required LYDirection direction = 4;
+    required int32 speed = 5;
+    optional string details = 11;
+}
+
+message LYRoadTraffic {
+    required string road = 1;
+    optional int64 timestamp = 2;
+    repeated LYSegmentTraffic segment_traffics = 3;
+    optional string href = 12;
+    optional string desc = 11;
+}
+
+message LYCityTraffic {
+    optional string city = 1;
+    optional int64 timestamp = 2;
+    repeated LYRoadTraffic road_traffics = 3;
+}
+
+message LYCrontab {
+    enum LYCronType {
+        LY_REP_MINUTE = 1; 
+        LY_REP_HOUR   = 2; 
+        LY_REP_DOM    = 4; 
+        LY_REP_MONTH  = 8; 
+        LY_REP_DOW    = 16;
+    }
+
+    //bitmap，类似linux的crontab
+    required LYCronType cron_type = 1;
+    optional int64 minute  = 2;
+    optional int64 hour    = 3;
+    optional int32 dom     = 4;//date of month
+    optional int32 month   = 5;
+    optional int32 dow     = 6;//day of week
+}
+
+//发起订阅的消息结构
+message LYTrafficSub {
+    //订阅记录的操作类型
+    enum LYOprType {
+        LY_SUB_CREATE = 1;
+        LY_SUB_DELETE = 2;
+        LY_SUB_UPDATE = 3;
+    }
+
+    //订阅的发布类型
+    enum LYPubType {
+        LY_PUB_ADHOC = 1; //一次性的
+        LY_PUB_EVENT = 2; //事件触发，抑制后实际上是interval timer
+        LY_PUB_CRON = 3; //chronology，类似linux的cron
+    }
+
+    required string city = 1;
+    required LYRoute route = 2;
+    required LYOprType opr_type = 3;
+    required LYPubType pub_type = 4;
+    optional int32 expires = 5 [default = 30]; //minute; 0 = never
+    optional LYCrontab cron_tab = 6;
+}
+
+message LYTrafficPub {
+    required int32 route_id = 1;
+    required LYCityTraffic city_traffic = 2;
+}
+
+message LYDeviceReport {
+    required string device_id = 1;
+    required bytes device_token = 2;
+    required string device_name = 3;
+    required string device_model = 4;
+    required string device_os_version = 5;
+}
+
+// 返回代码说明
+// 0: sucess
+// 0xABC.
+// A:type:1.version 2.party 3.msg_type 4.timeout 9.unknown/others
+// B:No.:9.unknown/others //因类型而异
+// C:level:1.FATAL 2.ERROR 3.WARN 4.INFO 5.DEBUG 6.VERBOSE 9.unknown/others
+enum LYRetCode {
+    LY_SUCCESS = 0;
+    LY_VERSION_IMCOMPATIBLE = 0x111; //版本不兼容，必须升级
+    LY_VERSION_LOW = 0x123; //版本号过低，建议升级
+    LY_PARTY_ERROR = 0x229; //消息发送或接收方错
+    LY_MSG_TYPE_ERROR = 0x392; //消息类型错
+    LY_TIMEOUT = 0x493; //超时
+    LY_OTHER_ERROR = 0x999; //其它
+}
+
+enum LYParty {
+    LY_CLIENT = 1; 
+    LY_TSS = 2;
+}
+
+enum LYMsgType {
+    LY_VOID = 0X01;
+    LY_RET_CODE = 0x02;	//message RetCode
+    LY_TRAFFIC_SUB  = 0x04;	//message TrafficSub
+    LY_TRAFFIC_REPORT = 0x05;	//message TrafficReport
+    LY_DEVICE_REPORT = 0x06;	//message DeviceReport
+    LY_TRAFFIC_PUB = 0x13;	//message TrafficPub
+}
+
+message LYMsgOnAir {
+    required int32 version = 1; //only value 1 supported till 2012-08-30, 2012-12-30 hopehully
+    required int32 msg_id = 5;
+    required int64 timestamp = 6;
+    required LYParty from_party = 2;
+    required LYParty to_party = 3;
+    required LYMsgType msg_type = 4;
+
+    extensions 128 to 255;
+
+    optional LYRetCode ret_code = 0x11;
+    optional LYDeviceReport device_report = 0x13; //to be moved to HTTP:roadclouding
+    optional LYTrafficSub traffic_sub = 0x24;
+    optional LYTrafficPub traffic_pub = 0x33;
+    optional LYTrafficReport traffic_report = 0x41;
+}
