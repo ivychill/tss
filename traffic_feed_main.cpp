@@ -92,12 +92,9 @@ int main (int argc, char *argv[])
             {
                 LOG4CPLUS_ERROR (logger, "fail to parse from string");
             }
-            else
+            else if (client_msg_processor.ProcessRcvMsg (address, rcv_msg) != 0)
             {
-                if (client_msg_processor.ProcessRcvMsg (address, rcv_msg) != 0);
-                {
-                    LOG4CPLUS_ERROR (logger, "fail to process package");
-                }
+                LOG4CPLUS_ERROR (logger, "fail to process package");
             }
         }
     }

@@ -10,13 +10,6 @@ extern ClientMsgProcessor client_msg_processor;
 extern DBClientConnection db_client;
 extern zmq::socket_t* p_skt_client;
 
-void PrepareSndMsg (LYMsgOnAir& msg, LYMsgType mt)
-{
-    msg.set_msg_type (mt);
-    //msg.set_msg_id (msgid);
-    msg.set_timestamp (time (NULL));
-}
-
 int ClientMsgProcessor::ReturnToClient ()
 {
     snd_msg.set_timestamp (time (NULL));
@@ -121,8 +114,7 @@ int ClientMsgProcessor::ProcessRcvMsg (std::string& adr, LYMsgOnAir& msg)
 
 int TrafficObserver::ReplyToClient ()
 {
-    snd_msg.set_msg_type (LY_TRAFFIC_PUB);
-    snd_msg.set_msg_id (0);
+    snd_msg.set_timestamp (time (NULL));
     LOG4CPLUS_DEBUG (logger, "reply to client, address: " << address << ", package:\n" << snd_msg.DebugString ());
     std::string str_msg;
     if (!snd_msg.SerializeToString (&str_msg))
@@ -143,7 +135,6 @@ void TrafficObserver::Update (RoadTrafficSubject *sub)
     if (now - ts > ROAD_TRAFFIC_TIMEOUT * 60)
     {
         LOG4CPLUS_INFO (logger, "expired road traffic, road: " << sub->GetRoadTraffic().road() << ", timestamp: " << ::ctime(&ts));
-        return;
     }
     else
     {
@@ -152,7 +143,9 @@ void TrafficObserver::Update (RoadTrafficSubject *sub)
         LOG4CPLUS_DEBUG (logger, "add road traffic:\n" << sub->GetRoadTraffic().DebugString() << " to observer: " << address);
     }
 
-    if (now - last_update > UPDATE_INTERVAL)
+    //LOG4CPLUS_DEBUG (logger, "now: " << now << ", last update: " << last_update);
+    //if (now - last_update > UPDATE_INTERVAL) //temmporary
+    if (relevant_traffic->road_traffics_size () != 0)
     {
         ReplyToClient ();
         last_update = now;
@@ -249,8 +242,8 @@ void OnRouteClientPanorama::CreateSubscription (const std::string& adr, LYMsgOnA
         std::map<int, TrafficObserver *> map_route_relevant_traffic;
         map_route_relevant_traffic [identity] = traffic_observer;
         map_client_relevant_traffic [adr] = map_route_relevant_traffic;
-        traffic_observer->Register (route);
         LOG4CPLUS_DEBUG (logger, "insert subscription of nonexistent client, address: " << adr << " identity: " << identity);
+        traffic_observer->Register (route);
     }
     else // update
     {
@@ -261,14 +254,14 @@ void OnRouteClientPanorama::CreateSubscription (const std::string& adr, LYMsgOnA
         {
             TrafficObserver *traffic_observer = new TrafficObserver (adr);
             it_client->second [identity] = traffic_observer;
-            traffic_observer->Register (route);
             LOG4CPLUS_DEBUG (logger, "insert subscription of existent client, address: " << adr << " identity: " << identity);
+            traffic_observer->Register (route);
         }
         else
         {
+            LOG4CPLUS_WARN (logger, "create existent subscription of existent client, address: " << adr << " identity: " << identity);
             it_route->second->Unregister ();
             it_route->second->Register (route);
-            LOG4CPLUS_WARN (logger, "create existent subscription of existent client, address: " << adr << " identity: " << identity);
         }
     }
 }
@@ -288,8 +281,8 @@ void OnRouteClientPanorama::UpdateSubscription (const std::string& adr, LYMsgOnA
         std::map<int, TrafficObserver *> map_route_relevant_traffic;
         map_route_relevant_traffic [identity] = traffic_observer;
         map_client_relevant_traffic [adr] = map_route_relevant_traffic;
-        traffic_observer->Register (route);
         LOG4CPLUS_WARN (logger, "update subscription of inexistent client, address: " << adr << " identity: " << identity);
+        traffic_observer->Register (route);
     }
     else // update
     {
@@ -300,14 +293,14 @@ void OnRouteClientPanorama::UpdateSubscription (const std::string& adr, LYMsgOnA
         {
             TrafficObserver *traffic_observer = new TrafficObserver (adr);
             it_client->second [identity] = traffic_observer;
-            traffic_observer->Register (route);
             LOG4CPLUS_WARN (logger, "update inexistent subscription of existent client, address: " << adr << " identity: " << identity);
+            traffic_observer->Register (route);
         }
         else
         {
+            LOG4CPLUS_DEBUG (logger, "update existent subscription of existent client, address: " << adr << " identity: " << identity);
             it_route->second->Unregister ();
             it_route->second->Register (route);
-            LOG4CPLUS_DEBUG (logger, "update existent subscription of existent client, address: " << adr << " identity: " << identity);
         }
     }
 }

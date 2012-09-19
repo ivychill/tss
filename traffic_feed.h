@@ -13,6 +13,7 @@
 #define ROAD_TRAFFIC_TIMEOUT 30 //minute
 #define CLIENT_REQUEST_TIMEOUT 30 //minute
 #define UPDATE_INTERVAL 120 //second
+#define TRAFFIC_PUB_MSG_ID 0
 using namespace std;
 using namespace tss;
 //#include <google/protobuf/repeated_field.h>
@@ -74,6 +75,11 @@ class TrafficObserver
     {
         last_update = 0;
         address = adr;
+        snd_msg.set_version (1);
+        snd_msg.set_msg_id (TRAFFIC_PUB_MSG_ID);
+        snd_msg.set_from_party (LY_TSS);
+        snd_msg.set_to_party (LY_CLIENT);
+        snd_msg.set_msg_type (LY_TRAFFIC_PUB);
     }
 
     std::string& GetAddress ()

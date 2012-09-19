@@ -91,9 +91,9 @@ void TestRequestRoad (zmq::socket_t& skt, std::string* roadarray)
 
     SendPackage (skt, pkg);
     RecvPackage (skt);
-LOG4CPLUS_DEBUG (logger, "test traffic");
+    LOG4CPLUS_DEBUG (logger, "receive first message indicating success");
     RecvPackage (skt);
-LOG4CPLUS_DEBUG (logger, "test traffic");
+    LOG4CPLUS_DEBUG (logger, "receive second message including traffic");
 }
 
 struct ContextAndArg
