@@ -4,9 +4,11 @@
 
 Logger logger;
 DBClientConnection db_client;
+uint32_t whicheverOrderIWantToGetBackInAErrorResponse_ID = 0;
 
 int main (int argc, char *argv[])
 {
+    signal(SIGPIPE,SIG_IGN);
     InitLog (argv[0], logger);
     InitDB (db_client);
     Apns apns;
@@ -121,7 +123,7 @@ bool Apns::sendPayload (char *deviceTokenBinary, const char *payloadBuff, size_t
       DEVICE_TOKEN_SIZE + sizeof(uint16_t) + MAXPAYLOAD_SIZE];
       /* message format is, |COMMAND|ID|EXPIRY|TOKENLEN|TOKEN|PAYLOADLEN|PAYLOAD| */
       char *binaryMessagePt = binaryMessageBuff;
-      uint32_t whicheverOrderIWantToGetBackInAErrorResponse_ID = 1234;
+      whicheverOrderIWantToGetBackInAErrorResponse_ID++;
       uint32_t networkOrderExpiryEpochUTC = htonl(time(NULL)+86400); // expire message if not delivered in 1 day
       uint16_t networkOrderTokenLength = htons(DEVICE_TOKEN_SIZE);
       uint16_t networkOrderPayloadLength = htons(payloadLength);
@@ -153,12 +155,31 @@ bool Apns::sendPayload (char *deviceTokenBinary, const char *payloadBuff, size_t
       memcpy(binaryMessagePt, payloadBuff, payloadLength);
       binaryMessagePt += payloadLength;
 
+      //LOG4CPLUS_DEBUG (logger, "before SSL_write");
       int wbytes;
       if ((wbytes = SSL_write(push.ssl, binaryMessageBuff, (binaryMessagePt - binaryMessageBuff))) > 0)
       {
           LOG4CPLUS_DEBUG (logger, "write push bytes: " << wbytes);
           rtn = true;
+
+          int rbytes;
+          char byte_buff [ERROR_RESPONSE_SIZE];
+          char hex_buff [ERROR_RESPONSE_SIZE * 2];
+          if ((rbytes = SSL_read (push.ssl, byte_buff, ERROR_RESPONSE_SIZE)) > 0)
+          {
+              LOG4CPLUS_DEBUG (logger, "read error response bytes: " << rbytes);
+              HexDump (hex_buff, byte_buff, ERROR_RESPONSE_SIZE);
+              std::string str_response (hex_buff, ERROR_RESPONSE_SIZE * 2);
+              LOG4CPLUS_DEBUG (logger, "dump error response: " << hex_buff);
+              rtn = false;
+          }
       }
+      else
+      {
+          LOG4CPLUS_DEBUG (logger, "fail to write push");
+          rtn = false;
+      }
+      //LOG4CPLUS_DEBUG (logger, "after SSL_write");
   }
 
   checkFeedback ();
@@ -168,11 +189,12 @@ bool Apns::sendPayload (char *deviceTokenBinary, const char *payloadBuff, size_t
 bool Apns::checkFeedback ()
 {
     bool rtn = false;
-    InitFeedback ();
     char byte_buff [FEEDBACK_SIZE];
     char hex_buff [FEEDBACK_SIZE * 2];
     int rbytes;
 
+    InitFeedback ();
+    //LOG4CPLUS_DEBUG (logger, "before SSL_read");
     while ((rbytes = SSL_read (feedback.ssl, byte_buff, FEEDBACK_SIZE)) > 0) //to be improved
     {
         LOG4CPLUS_DEBUG (logger, "read feedback bytes: " << rbytes);
@@ -183,6 +205,7 @@ bool Apns::checkFeedback ()
         UnregisterDevice (db_client, device_token);
         rtn = true;
     }
+    //LOG4CPLUS_DEBUG (logger, "after SSL_read");
     ReleaseFeedback ();
     return rtn;
 }

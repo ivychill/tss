@@ -19,6 +19,7 @@
 #define MAXPAYLOAD_SIZE 256
 #define FEEDBACK_SIZE 38
 #define FEEDBACK_HEAD_SIZE 6
+#define ERROR_RESPONSE_SIZE 6
 
 void unregisterDevice (const std::string& device_token);
 

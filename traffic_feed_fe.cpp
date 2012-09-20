@@ -13,6 +13,7 @@ extern zmq::socket_t* p_skt_client;
 int ClientMsgProcessor::ReturnToClient ()
 {
     snd_msg.set_timestamp (time (NULL));
+    LOG4CPLUS_DEBUG (logger, "return to client, address: " << address << ", package:\n" << snd_msg.DebugString ());
     std::string str_msg;
     if (!snd_msg.SerializeToString (&str_msg))
     {
