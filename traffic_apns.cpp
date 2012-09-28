@@ -8,7 +8,13 @@ uint32_t whicheverOrderIWantToGetBackInAErrorResponse_ID = 0;
 
 int main (int argc, char *argv[])
 {
+    signal(SIGTTOU,SIG_IGN);  
+    signal(SIGTTIN,SIG_IGN);  
+    signal(SIGTSTP,SIG_IGN);  
+    signal(SIGHUP ,SIG_IGN); 
     signal(SIGPIPE,SIG_IGN);
+    signal(SIGCHLD,SIG_IGN);
+
     InitLog (argv[0], logger);
     InitDB (db_client);
     Apns apns;

@@ -108,7 +108,8 @@ int RoadTrafficSubject::SetState(const Json::Value& jv_road)
     road_traffic.Clear();
     road_traffic.set_road(jv_road ["rn"].asString());
     //int timestamp = TimeStrToInt(jv_road["ts"].asString());
-    road_traffic.set_timestamp (atoi (jv_road["ts_in_sec"].asString().c_str()));
+    int timestamp = atoi (jv_road["ts_in_sec"].asString().c_str());
+    road_traffic.set_timestamp (timestamp);
     road_traffic.set_href(jv_road["rid"].asString());
     Json::Value jv_segmentset = jv_road["segments"]; 
 
@@ -122,6 +123,7 @@ int RoadTrafficSubject::SetState(const Json::Value& jv_road)
         segment_traffic->mutable_segment()->mutable_end()->set_lng(atof(jv_segmentset[indexj]["e_lng"].asString().c_str()));
         segment_traffic->mutable_segment()->mutable_end()->set_lat(atof(jv_segmentset[indexj]["e_lat"].asString().c_str()));
 
+        segment_traffic->set_timestamp(timestamp);
         LYDirection direction = DirectionStrToInt(jv_segmentset[indexj]["dir"].asString());
         segment_traffic->set_direction(direction);
 

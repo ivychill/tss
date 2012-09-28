@@ -1,7 +1,7 @@
 #started with '#' are comments
 JSON_HOME=/home/chenfeng/jsoncpp-src-0.5.0
 #INC=-I$(JSON_HOME)/include/json
-LIB=-L$(JSON_HOME)/libs/linux-gcc-4.4.5 -lzmq -llog4cplus -lprotobuf -ljson_linux-gcc-4.4.5_libmt
+LIB=-L$(JSON_HOME)/libs/linux-gcc-4.6 -lzmq -llog4cplus -lprotobuf -ljson_linux-gcc-4.6_libmt
 LIB_ADD = -lmongoclient -lboost_thread -lboost_system -lboost_filesystem -lboost_program_options
 
 BIN_PATH=bin
