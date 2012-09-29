@@ -23,7 +23,7 @@ message LYSegment {
 
 //与segment group同义,identity的部分取值范围保留
 message LYRoute {
-    required int32 identity = 1;
+    required int32 identity = 1;	// 128-255保留为系统用，如热点路况、华为路况等
     repeated LYSegment segments = 2;
 }
 
@@ -153,7 +153,7 @@ enum LYMsgType {
 
 message LYMsgOnAir {
     required int32 version = 1; //only value 1 supported till 2012-08-30, 2012-12-30 hopehully
-    required int32 msg_id = 5;
+    required int32 msg_id = 5;	// 128-255保留为系统用，如广播等
     required int64 timestamp = 6;
     required LYParty from_party = 2;
     required LYParty to_party = 3;

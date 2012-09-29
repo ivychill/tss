@@ -64,7 +64,6 @@ void TestDeviceReport (zmq::socket_t& skt)
     device_report->set_device_os_version ("iOS 5");
 
     SendPackage (skt, pkg);
-    RecvPackage (skt);
 }
 
 void TestRequestRoad (zmq::socket_t& skt, std::string* roadarray)
@@ -90,10 +89,6 @@ void TestRequestRoad (zmq::socket_t& skt, std::string* roadarray)
     }
 
     SendPackage (skt, pkg);
-    RecvPackage (skt);
-    LOG4CPLUS_DEBUG (logger, "receive first message indicating success");
-    RecvPackage (skt);
-    LOG4CPLUS_DEBUG (logger, "receive second message including traffic");
 }
 
 struct ContextAndArg
@@ -120,6 +115,11 @@ void *worker_routine (void *arg)
     skt_feed.setsockopt (ZMQ_IDENTITY, client_identity, strlen (client_identity));
     skt_feed.connect ("tcp://localhost:7001");
 
+    //  Initialize poll set
+    zmq::pollitem_t items [] = {
+        { skt_feed, 0, ZMQ_POLLIN, 0 },
+    };
+        
     while (1)
     {
         TestDeviceReport (skt_feed);
@@ -132,6 +132,15 @@ void *worker_routine (void *arg)
 
         std::string vt_road_hit_none[] = {"fake", "mock"};
         TestRequestRoad (skt_feed, vt_road_hit_none);
+
+        while (1)
+        {
+            zmq::poll (&items [0], 1, -1);
+            if (items [0].revents & ZMQ_POLLIN)
+            {
+                RecvPackage (skt_feed);
+            }
+        }
 
         sleep (60);
     }

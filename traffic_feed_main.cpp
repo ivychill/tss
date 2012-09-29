@@ -12,6 +12,7 @@ zmq::socket_t* p_skt_client;
 
 int main (int argc, char *argv[])
 {
+    GOOGLE_PROTOBUF_VERIFY_VERSION;
     InitLog (argv[0], logger);
     InitDB (db_client);
 
@@ -29,8 +30,6 @@ int main (int argc, char *argv[])
     
     // Tell traffic_router we're ready for work
     s_send (skt_client, "READY");
-
-    GOOGLE_PROTOBUF_VERIFY_VERSION;
 
     while (1)
     {
