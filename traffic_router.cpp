@@ -24,7 +24,7 @@ int main (int argc, char *argv[])
     //skt_feed.setsockopt (ZMQ_IDENTITY, &msg_num, sizeof msg_num);
     
     skt_client.bind("tcp://*:7001");
-    skt_feed.bind("tcp://*:7002");
+    skt_feed.bind("tcp://127.0.0.1:7002");
 
     //  Logic of LRU loop
     //  - Poll skt_feed always, skt_client only if 1+ worker ready
@@ -52,8 +52,6 @@ int main (int argc, char *argv[])
 
     while (1)
     {
-        LOG4CPLUS_DEBUG (logger, "worker address: " << worker_addr);
-
         if (worker_addr.size())
         {
             zmq::poll (&items [0], 2, -1);
@@ -63,18 +61,16 @@ int main (int argc, char *argv[])
             zmq::poll (&items [0], 1, -1);
         }
 
-
         //  Handle worker activity on skt_feed
         if (items [0].revents & ZMQ_POLLIN)
         {
-        	
             //  Queue first frame, i.e. worker address for LRU routing
             //  worker_queue.push(s_recv (skt_feed));
             worker_addr = s_recv (skt_feed);
+            LOG4CPLUS_INFO (logger, "worker address: " << worker_addr);
 
             //  second frame is a client reply address
             std::string client_addr = s_recv (skt_feed);
-
             LOG4CPLUS_INFO (logger, "client address from worker: " << client_addr); 
 
             if (client_addr.compare("READY") != 0)

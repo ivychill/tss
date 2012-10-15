@@ -94,13 +94,13 @@ void RoadTrafficSubject::Notify ()
     std::set<TrafficObserver *>::iterator it;
     for ( it = set_observers.begin(); it != set_observers.end(); it++ )
     {
-        (*it)->Update(this);
+        (*it)->Update(this, true);
     }
 }
 
 void RoadTrafficSubject::Notify (TrafficObserver *obs)
 {
-    obs->Update(this);
+    obs->Update(this, false);
 }
 
 int RoadTrafficSubject::SetState(const Json::Value& jv_road)

@@ -1,11 +1,11 @@
-//  Basic request-reply client using REQ socket
-//
-
 #include <fstream>
 #include "zhelpers.hpp"
 #include "tss.pb.h"
 #include "tss_log.h"
 #include "tss_helper.h"
+#include <boost/thread.hpp>
+#include <boost/bind.hpp>
+#include <boost/date_time.hpp>
 
 #define CLT_NBR 1
 
@@ -72,7 +72,7 @@ void TestRequestRoad (zmq::socket_t& skt, std::string* roadarray)
     PreparePackage (pkg, LY_TRAFFIC_SUB);
 
     LYTrafficSub *traffic_sub = pkg.mutable_traffic_sub ();
-    traffic_sub->set_city ("深圳");
+    traffic_sub->set_city ("娣卞�");
     traffic_sub->set_opr_type (LYTrafficSub::LY_SUB_CREATE);
      traffic_sub->set_pub_type (LYTrafficSub::LY_PUB_EVENT);
     LYRoute *route = traffic_sub->mutable_route ();
@@ -98,6 +98,112 @@ struct ContextAndArg
     char *m_argv[2];
 };
 
+//tangkefu modify 
+#if 0
+void DoRecvRoutine(zmq::context_t * ctxt, char* client_identity)
+{
+    zmq::socket_t skt_feed (*ctxt, ZMQ_DEALER);
+    skt_feed.setsockopt (ZMQ_IDENTITY, client_identity, strlen (client_identity));
+
+    skt_feed.connect("tcp://localhost:7001");
+
+    //  Initialize poll set
+    zmq::pollitem_t items [] = {
+        { skt_feed, 0, ZMQ_POLLIN, 0 },
+    };
+ 
+    LOG4CPLUS_DEBUG (logger, "DoRecvRoutine: client_identity: " << client_identity);
+
+    while(1)
+    {
+        zmq::poll (&items [0], 1, -1);
+        if (items [0].revents & ZMQ_POLLIN)
+        {
+           RecvPackage (skt_feed);
+           LOG4CPLUS_DEBUG (logger, "DoRecvRoutine reply: client_identity: " << client_identity);
+        }
+
+        boost::this_thread::sleep(boost::posix_time::seconds(1));
+    }
+}
+#endif
+
+void DoSendRoutine(zmq::context_t* ctxt, char* client_identity)
+{
+    zmq::socket_t skt_feed (*ctxt, ZMQ_DEALER);
+
+    skt_feed.setsockopt (ZMQ_IDENTITY, client_identity, strlen (client_identity));
+    skt_feed.connect ("tcp://localhost:7001");
+
+
+    //  Initialize poll set
+    zmq::pollitem_t items [] = {
+        { skt_feed, 0, ZMQ_POLLIN, 0 },
+        };
+
+    while(1)
+    {
+        TestDeviceReport (skt_feed);
+
+        std::string vt_road_hit_all[] = {"���涓�矾", "杩����矾"};
+        TestRequestRoad (skt_feed, vt_road_hit_all);
+
+        std::string vt_road_hit_part[] = {"杩����矾", "nonexist"};
+        TestRequestRoad (skt_feed, vt_road_hit_part);
+
+        std::string vt_road_hit_none[] = {"fake", "mock"};
+        TestRequestRoad (skt_feed, vt_road_hit_none);
+
+        boost::this_thread::sleep(boost::posix_time::seconds(1));
+#if 1
+
+        zmq::poll (&items [0], 1, 0);
+	int poll_result = (items [0].revents & ZMQ_POLLIN);
+
+
+    //  LOG4CPLUS_DEBUG (logger, ":poll result: " << items[0].revents );
+
+        while (poll_result)
+        {
+           RecvPackage (skt_feed);
+	
+	   poll_result = (items [0].revents & ZMQ_POLLIN);
+        }
+
+        boost::this_thread::sleep(boost::posix_time::seconds(10));
+#endif
+
+    }
+}
+
+void *worker_routine_ex (void *arg)
+{
+    ContextAndArg *context_and_arg = (ContextAndArg *) arg;
+    zmq::context_t *context = context_and_arg->m_context;;
+    //int argc = context_and_arg->m_argc;
+    char *argv[2];
+    argv[0] = context_and_arg->m_argv[0];
+    argv[1] = context_and_arg->m_argv[1];
+
+    char client_identity [64];
+    sprintf (client_identity, "%s_%u", argv[1], pthread_self());
+    LOG4CPLUS_DEBUG (logger, "client_identity: " << client_identity);
+
+#if 0
+    zmq::socket_t skt_feed (*context, ZMQ_DEALER); 
+    skt_feed.setsockopt (ZMQ_IDENTITY, client_identity, strlen (client_identity));
+    skt_feed.connect ("tcp://localhost:7001");
+#endif
+
+    //boost::thread recv_routine(boost::bind(DoRecvRoutine, context, client_identity)); 
+    boost::thread send_routine(boost::bind(DoSendRoutine, context, client_identity));
+
+    //recv_routine.join();
+    send_routine.join();
+
+    return (NULL);
+}
+
 void *worker_routine (void *arg)
 {
     ContextAndArg *context_and_arg = (ContextAndArg *) arg;
@@ -119,15 +225,16 @@ void *worker_routine (void *arg)
     zmq::pollitem_t items [] = {
         { skt_feed, 0, ZMQ_POLLIN, 0 },
     };
-        
+ 
+       
     while (1)
     {
         TestDeviceReport (skt_feed);
 
-        std::string vt_road_hit_all[] = {"商报东路", "迎宾南路"};
+        std::string vt_road_hit_all[] = {"���涓�矾", "杩����矾"};
         TestRequestRoad (skt_feed, vt_road_hit_all);
 
-        std::string vt_road_hit_part[] = {"迎宾南路", "nonexist"};
+        std::string vt_road_hit_part[] = {"杩����矾", "nonexist"};
         TestRequestRoad (skt_feed, vt_road_hit_part);
 
         std::string vt_road_hit_none[] = {"fake", "mock"};
@@ -142,7 +249,7 @@ void *worker_routine (void *arg)
             }
         }
 
-        sleep (60);
+        sleep (10);
     }
 
     return (NULL);
@@ -172,7 +279,7 @@ int main (int argc, char *argv[])
 
     for (int thread_nbr = 0; thread_nbr != CLT_NBR; thread_nbr++)
     {
-        pthread_create (&clt[thread_nbr], NULL, worker_routine, (void *) &context_and_arg);
+        pthread_create (&clt[thread_nbr], NULL, worker_routine_ex, (void *) &context_and_arg);
         //LOG4CPLUS_DEBUG (logger, "precess " << argv[1] << " create thread NO. " << thread_nbr << " ID: " << clt[thread_nbr]);
     }
 

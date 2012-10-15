@@ -68,7 +68,7 @@ class TrafficObserver
     LYCityTraffic* relevant_traffic;
 
   public:
-    void Update (RoadTrafficSubject *sub);
+    void Update (RoadTrafficSubject *sub, bool should_pub);
     int ReplyToClient ();
     void Register (const string& adr, LYTrafficSub& ts);
     void Unregister ();

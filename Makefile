@@ -15,7 +15,7 @@ CC_FLAG=-Wall
 
 #/libjson_linux-gcc-4.2.1_libmt.a
 
-all: traffic_router traffic_forward traffic_feed traffic_apns test_probe test_client 
+all: traffic_router traffic_forward traffic_feed traffic_apns test_probe test_client test_remote 
 
 .cpp.o:
 	@echo "Compile $(OBJ) begin......"
@@ -57,9 +57,9 @@ test_client: test_client.o tss.pb.o tss_log.o tss_helper.o
 	$(CC) $(CC_FLAG) -o $(BIN_PATH)/$@ $^ $(LIB) $(LIB_ADD)
 	@echo "Link test_client end......"
 
-test_remote: test_remote.o tss.pb.o tss_log.o
+test_remote: test_remote.o tss.pb.o tss_log.o tss_helper.o
 	@echo "Link test_remote begin......"
-	$(CC) $(CC_FLAG) -o $(BIN_PATH)/$@ $^ $(LIB)
+	$(CC) $(CC_FLAG) -o $(BIN_PATH)/$@ $^ $(LIB) $(LIB_ADD)
 	@echo "Link test_remote end......"
 
 clean:

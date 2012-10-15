@@ -129,7 +129,7 @@ int TrafficObserver::ReplyToClient ()
     return 0;
 }
 
-void TrafficObserver::Update (RoadTrafficSubject *sub)
+void TrafficObserver::Update (RoadTrafficSubject *sub, bool should_pub)
 {
     time_t now = time (NULL);
     time_t ts = sub->GetRoadTraffic().timestamp();
@@ -142,6 +142,13 @@ void TrafficObserver::Update (RoadTrafficSubject *sub)
         LYRoadTraffic *rdtf = relevant_traffic->add_road_traffics();
         *rdtf = sub->GetRoadTraffic();
         LOG4CPLUS_DEBUG (logger, "add road traffic:\n" << sub->GetRoadTraffic().DebugString() << " to observer: " << address);
+    }
+
+    if (should_pub && relevant_traffic->road_traffics_size () != 0)
+    {
+        ReplyToClient ();
+        last_update = now;
+        relevant_traffic->clear_road_traffics();
     }
 
     /* core dump induced, because the following clear will clear *sub
