@@ -1,6 +1,9 @@
 //
 //
 
+#ifndef _TRAFFIC_FEED_H_
+#define _TRAFFIC_FEED_H_
+
 #include <unistd.h>
 #include <time.h>
 #include <set>
@@ -9,6 +12,15 @@
 #include "tss_log.h"
 #include "tss.pb.h"
 #include "tss_helper.h"
+
+#include <string>
+#include <list>
+#include "boost/date_time/posix_time/posix_time.hpp"
+#include <boost/thread.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/algorithm/string.hpp>
+#include <boost/utility.hpp>
+
 #define CITY_NAME "深圳"
 #define ROAD_TRAFFIC_TIMEOUT 30 //minute
 #define CLIENT_REQUEST_TIMEOUT 30 //minute
@@ -24,6 +36,8 @@ int JsonStringToJsonValue (const string& str_input, Json::Value& jv_roadset);
 int TimeStrToInt(const string& str_time);
 LYDirection DirectionStrToInt(const string& str_direction);
 //void PrepareSndMsg (LYMsgOnAir& msg, LYMsgType mt, int msgid);
+
+const string dbns("roadclouding_production.devices");
 
 class TrafficObserver;
 
@@ -83,6 +97,8 @@ class TrafficObserver
         snd_msg.set_to_party (LY_CLIENT);
         snd_msg.set_msg_type (LY_TRAFFIC_PUB);
     }
+
+    void ProcCron(const string& dev_tk);
 };
 
 /*
@@ -133,6 +149,8 @@ public:
         return map_route_relevant_traffic[id];
     }
     */
+
+    void ProcCronSub(const string& dev_tk, int route_id);
 };
 
 class OnRouteClientPanorama
@@ -160,6 +178,7 @@ class OnRouteClientPanorama
         return map_client_relevant_traffic[adr];
     }
     */
+    void ProcCronSub(const string& dev_tk, int route_id);
 };
 
 class ClientMsgProcessor
@@ -181,3 +200,83 @@ class ClientMsgProcessor
 
     int ProcessRcvMsg (string& adr, LYMsgOnAir& msg);
 };
+
+
+using namespace boost::posix_time;
+using namespace boost::gregorian;
+
+class Cron;
+class CronJob
+{
+private:
+	int wait_time_;       //unit: minute
+	int repeate_time_;    //default 3 ; period 5 minute
+	Cron* pcron_;
+	string dev_tk_;
+	LYTrafficSub ts_;
+	int route_id_;
+	void Renew();
+	void Exec();
+
+public:
+    static int CalcWaitTime(const LYCrontab& tab);
+    static int GetDaysInterval(date& today, int dow);
+    static bool DayInDow(date& day, int dow);
+
+	inline int GetWaitTime(){return wait_time_;}
+	CronJob(const string& dev_tk, LYTrafficSub ts,int tm, Cron* const p):dev_tk_(dev_tk),
+			wait_time_(tm),
+			pcron_(p),
+			ts_(ts),
+			repeate_time_(2),
+			route_id_(-1){
+		if(ts.has_route())
+		{
+			route_id_ = ts.route().identity();
+		}
+	}
+	void Do();
+	void ModifyTime(int tm);
+	bool operator==(const CronJob& other)const;
+
+	~CronJob(){};
+};
+
+class JobQueue: boost::noncopyable
+{
+private:
+	typedef std::list< boost::shared_ptr<CronJob> > Queue;
+	Queue queue_;
+	int tm_elapse_; // minutes elapse in a day,  max(24*60 = 1440)
+
+	boost::mutex mutex_;
+
+public:
+	JobQueue():tm_elapse_(0){}
+	void Submit(boost::shared_ptr<CronJob> & job);
+	void Remove(const string& dev_token, LYTrafficSub& ts);
+    void DoJob();
+};
+
+class Cron : boost::noncopyable
+{
+private:
+	JobQueue jobqueue_;
+	DBClientConnection &db_;
+
+	void InitQueue();
+	void GenJob(const string& dev_tk, LYTrafficSub& ts);
+	void DelJob(const string& dev_token, LYTrafficSub& ts);
+
+public:
+	Cron(DBClientConnection& db, zmq::context_t& ctxt):db_(db), skt_(ctxt, ZMQ_PAIR){}
+
+	void Init();
+	void ProcCronSub(const string& dev_token, LYTrafficSub& ts);
+	void OnTimer();
+
+	zmq::socket_t skt_;
+};
+
+#endif
+

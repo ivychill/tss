@@ -1,6 +1,6 @@
+using namespace std;
 
 #include "traffic_apns.h"
-
 
 Logger logger;
 DBClientConnection db_client;
@@ -19,6 +19,60 @@ int main (int argc, char *argv[])
     InitDB (db_client);
     Apns apns;
 
+    zmq::context_t ctxt(1);
+	zmq::socket_t  apns_skt(ctxt, ZMQ_PAIR);
+	apns_skt.bind("ipc://apns.ipc");
+
+
+    //  Initialize poll set
+    zmq::pollitem_t items [] = {
+        //  Always poll for worker activity on skt_feed
+        { apns_skt,  0, ZMQ_POLLIN, 0 }
+    };
+
+	while (true)
+	{
+        time_t now = time (NULL);
+        struct tm *timeinfo;
+        timeinfo = ::localtime (&now);
+
+		zmq::poll (&items [0], 1, -1);
+
+	    //  Handle worker activity on skt_feed
+		if (items [0].revents & ZMQ_POLLIN)
+		{
+			LOG4CPLUS_DEBUG (logger, "begin to push message, " << timeinfo->tm_year + 1900 << "-" << timeinfo->tm_mon + 1 << "-" << timeinfo->tm_mday << " " << timeinfo->tm_hour << ":" << timeinfo->tm_min << " week day " << timeinfo->tm_wday);
+			//char pld[] = "{\"aps\":{\"alert\":\"提醒您关注上下班拥堵路段\"}}";
+
+			std::string dev_token = s_recv(apns_skt);
+
+			std::string info = s_recv(apns_skt);
+			LOG4CPLUS_DEBUG (logger, "s_recv info : " << info.size());
+
+			Json::Value jv_payload;
+			//Json::Value jv_alert, jv_badge, jv_sound;
+			jv_payload["aps"]["alert"] = info;
+			jv_payload["aps"]["badge"] = 1;
+			jv_payload["aps"]["sound"] = "chime";
+			Json::FastWriter writer;
+			std::string str_payload = writer.write(jv_payload);
+			LOG4CPLUS_DEBUG (logger, "payload: \n" << str_payload);
+			LOG4CPLUS_DEBUG (logger, "payload: \n" << jv_payload.toStyledString());
+
+			apns.InitPush ();
+
+			LOG4CPLUS_DEBUG (logger, "str_hex_token: " << dev_token);
+			char byte_token [DEVICE_TOKEN_SIZE];
+
+			ByteDump (byte_token, dev_token.data(), DEVICE_TOKEN_SIZE);
+			apns.sendPayload (byte_token, str_payload.c_str (), str_payload.length ());
+
+			apns.ReleasePush ();
+		}
+
+	}
+
+#if 0
     while (true)
     {
         time_t now = time (NULL);
@@ -61,6 +115,7 @@ int main (int argc, char *argv[])
         }
         sleep (300);
     }
+#endif
 
     return 0;
 }
@@ -82,6 +137,7 @@ Apns::Apns ()
     passphrase = PDT_PASSPHRASE;    
     LOG4CPLUS_DEBUG (logger, "production env");
 #endif
+
     Init (feedback);
 }
 

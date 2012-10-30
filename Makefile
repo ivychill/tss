@@ -27,12 +27,12 @@ all: traffic_router traffic_forward traffic_feed traffic_apns test_probe test_cl
 	$(CC) $(CC_FLAG) -c $<
 	@echo "Compile $(OBJ) end......"
 
-traffic_router: traffic_router.o tss_log.o
+traffic_router: traffic_router.o tss_log.o tss.pb.o
 	@echo "Link traffic_router begin......"
 	$(CC) $(CC_FLAG) -o $(BIN_PATH)/$@ $^ $(LIB)
 	@echo "Link traffic_router end......"
 
-traffic_feed: traffic_feed_main.o traffic_feed_be.o traffic_feed_fe.o tss.pb.o tss_log.o tss_helper.o traffic_feed.h
+traffic_feed: traffic_feed_main.o traffic_feed_be.o traffic_feed_fe.o traffic_feed_cron.o tss.pb.o tss_log.o tss_helper.o traffic_feed.h
 	@echo "Link traffic_feed begin......"
 	$(CC) $(CC_FLAG) -o $(BIN_PATH)/$@ $^ $(LIB) $(LIB_ADD)
 	@echo "Link traffic_feed end......"
