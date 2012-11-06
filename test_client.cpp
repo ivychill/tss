@@ -55,13 +55,13 @@ void TestDeviceReport (zmq::socket_t& skt)
     char byte_token[DEVICE_TOKEN_SIZE];
     ByteDump (byte_token, hex_token, DEVICE_TOKEN_SIZE);
     std::string str_byte_token (byte_token, DEVICE_TOKEN_SIZE);
-
+    
     LYDeviceReport *device_report = pkg.mutable_device_report ();
     device_report->set_device_id ("test");
     device_report->set_device_token (str_byte_token);
-    device_report->set_device_name ("tommy's samsung");
+    device_report->set_device_name ("chenfeng's iphone");
     device_report->set_device_model ("iphone 4S");
-    device_report->set_device_os_version ("IOS 5");
+    device_report->set_device_os_version ("iOS 5");
 
     SendPackage (skt, pkg);
 }
@@ -91,37 +91,6 @@ void TestRequestRoad (zmq::socket_t& skt, std::string* roadarray)
     SendPackage (skt, pkg);
 }
 
-void TestRequestCron (zmq::socket_t& skt, std::string* roadarray)
-{
-    LYMsgOnAir pkg;
-    PreparePackage (pkg, LY_TRAFFIC_SUB);
-
-    LYTrafficSub *traffic_sub = pkg.mutable_traffic_sub ();
-    traffic_sub->set_city ("娣卞�");
-    traffic_sub->set_opr_type (LYTrafficSub::LY_SUB_CREATE);
-    traffic_sub->set_pub_type (LYTrafficSub::LY_PUB_CRON);
-
-    LYCrontab *tab = traffic_sub->mutable_cron_tab();
-    tab->set_cron_type(LYCrontab_LYCronType_LY_REP_DOW);
-    tab->set_dow(0xffffffff);
-    tab->set_hour(0x000000800000012);
-
-    LYRoute *route = traffic_sub->mutable_route ();
-    route->set_identity (1);
-
-    for (int index = 0; index < 2; index++)
-    {
-        LYSegment *segment = route->add_segments();
-        segment->set_road(roadarray[index]);
-        segment->mutable_start()->set_lng(120.558957);
-        segment->mutable_start()->set_lat(31.325152);
-        segment->mutable_end()->set_lng(120.559000);
-        segment->mutable_end()->set_lat(31.325000);
-    }
-
-    SendPackage (skt, pkg);
-}
-
 struct ContextAndArg
 {
     zmq::context_t *m_context;
@@ -129,17 +98,41 @@ struct ContextAndArg
     char *m_argv[2];
 };
 
+//tangkefu modify 
+#if 0
+void DoRecvRoutine(zmq::context_t * ctxt, char* client_identity)
+{
+    zmq::socket_t skt_feed (*ctxt, ZMQ_DEALER);
+    skt_feed.setsockopt (ZMQ_IDENTITY, client_identity, strlen (client_identity));
+
+    skt_feed.connect("tcp://localhost:7001");
+
+    //  Initialize poll set
+    zmq::pollitem_t items [] = {
+        { skt_feed, 0, ZMQ_POLLIN, 0 },
+    };
+ 
+    LOG4CPLUS_DEBUG (logger, "DoRecvRoutine: client_identity: " << client_identity);
+
+    while(1)
+    {
+        zmq::poll (&items [0], 1, -1);
+        if (items [0].revents & ZMQ_POLLIN)
+        {
+           RecvPackage (skt_feed);
+           LOG4CPLUS_DEBUG (logger, "DoRecvRoutine reply: client_identity: " << client_identity);
+        }
+
+        boost::this_thread::sleep(boost::posix_time::seconds(1));
+    }
+}
+#endif
+
 void DoSendRoutine(zmq::context_t* ctxt, char* client_identity)
 {
     zmq::socket_t skt_feed (*ctxt, ZMQ_DEALER);
 
-    char hex_token[] = "0efc4c9f9bf8a4f8957619bd9207d0c9651cfc2aef936409053c9e4ac8befa89";
-
-    char byte_token[DEVICE_TOKEN_SIZE];
-    ByteDump (byte_token, hex_token, DEVICE_TOKEN_SIZE);
-    std::string str_byte_token (byte_token, DEVICE_TOKEN_SIZE);
-
-    skt_feed.setsockopt (ZMQ_IDENTITY, str_byte_token.c_str(), str_byte_token.size());
+    skt_feed.setsockopt (ZMQ_IDENTITY, client_identity, strlen (client_identity));
     skt_feed.connect ("tcp://localhost:7001");
 
 
@@ -162,8 +155,6 @@ void DoSendRoutine(zmq::context_t* ctxt, char* client_identity)
         TestRequestRoad (skt_feed, vt_road_hit_none);
 
         boost::this_thread::sleep(boost::posix_time::seconds(1));
-
-        TestRequestCron(skt_feed, vt_road_hit_all);
 #if 1
 
         zmq::poll (&items [0], 1, 0);

@@ -23,7 +23,7 @@ message LYSegment {
 
 //与segment group同义,identity的部分取值范围保留
 message LYRoute {
-    required int32 identity = 1;	// 128-255保留为系统用，如热点路况、华为路况等
+    required int32 identity = 1;
     repeated LYSegment segments = 2;
 }
 
@@ -35,14 +35,14 @@ enum LYDirection {
     LY_SOUTH = 7; LY_SOUTHEAST = 8;
 }
 
-message LYTrafficReport {
-    optional LYSegment segment = 1;
-    optional LYCoordinate location = 2;
-    optional int64 timestamp = 3;
-    required LYDirection direction = 4;
-    required int32 speed = 5;
-    optional int32 acceleration = 6;
-}
+//message LYTrafficReport {
+//    optional LYSegment segment = 1;
+//    optional LYCoordinate location = 2;
+//    optional int64 timestamp = 3;
+//    required LYDirection direction = 4;
+//    required int32 speed = 5;
+//    optional int32 acceleration = 6;
+//}
 
 message LYSegmentTraffic {
     required LYSegment segment = 1;
@@ -121,6 +121,18 @@ message LYDeviceReport {
     required string device_os_version = 5;
 }
 
+message LYSamplePoint {
+    required LYCoordinate sp_coordinate = 1; 	//位置的经纬度
+    required int64 timestamp = 2;         	//所在位置时刻的时间戳
+    optional double altitude = 3;			//高度
+    optional double course = 4;				//航线角度, 正北=0，正南=180
+}
+
+message LYTrafficReport {
+    repeated LYSamplePoint points = 1; 	//采样点列表
+
+}
+
 // 返回代码说明
 // 0: sucess
 // 0xABC.
@@ -140,6 +152,7 @@ enum LYRetCode {
 enum LYParty {
     LY_CLIENT = 1; 
     LY_TSS = 2;
+    LY_TC = 3; //TrafficCollector，收集终端客户发过来的原始数据
 }
 
 enum LYMsgType {
@@ -153,7 +166,7 @@ enum LYMsgType {
 
 message LYMsgOnAir {
     required int32 version = 1; //only value 1 supported till 2012-08-30, 2012-12-30 hopehully
-    required int32 msg_id = 5;	// 128-255保留为系统用，如广播等
+    required int32 msg_id = 5;
     required int64 timestamp = 6;
     required LYParty from_party = 2;
     required LYParty to_party = 3;

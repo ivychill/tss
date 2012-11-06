@@ -1,5 +1,3 @@
-#include "zhelpers.hpp"
-
 #include <stdint.h>
 #include <netinet/in.h>
 #include <openssl/bio.h>
@@ -8,7 +6,6 @@
 #include "/home/chenfeng/jsoncpp-src-0.5.0/include/json/json.h"
 #include "tss_log.h"
 #include "tss_helper.h"
-
 #define DVL_PUSH_URL "gateway.sandbox.push.apple.com:2195"
 #define DVL_FEEDBACK_URL "feedback.sandbox.push.apple.com:2196"
 #define DVL_CER_PATH "etc/easyway95_dvl_cer.pem"

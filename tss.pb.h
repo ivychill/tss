@@ -36,7 +36,6 @@ class LYCoordinate;
 class LYLocation;
 class LYSegment;
 class LYRoute;
-class LYTrafficReport;
 class LYSegmentTraffic;
 class LYRoadTraffic;
 class LYCityTraffic;
@@ -44,6 +43,8 @@ class LYCrontab;
 class LYTrafficSub;
 class LYTrafficPub;
 class LYDeviceReport;
+class LYSamplePoint;
+class LYTrafficReport;
 class LYMsgOnAir;
 
 enum LYCrontab_LYCronType {
@@ -160,11 +161,12 @@ inline bool LYRetCode_Parse(
 }
 enum LYParty {
   LY_CLIENT = 1,
-  LY_TSS = 2
+  LY_TSS = 2,
+  LY_TC = 3
 };
 bool LYParty_IsValid(int value);
 const LYParty LYParty_MIN = LY_CLIENT;
-const LYParty LYParty_MAX = LY_TSS;
+const LYParty LYParty_MAX = LY_TC;
 const int LYParty_ARRAYSIZE = LYParty_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* LYParty_descriptor();
@@ -614,140 +616,6 @@ class LYRoute : public ::google::protobuf::Message {
   
   void InitAsDefaultInstance();
   static LYRoute* default_instance_;
-};
-// -------------------------------------------------------------------
-
-class LYTrafficReport : public ::google::protobuf::Message {
- public:
-  LYTrafficReport();
-  virtual ~LYTrafficReport();
-  
-  LYTrafficReport(const LYTrafficReport& from);
-  
-  inline LYTrafficReport& operator=(const LYTrafficReport& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-  
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-  
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const LYTrafficReport& default_instance();
-  
-  void Swap(LYTrafficReport* other);
-  
-  // implements Message ----------------------------------------------
-  
-  LYTrafficReport* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const LYTrafficReport& from);
-  void MergeFrom(const LYTrafficReport& from);
-  void Clear();
-  bool IsInitialized() const;
-  
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-  
-  ::google::protobuf::Metadata GetMetadata() const;
-  
-  // nested types ----------------------------------------------------
-  
-  // accessors -------------------------------------------------------
-  
-  // optional .tss.LYSegment segment = 1;
-  inline bool has_segment() const;
-  inline void clear_segment();
-  static const int kSegmentFieldNumber = 1;
-  inline const ::tss::LYSegment& segment() const;
-  inline ::tss::LYSegment* mutable_segment();
-  inline ::tss::LYSegment* release_segment();
-  
-  // optional .tss.LYCoordinate location = 2;
-  inline bool has_location() const;
-  inline void clear_location();
-  static const int kLocationFieldNumber = 2;
-  inline const ::tss::LYCoordinate& location() const;
-  inline ::tss::LYCoordinate* mutable_location();
-  inline ::tss::LYCoordinate* release_location();
-  
-  // optional int64 timestamp = 3;
-  inline bool has_timestamp() const;
-  inline void clear_timestamp();
-  static const int kTimestampFieldNumber = 3;
-  inline ::google::protobuf::int64 timestamp() const;
-  inline void set_timestamp(::google::protobuf::int64 value);
-  
-  // required .tss.LYDirection direction = 4;
-  inline bool has_direction() const;
-  inline void clear_direction();
-  static const int kDirectionFieldNumber = 4;
-  inline tss::LYDirection direction() const;
-  inline void set_direction(tss::LYDirection value);
-  
-  // required int32 speed = 5;
-  inline bool has_speed() const;
-  inline void clear_speed();
-  static const int kSpeedFieldNumber = 5;
-  inline ::google::protobuf::int32 speed() const;
-  inline void set_speed(::google::protobuf::int32 value);
-  
-  // optional int32 acceleration = 6;
-  inline bool has_acceleration() const;
-  inline void clear_acceleration();
-  static const int kAccelerationFieldNumber = 6;
-  inline ::google::protobuf::int32 acceleration() const;
-  inline void set_acceleration(::google::protobuf::int32 value);
-  
-  // @@protoc_insertion_point(class_scope:tss.LYTrafficReport)
- private:
-  inline void set_has_segment();
-  inline void clear_has_segment();
-  inline void set_has_location();
-  inline void clear_has_location();
-  inline void set_has_timestamp();
-  inline void clear_has_timestamp();
-  inline void set_has_direction();
-  inline void clear_has_direction();
-  inline void set_has_speed();
-  inline void clear_has_speed();
-  inline void set_has_acceleration();
-  inline void clear_has_acceleration();
-  
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-  
-  ::tss::LYSegment* segment_;
-  ::tss::LYCoordinate* location_;
-  ::google::protobuf::int64 timestamp_;
-  int direction_;
-  ::google::protobuf::int32 speed_;
-  ::google::protobuf::int32 acceleration_;
-  
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
-  
-  friend void  protobuf_AddDesc_tss_2eproto();
-  friend void protobuf_AssignDesc_tss_2eproto();
-  friend void protobuf_ShutdownFile_tss_2eproto();
-  
-  void InitAsDefaultInstance();
-  static LYTrafficReport* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -1706,6 +1574,204 @@ class LYDeviceReport : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class LYSamplePoint : public ::google::protobuf::Message {
+ public:
+  LYSamplePoint();
+  virtual ~LYSamplePoint();
+  
+  LYSamplePoint(const LYSamplePoint& from);
+  
+  inline LYSamplePoint& operator=(const LYSamplePoint& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const LYSamplePoint& default_instance();
+  
+  void Swap(LYSamplePoint* other);
+  
+  // implements Message ----------------------------------------------
+  
+  LYSamplePoint* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const LYSamplePoint& from);
+  void MergeFrom(const LYSamplePoint& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // required .tss.LYCoordinate sp_coordinate = 1;
+  inline bool has_sp_coordinate() const;
+  inline void clear_sp_coordinate();
+  static const int kSpCoordinateFieldNumber = 1;
+  inline const ::tss::LYCoordinate& sp_coordinate() const;
+  inline ::tss::LYCoordinate* mutable_sp_coordinate();
+  inline ::tss::LYCoordinate* release_sp_coordinate();
+  
+  // required int64 timestamp = 2;
+  inline bool has_timestamp() const;
+  inline void clear_timestamp();
+  static const int kTimestampFieldNumber = 2;
+  inline ::google::protobuf::int64 timestamp() const;
+  inline void set_timestamp(::google::protobuf::int64 value);
+  
+  // optional double altitude = 3;
+  inline bool has_altitude() const;
+  inline void clear_altitude();
+  static const int kAltitudeFieldNumber = 3;
+  inline double altitude() const;
+  inline void set_altitude(double value);
+  
+  // optional double course = 4;
+  inline bool has_course() const;
+  inline void clear_course();
+  static const int kCourseFieldNumber = 4;
+  inline double course() const;
+  inline void set_course(double value);
+  
+  // @@protoc_insertion_point(class_scope:tss.LYSamplePoint)
+ private:
+  inline void set_has_sp_coordinate();
+  inline void clear_has_sp_coordinate();
+  inline void set_has_timestamp();
+  inline void clear_has_timestamp();
+  inline void set_has_altitude();
+  inline void clear_has_altitude();
+  inline void set_has_course();
+  inline void clear_has_course();
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  ::tss::LYCoordinate* sp_coordinate_;
+  ::google::protobuf::int64 timestamp_;
+  double altitude_;
+  double course_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_tss_2eproto();
+  friend void protobuf_AssignDesc_tss_2eproto();
+  friend void protobuf_ShutdownFile_tss_2eproto();
+  
+  void InitAsDefaultInstance();
+  static LYSamplePoint* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class LYTrafficReport : public ::google::protobuf::Message {
+ public:
+  LYTrafficReport();
+  virtual ~LYTrafficReport();
+  
+  LYTrafficReport(const LYTrafficReport& from);
+  
+  inline LYTrafficReport& operator=(const LYTrafficReport& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const LYTrafficReport& default_instance();
+  
+  void Swap(LYTrafficReport* other);
+  
+  // implements Message ----------------------------------------------
+  
+  LYTrafficReport* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const LYTrafficReport& from);
+  void MergeFrom(const LYTrafficReport& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // repeated .tss.LYSamplePoint points = 1;
+  inline int points_size() const;
+  inline void clear_points();
+  static const int kPointsFieldNumber = 1;
+  inline const ::tss::LYSamplePoint& points(int index) const;
+  inline ::tss::LYSamplePoint* mutable_points(int index);
+  inline ::tss::LYSamplePoint* add_points();
+  inline const ::google::protobuf::RepeatedPtrField< ::tss::LYSamplePoint >&
+      points() const;
+  inline ::google::protobuf::RepeatedPtrField< ::tss::LYSamplePoint >*
+      mutable_points();
+  
+  // @@protoc_insertion_point(class_scope:tss.LYTrafficReport)
+ private:
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  ::google::protobuf::RepeatedPtrField< ::tss::LYSamplePoint > points_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_tss_2eproto();
+  friend void protobuf_AssignDesc_tss_2eproto();
+  friend void protobuf_ShutdownFile_tss_2eproto();
+  
+  void InitAsDefaultInstance();
+  static LYTrafficReport* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class LYMsgOnAir : public ::google::protobuf::Message {
  public:
   LYMsgOnAir();
@@ -2277,157 +2343,6 @@ LYRoute::segments() const {
 inline ::google::protobuf::RepeatedPtrField< ::tss::LYSegment >*
 LYRoute::mutable_segments() {
   return &segments_;
-}
-
-// -------------------------------------------------------------------
-
-// LYTrafficReport
-
-// optional .tss.LYSegment segment = 1;
-inline bool LYTrafficReport::has_segment() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void LYTrafficReport::set_has_segment() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void LYTrafficReport::clear_has_segment() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void LYTrafficReport::clear_segment() {
-  if (segment_ != NULL) segment_->::tss::LYSegment::Clear();
-  clear_has_segment();
-}
-inline const ::tss::LYSegment& LYTrafficReport::segment() const {
-  return segment_ != NULL ? *segment_ : *default_instance_->segment_;
-}
-inline ::tss::LYSegment* LYTrafficReport::mutable_segment() {
-  set_has_segment();
-  if (segment_ == NULL) segment_ = new ::tss::LYSegment;
-  return segment_;
-}
-inline ::tss::LYSegment* LYTrafficReport::release_segment() {
-  clear_has_segment();
-  ::tss::LYSegment* temp = segment_;
-  segment_ = NULL;
-  return temp;
-}
-
-// optional .tss.LYCoordinate location = 2;
-inline bool LYTrafficReport::has_location() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void LYTrafficReport::set_has_location() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void LYTrafficReport::clear_has_location() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void LYTrafficReport::clear_location() {
-  if (location_ != NULL) location_->::tss::LYCoordinate::Clear();
-  clear_has_location();
-}
-inline const ::tss::LYCoordinate& LYTrafficReport::location() const {
-  return location_ != NULL ? *location_ : *default_instance_->location_;
-}
-inline ::tss::LYCoordinate* LYTrafficReport::mutable_location() {
-  set_has_location();
-  if (location_ == NULL) location_ = new ::tss::LYCoordinate;
-  return location_;
-}
-inline ::tss::LYCoordinate* LYTrafficReport::release_location() {
-  clear_has_location();
-  ::tss::LYCoordinate* temp = location_;
-  location_ = NULL;
-  return temp;
-}
-
-// optional int64 timestamp = 3;
-inline bool LYTrafficReport::has_timestamp() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void LYTrafficReport::set_has_timestamp() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void LYTrafficReport::clear_has_timestamp() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void LYTrafficReport::clear_timestamp() {
-  timestamp_ = GOOGLE_LONGLONG(0);
-  clear_has_timestamp();
-}
-inline ::google::protobuf::int64 LYTrafficReport::timestamp() const {
-  return timestamp_;
-}
-inline void LYTrafficReport::set_timestamp(::google::protobuf::int64 value) {
-  set_has_timestamp();
-  timestamp_ = value;
-}
-
-// required .tss.LYDirection direction = 4;
-inline bool LYTrafficReport::has_direction() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
-}
-inline void LYTrafficReport::set_has_direction() {
-  _has_bits_[0] |= 0x00000008u;
-}
-inline void LYTrafficReport::clear_has_direction() {
-  _has_bits_[0] &= ~0x00000008u;
-}
-inline void LYTrafficReport::clear_direction() {
-  direction_ = 0;
-  clear_has_direction();
-}
-inline tss::LYDirection LYTrafficReport::direction() const {
-  return static_cast< tss::LYDirection >(direction_);
-}
-inline void LYTrafficReport::set_direction(tss::LYDirection value) {
-  GOOGLE_DCHECK(tss::LYDirection_IsValid(value));
-  set_has_direction();
-  direction_ = value;
-}
-
-// required int32 speed = 5;
-inline bool LYTrafficReport::has_speed() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
-}
-inline void LYTrafficReport::set_has_speed() {
-  _has_bits_[0] |= 0x00000010u;
-}
-inline void LYTrafficReport::clear_has_speed() {
-  _has_bits_[0] &= ~0x00000010u;
-}
-inline void LYTrafficReport::clear_speed() {
-  speed_ = 0;
-  clear_has_speed();
-}
-inline ::google::protobuf::int32 LYTrafficReport::speed() const {
-  return speed_;
-}
-inline void LYTrafficReport::set_speed(::google::protobuf::int32 value) {
-  set_has_speed();
-  speed_ = value;
-}
-
-// optional int32 acceleration = 6;
-inline bool LYTrafficReport::has_acceleration() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
-}
-inline void LYTrafficReport::set_has_acceleration() {
-  _has_bits_[0] |= 0x00000020u;
-}
-inline void LYTrafficReport::clear_has_acceleration() {
-  _has_bits_[0] &= ~0x00000020u;
-}
-inline void LYTrafficReport::clear_acceleration() {
-  acceleration_ = 0;
-  clear_has_acceleration();
-}
-inline ::google::protobuf::int32 LYTrafficReport::acceleration() const {
-  return acceleration_;
-}
-inline void LYTrafficReport::set_acceleration(::google::protobuf::int32 value) {
-  set_has_acceleration();
-  acceleration_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -3594,6 +3509,134 @@ inline ::std::string* LYDeviceReport::release_device_os_version() {
     device_os_version_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
     return temp;
   }
+}
+
+// -------------------------------------------------------------------
+
+// LYSamplePoint
+
+// required .tss.LYCoordinate sp_coordinate = 1;
+inline bool LYSamplePoint::has_sp_coordinate() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void LYSamplePoint::set_has_sp_coordinate() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void LYSamplePoint::clear_has_sp_coordinate() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void LYSamplePoint::clear_sp_coordinate() {
+  if (sp_coordinate_ != NULL) sp_coordinate_->::tss::LYCoordinate::Clear();
+  clear_has_sp_coordinate();
+}
+inline const ::tss::LYCoordinate& LYSamplePoint::sp_coordinate() const {
+  return sp_coordinate_ != NULL ? *sp_coordinate_ : *default_instance_->sp_coordinate_;
+}
+inline ::tss::LYCoordinate* LYSamplePoint::mutable_sp_coordinate() {
+  set_has_sp_coordinate();
+  if (sp_coordinate_ == NULL) sp_coordinate_ = new ::tss::LYCoordinate;
+  return sp_coordinate_;
+}
+inline ::tss::LYCoordinate* LYSamplePoint::release_sp_coordinate() {
+  clear_has_sp_coordinate();
+  ::tss::LYCoordinate* temp = sp_coordinate_;
+  sp_coordinate_ = NULL;
+  return temp;
+}
+
+// required int64 timestamp = 2;
+inline bool LYSamplePoint::has_timestamp() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void LYSamplePoint::set_has_timestamp() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void LYSamplePoint::clear_has_timestamp() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void LYSamplePoint::clear_timestamp() {
+  timestamp_ = GOOGLE_LONGLONG(0);
+  clear_has_timestamp();
+}
+inline ::google::protobuf::int64 LYSamplePoint::timestamp() const {
+  return timestamp_;
+}
+inline void LYSamplePoint::set_timestamp(::google::protobuf::int64 value) {
+  set_has_timestamp();
+  timestamp_ = value;
+}
+
+// optional double altitude = 3;
+inline bool LYSamplePoint::has_altitude() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void LYSamplePoint::set_has_altitude() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void LYSamplePoint::clear_has_altitude() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void LYSamplePoint::clear_altitude() {
+  altitude_ = 0;
+  clear_has_altitude();
+}
+inline double LYSamplePoint::altitude() const {
+  return altitude_;
+}
+inline void LYSamplePoint::set_altitude(double value) {
+  set_has_altitude();
+  altitude_ = value;
+}
+
+// optional double course = 4;
+inline bool LYSamplePoint::has_course() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void LYSamplePoint::set_has_course() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void LYSamplePoint::clear_has_course() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void LYSamplePoint::clear_course() {
+  course_ = 0;
+  clear_has_course();
+}
+inline double LYSamplePoint::course() const {
+  return course_;
+}
+inline void LYSamplePoint::set_course(double value) {
+  set_has_course();
+  course_ = value;
+}
+
+// -------------------------------------------------------------------
+
+// LYTrafficReport
+
+// repeated .tss.LYSamplePoint points = 1;
+inline int LYTrafficReport::points_size() const {
+  return points_.size();
+}
+inline void LYTrafficReport::clear_points() {
+  points_.Clear();
+}
+inline const ::tss::LYSamplePoint& LYTrafficReport::points(int index) const {
+  return points_.Get(index);
+}
+inline ::tss::LYSamplePoint* LYTrafficReport::mutable_points(int index) {
+  return points_.Mutable(index);
+}
+inline ::tss::LYSamplePoint* LYTrafficReport::add_points() {
+  return points_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::tss::LYSamplePoint >&
+LYTrafficReport::points() const {
+  return points_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::tss::LYSamplePoint >*
+LYTrafficReport::mutable_points() {
+  return &points_;
 }
 
 // -------------------------------------------------------------------

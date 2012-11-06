@@ -1,6 +1,5 @@
 #include "tss_helper.h"
 
-
 void HexDump (char* out, const char* in, int size)
 {
     for (int index = 0; index < size; index++)

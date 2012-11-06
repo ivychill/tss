@@ -9,12 +9,11 @@ extern OnRouteClientPanorama onrouteclientpanorama;
 //extern ClientMsgProcessor client_msg_processor;
 extern DBClientConnection db_client;
 extern zmq::socket_t* p_skt_client;
-extern Cron* p_cron;
-extern zmq::socket_t* p_skt_apns_client;
 
 int ClientMsgProcessor::ReturnToClient ()
 {
     snd_msg.set_timestamp (time (NULL));
+    LOG4CPLUS_DEBUG (logger, "return to client, address: " << address << ", package:\n" << snd_msg.DebugString ());
     string str_msg;
     if (!snd_msg.SerializeToString (&str_msg))
     {
@@ -194,18 +193,13 @@ void TrafficObserver::Register (const string& adr, LYTrafficSub& ts)
     }
 
     LYTrafficSub::LYPubType pub_type = traffic_sub.pub_type();
-    //LOG4CPLUS_DEBUG (logger, "register pub type: " << pub_type);
-
     if (pub_type == LYTrafficSub::LY_PUB_ADHOC)
     {
     	Unregister ();
     }
     else if (pub_type == LYTrafficSub::LY_PUB_CRON)
     {
-      	//submit the cron request to cron_worker
-    	LOG4CPLUS_DEBUG (logger, "sub cron ");
-
-    	p_cron->ProcCronSub(adr, ts);
+    	// TODO
     }
 }
 
@@ -229,58 +223,6 @@ void TrafficObserver::Unregister ()
         LOG4CPLUS_DEBUG (logger, "unregister road: " << roadname);
         citytrafficpanorama.Detach (this, roadname);
     }
-}
-
-void TrafficObserver::ProcCron(const string& dev_token)
-{
-	string os_ver;
-
-	char hex_token [DEVICE_TOKEN_SIZE * 2];
-    HexDump (hex_token, dev_token.c_str(), DEVICE_TOKEN_SIZE);
-    std::string s_hex_token (hex_token, DEVICE_TOKEN_SIZE * 2);
-
-	auto_ptr<DBClientCursor> cursor = db_client.query(dbns, BSON("dev_token"<< s_hex_token));
-	if( cursor->more() )
-	{
-		BSONObj obj = cursor->next();
-		os_ver = obj["dev_os_ver"].String();
-		boost::to_lower(os_ver);
-	}
-
-	string reply("tips:");
-
-	if(boost::find_first(os_ver, "ios"))
-	{
-		if(LY_TRAFFIC_PUB == snd_msg.msg_type())
-		{
-			const tss::LYTrafficPub& pub = snd_msg.traffic_pub();
-			if(pub.has_city_traffic())
-			{
-				if(pub.city_traffic().road_traffics_size() > 0)
-				{
-					LOG4CPLUS_DEBUG (logger, "send to client msg:" << pub.city_traffic().road_traffics().size());
-					for(int i = 0; i < pub.city_traffic().road_traffics(0).segment_traffics_size(); i++)
-					{
-						reply += ":";
-						reply += pub.city_traffic().road_traffics(0).segment_traffics(i).details();
-					}
-				}
-				else
-				{
-					LOG4CPLUS_DEBUG (logger, "road traffic no info" );
-				}
-			}
-		}
-
-		LOG4CPLUS_DEBUG (logger, "send to apns msg: " << reply);
-
-		s_sendmore(*p_skt_apns_client, dev_token);
-		s_send (*p_skt_apns_client, reply);
-	}
-	else
-	{
-		this->ReplyToClient();
-	}
 }
 
 int OnRouteClientPanorama::SubTraffic (string& adr, LYMsgOnAir& pkg)
@@ -308,13 +250,10 @@ int OnRouteClientPanorama::SubTraffic (string& adr, LYMsgOnAir& pkg)
 void ClientObservers::CreateSubscription (const string& adr, LYMsgOnAir& pkg)
 {
     LYTrafficSub traffic_sub = pkg.traffic_sub ();
-
-    LOG4CPLUS_ERROR (logger, "run to CreateSubscription: ");
-    //LOG4CPLUS_ERROR (logger, "ts pub type "<< traffic_sub.pub_type());
-
     LYRoute route = traffic_sub.route ();
     int identity = route.identity ();
 
+	/*
     if ( identity == HOT_TRAFFIC_ROUTE_ID)
     {
     	if (has_sub_hot_traffic)
@@ -326,6 +265,7 @@ void ClientObservers::CreateSubscription (const string& adr, LYMsgOnAir& pkg)
     		has_sub_hot_traffic = true;
     	}
     }
+	*/
 
 //    address = adr;
     LOG4CPLUS_DEBUG (logger, "insert/update subscription, address: " << adr << " identity: " << identity);
@@ -342,21 +282,6 @@ void ClientObservers::DeleteSubscription (const string& adr, LYMsgOnAir& pkg)
     map_route_relevant_traffic [identity].Unregister ();
     map_route_relevant_traffic.erase(identity);
     LOG4CPLUS_DEBUG (logger, "delete subscription, address: " << adr << " identity: " << identity);
-}
-
-void ClientObservers::ProcCronSub(const string& dev_token , int route_id)
-{
-	map<int, TrafficObserver>::iterator kitr;
-	kitr = map_route_relevant_traffic.find(route_id);
-
-	if(kitr != map_route_relevant_traffic.end())
-	{
-		(*kitr).second.ProcCron(dev_token);
-	}
-	else
-	{
-		LOG4CPLUS_DEBUG (logger, "no subscription, address: " << dev_token << " identity: " << route_id);
-	}
 }
 
 OnRouteClientPanorama::OnRouteClientPanorama ()
@@ -389,67 +314,12 @@ OnRouteClientPanorama::OnRouteClientPanorama ()
 // Add if there does not exist, update if there exists.
 void OnRouteClientPanorama::CreateSubscription (const string& adr, LYMsgOnAir& pkg)
 {
-    LOG4CPLUS_DEBUG (logger, "insert/update subscription, address: " );//<< adr);
-    map_client_relevant_traffic[adr].CreateSubscription(adr, pkg);
+    LOG4CPLUS_DEBUG (logger, "insert/update subscription, address: " << adr);
+    map_client_relevant_traffic[adr].CreateSubscription(adr,pkg);
 }
 
 void OnRouteClientPanorama::DeleteSubscription (const string& adr, LYMsgOnAir& pkg)
 {
-    //LOG4CPLUS_DEBUG (logger, "delete subscription, address: " << adr);
+    LOG4CPLUS_DEBUG (logger, "delete subscription, address: " << adr);
     map_client_relevant_traffic[adr].DeleteSubscription(adr,pkg);
 }
-
-void OnRouteClientPanorama::ProcCronSub(const string& dev_token, int route_id)
-{
-	map<string, ClientObservers>::iterator mapitr;
-	mapitr = map_client_relevant_traffic.find(dev_token);
-	if(mapitr != map_client_relevant_traffic.end())
-	{
-		mapitr->second.ProcCronSub (dev_token, route_id);
-	}
-	else
-	{
-		//subinfo come from cron, client sub info restore
-		char hex_token [DEVICE_TOKEN_SIZE * 2];
-	    HexDump (hex_token, dev_token.c_str(), DEVICE_TOKEN_SIZE);
-	    std::string s_hex_token (hex_token, DEVICE_TOKEN_SIZE * 2);
-
-	    LYMsgOnAir pkg;
-
-		mongo::Query condition = QUERY("dev_token"<<s_hex_token);
-	    auto_ptr<DBClientCursor> cursor = db_client.query(dbns, condition);
-
-	    while (cursor->more())
-	    {
-	    	mongo::BSONObj obj = cursor->next();
-
-			LYTrafficSub ts;
-			std::string ts_str = obj.getField("trafficsub").String();
-			if(! ts.ParseFromString(ts_str))
-			{
-				LOG4CPLUS_DEBUG (logger, "parse fail: " << ts_str.length());
-			}
-
-			LYTrafficSub* p = pkg.mutable_traffic_sub();
-			*p = ts;
-
-			p->set_pub_type (LYTrafficSub::LY_PUB_CRON);
-			LOG4CPLUS_DEBUG (logger, "no sub find. now create sub ");
-	    }
-
-	    //LOG4CPLUS_DEBUG (logger, "no find subscription, create address: " << dev_token);
-	    this->CreateSubscription(dev_token, pkg);
-
-	    //find again
-	    mapitr = map_client_relevant_traffic.find(dev_token);
-		if(mapitr != map_client_relevant_traffic.end())
-		{
-			mapitr->second.ProcCronSub (dev_token, route_id);
-		}
-		else
-		{
-			LOG4CPLUS_ERROR (logger, "cron user data restore fail ");
-		}
-	}
-}
-

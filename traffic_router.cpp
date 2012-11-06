@@ -6,12 +6,9 @@
 #include <queue>
 #include "zhelpers.hpp"
 #include "tss_log.h"
-#include "tss.pb.h"
-
 //#define MAX_MSG_NUM 16
 
 Logger logger;
-static const std::string collector("traffic_collector");
 
 int main (int argc, char *argv[])
 {
@@ -99,28 +96,10 @@ int main (int argc, char *argv[])
             
             LOG4CPLUS_INFO (logger, "schedule to worker: " << worker_addr);
             
-            ::tss::LYMsgOnAir rcv_msg;
-
-            if (!rcv_msg.ParseFromString (request))
-            {
-                LOG4CPLUS_ERROR (logger, "fail to parse from string");
-            }
-
-            if(::tss::LY_TC == rcv_msg.to_party ())
-            { 
-                LOG4CPLUS_INFO (logger, "send to collector");
-				s_sendmore (skt_feed, collector);
-				s_sendmore (skt_feed, client_addr);
-				s_send     (skt_feed, rcv_msg.SerializeAsString());
-            }
-            else
-            {
-            	s_sendmore (skt_feed, worker_addr);
-				s_sendmore (skt_feed, client_addr);
-				s_send     (skt_feed, request);
-            }
+            s_sendmore (skt_feed, worker_addr);
+            s_sendmore (skt_feed, client_addr);
+            s_send     (skt_feed, request);
         }
     }
-
     return 0;
 }
