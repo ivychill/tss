@@ -53,6 +53,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* LYDeviceReport_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   LYDeviceReport_reflection_ = NULL;
+const ::google::protobuf::Descriptor* LYCheckin_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  LYCheckin_reflection_ = NULL;
 const ::google::protobuf::Descriptor* LYSamplePoint_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   LYSamplePoint_reflection_ = NULL;
@@ -62,6 +65,7 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* LYMsgOnAir_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   LYMsgOnAir_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* LYOsType_descriptor_ = NULL;
 const ::google::protobuf::EnumDescriptor* LYDirection_descriptor_ = NULL;
 const ::google::protobuf::EnumDescriptor* LYRetCode_descriptor_ = NULL;
 const ::google::protobuf::EnumDescriptor* LYParty_descriptor_ = NULL;
@@ -276,7 +280,27 @@ void protobuf_AssignDesc_tss_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(LYDeviceReport));
-  LYSamplePoint_descriptor_ = file->message_type(11);
+  LYCheckin_descriptor_ = file->message_type(11);
+  static const int LYCheckin_offsets_[6] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYCheckin, device_model_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYCheckin, os_type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYCheckin, os_version_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYCheckin, ly_major_release_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYCheckin, ly_minor_release_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYCheckin, download_url_),
+  };
+  LYCheckin_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      LYCheckin_descriptor_,
+      LYCheckin::default_instance_,
+      LYCheckin_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYCheckin, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYCheckin, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(LYCheckin));
+  LYSamplePoint_descriptor_ = file->message_type(12);
   static const int LYSamplePoint_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYSamplePoint, sp_coordinate_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYSamplePoint, timestamp_),
@@ -294,7 +318,7 @@ void protobuf_AssignDesc_tss_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(LYSamplePoint));
-  LYTrafficReport_descriptor_ = file->message_type(12);
+  LYTrafficReport_descriptor_ = file->message_type(13);
   static const int LYTrafficReport_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYTrafficReport, points_),
   };
@@ -309,15 +333,19 @@ void protobuf_AssignDesc_tss_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(LYTrafficReport));
-  LYMsgOnAir_descriptor_ = file->message_type(13);
-  static const int LYMsgOnAir_offsets_[11] = {
+  LYMsgOnAir_descriptor_ = file->message_type(14);
+  static const int LYMsgOnAir_offsets_[15] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYMsgOnAir, version_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYMsgOnAir, msg_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYMsgOnAir, timestamp_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYMsgOnAir, from_party_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYMsgOnAir, to_party_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYMsgOnAir, msg_type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYMsgOnAir, snd_id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYMsgOnAir, rcv_id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYMsgOnAir, signature_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYMsgOnAir, ret_code_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYMsgOnAir, checkin_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYMsgOnAir, device_report_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYMsgOnAir, traffic_sub_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYMsgOnAir, traffic_pub_),
@@ -334,10 +362,11 @@ void protobuf_AssignDesc_tss_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(LYMsgOnAir));
-  LYDirection_descriptor_ = file->enum_type(0);
-  LYRetCode_descriptor_ = file->enum_type(1);
-  LYParty_descriptor_ = file->enum_type(2);
-  LYMsgType_descriptor_ = file->enum_type(3);
+  LYOsType_descriptor_ = file->enum_type(0);
+  LYDirection_descriptor_ = file->enum_type(1);
+  LYRetCode_descriptor_ = file->enum_type(2);
+  LYParty_descriptor_ = file->enum_type(3);
+  LYMsgType_descriptor_ = file->enum_type(4);
 }
 
 namespace {
@@ -373,6 +402,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     LYDeviceReport_descriptor_, &LYDeviceReport::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    LYCheckin_descriptor_, &LYCheckin::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     LYSamplePoint_descriptor_, &LYSamplePoint::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     LYTrafficReport_descriptor_, &LYTrafficReport::default_instance());
@@ -405,6 +436,8 @@ void protobuf_ShutdownFile_tss_2eproto() {
   delete LYTrafficPub_reflection_;
   delete LYDeviceReport::default_instance_;
   delete LYDeviceReport_reflection_;
+  delete LYCheckin::default_instance_;
+  delete LYCheckin_reflection_;
   delete LYSamplePoint::default_instance_;
   delete LYSamplePoint_reflection_;
   delete LYTrafficReport::default_instance_;
@@ -455,34 +488,42 @@ void protobuf_AddDesc_tss_2eproto() {
     "s.LYCityTraffic\"\177\n\016LYDeviceReport\022\021\n\tdev"
     "ice_id\030\001 \002(\t\022\024\n\014device_token\030\002 \002(\014\022\023\n\013de"
     "vice_name\030\003 \002(\t\022\024\n\014device_model\030\004 \002(\t\022\031\n"
-    "\021device_os_version\030\005 \002(\t\"n\n\rLYSamplePoin"
-    "t\022(\n\rsp_coordinate\030\001 \002(\0132\021.tss.LYCoordin"
-    "ate\022\021\n\ttimestamp\030\002 \002(\003\022\020\n\010altitude\030\003 \001(\001"
-    "\022\016\n\006course\030\004 \001(\001\"5\n\017LYTrafficReport\022\"\n\006p"
-    "oints\030\001 \003(\0132\022.tss.LYSamplePoint\"\370\002\n\nLYMs"
-    "gOnAir\022\017\n\007version\030\001 \002(\005\022\016\n\006msg_id\030\005 \002(\005\022"
-    "\021\n\ttimestamp\030\006 \002(\003\022 \n\nfrom_party\030\002 \002(\0162\014"
-    ".tss.LYParty\022\036\n\010to_party\030\003 \002(\0162\014.tss.LYP"
-    "arty\022 \n\010msg_type\030\004 \002(\0162\016.tss.LYMsgType\022 "
-    "\n\010ret_code\030\021 \001(\0162\016.tss.LYRetCode\022*\n\rdevi"
-    "ce_report\030\023 \001(\0132\023.tss.LYDeviceReport\022&\n\013"
-    "traffic_sub\030$ \001(\0132\021.tss.LYTrafficSub\022&\n\013"
-    "traffic_pub\0303 \001(\0132\021.tss.LYTrafficPub\022,\n\016"
-    "traffic_report\030A \001(\0132\024.tss.LYTrafficRepo"
-    "rt*\006\010\200\001\020\200\002*\233\001\n\013LYDirection\022\016\n\nLY_UNKNOWN"
-    "\020\000\022\013\n\007LY_EAST\020\001\022\020\n\014LY_NORTHEAST\020\002\022\014\n\010LY_"
-    "NORTH\020\003\022\020\n\014LY_NORTHWEST\020\004\022\013\n\007LY_WEST\020\005\022\020"
-    "\n\014LY_SOUTHWEST\020\006\022\014\n\010LY_SOUTH\020\007\022\020\n\014LY_SOU"
-    "THEAST\020\010*\241\001\n\tLYRetCode\022\016\n\nLY_SUCCESS\020\000\022\034"
-    "\n\027LY_VERSION_IMCOMPATIBLE\020\221\002\022\023\n\016LY_VERSI"
-    "ON_LOW\020\243\002\022\023\n\016LY_PARTY_ERROR\020\251\004\022\026\n\021LY_MSG"
-    "_TYPE_ERROR\020\222\007\022\017\n\nLY_TIMEOUT\020\223\t\022\023\n\016LY_OT"
-    "HER_ERROR\020\231\023*/\n\007LYParty\022\r\n\tLY_CLIENT\020\001\022\n"
-    "\n\006LY_TSS\020\002\022\t\n\005LY_TC\020\003*~\n\tLYMsgType\022\013\n\007LY"
-    "_VOID\020\001\022\017\n\013LY_RET_CODE\020\002\022\022\n\016LY_TRAFFIC_S"
-    "UB\020\004\022\025\n\021LY_TRAFFIC_REPORT\020\005\022\024\n\020LY_DEVICE"
-    "_REPORT\020\006\022\022\n\016LY_TRAFFIC_PUB\020\023B\'\n\032com.luy"
-    "un.easyway95.sharedB\tTSSProtos", 2510);
+    "\021device_os_version\030\005 \002(\t\"\237\001\n\tLYCheckin\022\024"
+    "\n\014device_model\030\001 \001(\t\022\036\n\007os_type\030\002 \002(\0162\r."
+    "tss.LYOsType\022\022\n\nos_version\030\003 \001(\t\022\030\n\020ly_m"
+    "ajor_release\030\004 \002(\005\022\030\n\020ly_minor_release\030\005"
+    " \002(\005\022\024\n\014download_url\030\006 \001(\t\"n\n\rLYSamplePo"
+    "int\022(\n\rsp_coordinate\030\001 \002(\0132\021.tss.LYCoord"
+    "inate\022\021\n\ttimestamp\030\002 \002(\003\022\020\n\010altitude\030\003 \001"
+    "(\001\022\016\n\006course\030\004 \001(\001\"5\n\017LYTrafficReport\022\"\n"
+    "\006points\030\001 \003(\0132\022.tss.LYSamplePoint\"\314\003\n\nLY"
+    "MsgOnAir\022\017\n\007version\030\001 \002(\005\022\016\n\006msg_id\030\005 \002("
+    "\005\022\021\n\ttimestamp\030\006 \002(\003\022 \n\nfrom_party\030\002 \002(\016"
+    "2\014.tss.LYParty\022\036\n\010to_party\030\003 \002(\0162\014.tss.L"
+    "YParty\022 \n\010msg_type\030\004 \002(\0162\016.tss.LYMsgType"
+    "\022\016\n\006snd_id\030\007 \001(\t\022\016\n\006rcv_id\030\010 \001(\t\022\021\n\tsign"
+    "ature\030\t \001(\014\022 \n\010ret_code\030\021 \001(\0162\016.tss.LYRe"
+    "tCode\022\037\n\007checkin\030\022 \001(\0132\016.tss.LYCheckin\022*"
+    "\n\rdevice_report\030\023 \001(\0132\023.tss.LYDeviceRepo"
+    "rt\022&\n\013traffic_sub\030$ \001(\0132\021.tss.LYTrafficS"
+    "ub\022&\n\013traffic_pub\0303 \001(\0132\021.tss.LYTrafficP"
+    "ub\022,\n\016traffic_report\030A \001(\0132\024.tss.LYTraff"
+    "icReport*\006\010\200\001\020\200\002*1\n\010LYOsType\022\016\n\nLY_ANDRO"
+    "ID\020\000\022\n\n\006LY_IOS\020\001\022\t\n\005LY_WP\020\002*\233\001\n\013LYDirect"
+    "ion\022\016\n\nLY_UNKNOWN\020\000\022\013\n\007LY_EAST\020\001\022\020\n\014LY_N"
+    "ORTHEAST\020\002\022\014\n\010LY_NORTH\020\003\022\020\n\014LY_NORTHWEST"
+    "\020\004\022\013\n\007LY_WEST\020\005\022\020\n\014LY_SOUTHWEST\020\006\022\014\n\010LY_"
+    "SOUTH\020\007\022\020\n\014LY_SOUTHEAST\020\010*\241\001\n\tLYRetCode\022"
+    "\016\n\nLY_SUCCESS\020\000\022\034\n\027LY_VERSION_IMCOMPATIB"
+    "LE\020\221\002\022\023\n\016LY_VERSION_LOW\020\243\002\022\023\n\016LY_PARTY_E"
+    "RROR\020\251\004\022\026\n\021LY_MSG_TYPE_ERROR\020\222\007\022\017\n\nLY_TI"
+    "MEOUT\020\223\t\022\023\n\016LY_OTHER_ERROR\020\231\023*/\n\007LYParty"
+    "\022\r\n\tLY_CLIENT\020\001\022\n\n\006LY_TSS\020\002\022\t\n\005LY_TC\020\003*\201"
+    "\001\n\tLYMsgType\022\016\n\nLY_CHECKIN\020\001\022\017\n\013LY_RET_C"
+    "ODE\020\002\022\022\n\016LY_TRAFFIC_SUB\020\004\022\025\n\021LY_TRAFFIC_"
+    "REPORT\020\005\022\024\n\020LY_DEVICE_REPORT\020\006\022\022\n\016LY_TRA"
+    "FFIC_PUB\020\023B\'\n\032com.luyun.easyway95.shared"
+    "B\tTSSProtos", 2811);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "tss.proto", &protobuf_RegisterTypes);
   LYCoordinate::default_instance_ = new LYCoordinate();
@@ -496,6 +537,7 @@ void protobuf_AddDesc_tss_2eproto() {
   LYTrafficSub::default_instance_ = new LYTrafficSub();
   LYTrafficPub::default_instance_ = new LYTrafficPub();
   LYDeviceReport::default_instance_ = new LYDeviceReport();
+  LYCheckin::default_instance_ = new LYCheckin();
   LYSamplePoint::default_instance_ = new LYSamplePoint();
   LYTrafficReport::default_instance_ = new LYTrafficReport();
   LYMsgOnAir::default_instance_ = new LYMsgOnAir();
@@ -510,6 +552,7 @@ void protobuf_AddDesc_tss_2eproto() {
   LYTrafficSub::default_instance_->InitAsDefaultInstance();
   LYTrafficPub::default_instance_->InitAsDefaultInstance();
   LYDeviceReport::default_instance_->InitAsDefaultInstance();
+  LYCheckin::default_instance_->InitAsDefaultInstance();
   LYSamplePoint::default_instance_->InitAsDefaultInstance();
   LYTrafficReport::default_instance_->InitAsDefaultInstance();
   LYMsgOnAir::default_instance_->InitAsDefaultInstance();
@@ -522,6 +565,21 @@ struct StaticDescriptorInitializer_tss_2eproto {
     protobuf_AddDesc_tss_2eproto();
   }
 } static_descriptor_initializer_tss_2eproto_;
+
+const ::google::protobuf::EnumDescriptor* LYOsType_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return LYOsType_descriptor_;
+}
+bool LYOsType_IsValid(int value) {
+  switch(value) {
+    case 0:
+    case 1:
+    case 2:
+      return true;
+    default:
+      return false;
+  }
+}
 
 const ::google::protobuf::EnumDescriptor* LYDirection_descriptor() {
   protobuf_AssignDescriptorsOnce();
@@ -4542,6 +4600,471 @@ void LYDeviceReport::Swap(LYDeviceReport* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
+const int LYCheckin::kDeviceModelFieldNumber;
+const int LYCheckin::kOsTypeFieldNumber;
+const int LYCheckin::kOsVersionFieldNumber;
+const int LYCheckin::kLyMajorReleaseFieldNumber;
+const int LYCheckin::kLyMinorReleaseFieldNumber;
+const int LYCheckin::kDownloadUrlFieldNumber;
+#endif  // !_MSC_VER
+
+LYCheckin::LYCheckin()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void LYCheckin::InitAsDefaultInstance() {
+}
+
+LYCheckin::LYCheckin(const LYCheckin& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void LYCheckin::SharedCtor() {
+  _cached_size_ = 0;
+  device_model_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  os_type_ = 0;
+  os_version_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  ly_major_release_ = 0;
+  ly_minor_release_ = 0;
+  download_url_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+LYCheckin::~LYCheckin() {
+  SharedDtor();
+}
+
+void LYCheckin::SharedDtor() {
+  if (device_model_ != &::google::protobuf::internal::kEmptyString) {
+    delete device_model_;
+  }
+  if (os_version_ != &::google::protobuf::internal::kEmptyString) {
+    delete os_version_;
+  }
+  if (download_url_ != &::google::protobuf::internal::kEmptyString) {
+    delete download_url_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void LYCheckin::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* LYCheckin::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return LYCheckin_descriptor_;
+}
+
+const LYCheckin& LYCheckin::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_tss_2eproto();  return *default_instance_;
+}
+
+LYCheckin* LYCheckin::default_instance_ = NULL;
+
+LYCheckin* LYCheckin::New() const {
+  return new LYCheckin;
+}
+
+void LYCheckin::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_device_model()) {
+      if (device_model_ != &::google::protobuf::internal::kEmptyString) {
+        device_model_->clear();
+      }
+    }
+    os_type_ = 0;
+    if (has_os_version()) {
+      if (os_version_ != &::google::protobuf::internal::kEmptyString) {
+        os_version_->clear();
+      }
+    }
+    ly_major_release_ = 0;
+    ly_minor_release_ = 0;
+    if (has_download_url()) {
+      if (download_url_ != &::google::protobuf::internal::kEmptyString) {
+        download_url_->clear();
+      }
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool LYCheckin::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional string device_model = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_device_model()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->device_model().data(), this->device_model().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(16)) goto parse_os_type;
+        break;
+      }
+      
+      // required .tss.LYOsType os_type = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_os_type:
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (tss::LYOsType_IsValid(value)) {
+            set_os_type(static_cast< tss::LYOsType >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(2, value);
+          }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(26)) goto parse_os_version;
+        break;
+      }
+      
+      // optional string os_version = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_os_version:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_os_version()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->os_version().data(), this->os_version().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(32)) goto parse_ly_major_release;
+        break;
+      }
+      
+      // required int32 ly_major_release = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_ly_major_release:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &ly_major_release_)));
+          set_has_ly_major_release();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(40)) goto parse_ly_minor_release;
+        break;
+      }
+      
+      // required int32 ly_minor_release = 5;
+      case 5: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_ly_minor_release:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &ly_minor_release_)));
+          set_has_ly_minor_release();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(50)) goto parse_download_url;
+        break;
+      }
+      
+      // optional string download_url = 6;
+      case 6: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_download_url:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_download_url()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->download_url().data(), this->download_url().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+      
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void LYCheckin::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional string device_model = 1;
+  if (has_device_model()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->device_model().data(), this->device_model().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->device_model(), output);
+  }
+  
+  // required .tss.LYOsType os_type = 2;
+  if (has_os_type()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      2, this->os_type(), output);
+  }
+  
+  // optional string os_version = 3;
+  if (has_os_version()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->os_version().data(), this->os_version().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      3, this->os_version(), output);
+  }
+  
+  // required int32 ly_major_release = 4;
+  if (has_ly_major_release()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->ly_major_release(), output);
+  }
+  
+  // required int32 ly_minor_release = 5;
+  if (has_ly_minor_release()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->ly_minor_release(), output);
+  }
+  
+  // optional string download_url = 6;
+  if (has_download_url()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->download_url().data(), this->download_url().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      6, this->download_url(), output);
+  }
+  
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* LYCheckin::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional string device_model = 1;
+  if (has_device_model()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->device_model().data(), this->device_model().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->device_model(), target);
+  }
+  
+  // required .tss.LYOsType os_type = 2;
+  if (has_os_type()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      2, this->os_type(), target);
+  }
+  
+  // optional string os_version = 3;
+  if (has_os_version()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->os_version().data(), this->os_version().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        3, this->os_version(), target);
+  }
+  
+  // required int32 ly_major_release = 4;
+  if (has_ly_major_release()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->ly_major_release(), target);
+  }
+  
+  // required int32 ly_minor_release = 5;
+  if (has_ly_minor_release()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->ly_minor_release(), target);
+  }
+  
+  // optional string download_url = 6;
+  if (has_download_url()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->download_url().data(), this->download_url().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        6, this->download_url(), target);
+  }
+  
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int LYCheckin::ByteSize() const {
+  int total_size = 0;
+  
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional string device_model = 1;
+    if (has_device_model()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->device_model());
+    }
+    
+    // required .tss.LYOsType os_type = 2;
+    if (has_os_type()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->os_type());
+    }
+    
+    // optional string os_version = 3;
+    if (has_os_version()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->os_version());
+    }
+    
+    // required int32 ly_major_release = 4;
+    if (has_ly_major_release()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->ly_major_release());
+    }
+    
+    // required int32 ly_minor_release = 5;
+    if (has_ly_minor_release()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->ly_minor_release());
+    }
+    
+    // optional string download_url = 6;
+    if (has_download_url()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->download_url());
+    }
+    
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void LYCheckin::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const LYCheckin* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const LYCheckin*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void LYCheckin::MergeFrom(const LYCheckin& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_device_model()) {
+      set_device_model(from.device_model());
+    }
+    if (from.has_os_type()) {
+      set_os_type(from.os_type());
+    }
+    if (from.has_os_version()) {
+      set_os_version(from.os_version());
+    }
+    if (from.has_ly_major_release()) {
+      set_ly_major_release(from.ly_major_release());
+    }
+    if (from.has_ly_minor_release()) {
+      set_ly_minor_release(from.ly_minor_release());
+    }
+    if (from.has_download_url()) {
+      set_download_url(from.download_url());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void LYCheckin::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void LYCheckin::CopyFrom(const LYCheckin& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool LYCheckin::IsInitialized() const {
+  if ((_has_bits_[0] & 0x0000001a) != 0x0000001a) return false;
+  
+  return true;
+}
+
+void LYCheckin::Swap(LYCheckin* other) {
+  if (other != this) {
+    std::swap(device_model_, other->device_model_);
+    std::swap(os_type_, other->os_type_);
+    std::swap(os_version_, other->os_version_);
+    std::swap(ly_major_release_, other->ly_major_release_);
+    std::swap(ly_minor_release_, other->ly_minor_release_);
+    std::swap(download_url_, other->download_url_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata LYCheckin::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = LYCheckin_descriptor_;
+  metadata.reflection = LYCheckin_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
 const int LYSamplePoint::kSpCoordinateFieldNumber;
 const int LYSamplePoint::kTimestampFieldNumber;
 const int LYSamplePoint::kAltitudeFieldNumber;
@@ -5085,7 +5608,11 @@ const int LYMsgOnAir::kTimestampFieldNumber;
 const int LYMsgOnAir::kFromPartyFieldNumber;
 const int LYMsgOnAir::kToPartyFieldNumber;
 const int LYMsgOnAir::kMsgTypeFieldNumber;
+const int LYMsgOnAir::kSndIdFieldNumber;
+const int LYMsgOnAir::kRcvIdFieldNumber;
+const int LYMsgOnAir::kSignatureFieldNumber;
 const int LYMsgOnAir::kRetCodeFieldNumber;
+const int LYMsgOnAir::kCheckinFieldNumber;
 const int LYMsgOnAir::kDeviceReportFieldNumber;
 const int LYMsgOnAir::kTrafficSubFieldNumber;
 const int LYMsgOnAir::kTrafficPubFieldNumber;
@@ -5098,6 +5625,7 @@ LYMsgOnAir::LYMsgOnAir()
 }
 
 void LYMsgOnAir::InitAsDefaultInstance() {
+  checkin_ = const_cast< ::tss::LYCheckin*>(&::tss::LYCheckin::default_instance());
   device_report_ = const_cast< ::tss::LYDeviceReport*>(&::tss::LYDeviceReport::default_instance());
   traffic_sub_ = const_cast< ::tss::LYTrafficSub*>(&::tss::LYTrafficSub::default_instance());
   traffic_pub_ = const_cast< ::tss::LYTrafficPub*>(&::tss::LYTrafficPub::default_instance());
@@ -5118,7 +5646,11 @@ void LYMsgOnAir::SharedCtor() {
   from_party_ = 1;
   to_party_ = 1;
   msg_type_ = 1;
+  snd_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  rcv_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  signature_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ret_code_ = 0;
+  checkin_ = NULL;
   device_report_ = NULL;
   traffic_sub_ = NULL;
   traffic_pub_ = NULL;
@@ -5131,7 +5663,17 @@ LYMsgOnAir::~LYMsgOnAir() {
 }
 
 void LYMsgOnAir::SharedDtor() {
+  if (snd_id_ != &::google::protobuf::internal::kEmptyString) {
+    delete snd_id_;
+  }
+  if (rcv_id_ != &::google::protobuf::internal::kEmptyString) {
+    delete rcv_id_;
+  }
+  if (signature_ != &::google::protobuf::internal::kEmptyString) {
+    delete signature_;
+  }
   if (this != default_instance_) {
+    delete checkin_;
     delete device_report_;
     delete traffic_sub_;
     delete traffic_pub_;
@@ -5168,12 +5710,30 @@ void LYMsgOnAir::Clear() {
     from_party_ = 1;
     to_party_ = 1;
     msg_type_ = 1;
-    ret_code_ = 0;
-    if (has_device_report()) {
-      if (device_report_ != NULL) device_report_->::tss::LYDeviceReport::Clear();
+    if (has_snd_id()) {
+      if (snd_id_ != &::google::protobuf::internal::kEmptyString) {
+        snd_id_->clear();
+      }
+    }
+    if (has_rcv_id()) {
+      if (rcv_id_ != &::google::protobuf::internal::kEmptyString) {
+        rcv_id_->clear();
+      }
     }
   }
   if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    if (has_signature()) {
+      if (signature_ != &::google::protobuf::internal::kEmptyString) {
+        signature_->clear();
+      }
+    }
+    ret_code_ = 0;
+    if (has_checkin()) {
+      if (checkin_ != NULL) checkin_->::tss::LYCheckin::Clear();
+    }
+    if (has_device_report()) {
+      if (device_report_ != NULL) device_report_->::tss::LYDeviceReport::Clear();
+    }
     if (has_traffic_sub()) {
       if (traffic_sub_ != NULL) traffic_sub_->::tss::LYTrafficSub::Clear();
     }
@@ -5300,6 +5860,54 @@ bool LYMsgOnAir::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(58)) goto parse_snd_id;
+        break;
+      }
+      
+      // optional string snd_id = 7;
+      case 7: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_snd_id:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_snd_id()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->snd_id().data(), this->snd_id().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(66)) goto parse_rcv_id;
+        break;
+      }
+      
+      // optional string rcv_id = 8;
+      case 8: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_rcv_id:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_rcv_id()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->rcv_id().data(), this->rcv_id().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(74)) goto parse_signature;
+        break;
+      }
+      
+      // optional bytes signature = 9;
+      case 9: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_signature:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
+                input, this->mutable_signature()));
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectTag(136)) goto parse_ret_code;
         break;
       }
@@ -5318,6 +5926,20 @@ bool LYMsgOnAir::MergePartialFromCodedStream(
           } else {
             mutable_unknown_fields()->AddVarint(17, value);
           }
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(146)) goto parse_checkin;
+        break;
+      }
+      
+      // optional .tss.LYCheckin checkin = 18;
+      case 18: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_checkin:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_checkin()));
         } else {
           goto handle_uninterpreted;
         }
@@ -5437,10 +6059,40 @@ void LYMsgOnAir::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt64(6, this->timestamp(), output);
   }
   
+  // optional string snd_id = 7;
+  if (has_snd_id()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->snd_id().data(), this->snd_id().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      7, this->snd_id(), output);
+  }
+  
+  // optional string rcv_id = 8;
+  if (has_rcv_id()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->rcv_id().data(), this->rcv_id().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      8, this->rcv_id(), output);
+  }
+  
+  // optional bytes signature = 9;
+  if (has_signature()) {
+    ::google::protobuf::internal::WireFormatLite::WriteBytes(
+      9, this->signature(), output);
+  }
+  
   // optional .tss.LYRetCode ret_code = 17;
   if (has_ret_code()) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
       17, this->ret_code(), output);
+  }
+  
+  // optional .tss.LYCheckin checkin = 18;
+  if (has_checkin()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      18, this->checkin(), output);
   }
   
   // optional .tss.LYDeviceReport device_report = 19;
@@ -5512,10 +6164,44 @@ void LYMsgOnAir::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(6, this->timestamp(), target);
   }
   
+  // optional string snd_id = 7;
+  if (has_snd_id()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->snd_id().data(), this->snd_id().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        7, this->snd_id(), target);
+  }
+  
+  // optional string rcv_id = 8;
+  if (has_rcv_id()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->rcv_id().data(), this->rcv_id().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        8, this->rcv_id(), target);
+  }
+  
+  // optional bytes signature = 9;
+  if (has_signature()) {
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
+        9, this->signature(), target);
+  }
+  
   // optional .tss.LYRetCode ret_code = 17;
   if (has_ret_code()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       17, this->ret_code(), target);
+  }
+  
+  // optional .tss.LYCheckin checkin = 18;
+  if (has_checkin()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        18, this->checkin(), target);
   }
   
   // optional .tss.LYDeviceReport device_report = 19;
@@ -5600,10 +6286,40 @@ int LYMsgOnAir::ByteSize() const {
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->msg_type());
     }
     
+    // optional string snd_id = 7;
+    if (has_snd_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->snd_id());
+    }
+    
+    // optional string rcv_id = 8;
+    if (has_rcv_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->rcv_id());
+    }
+    
+  }
+  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    // optional bytes signature = 9;
+    if (has_signature()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::BytesSize(
+          this->signature());
+    }
+    
     // optional .tss.LYRetCode ret_code = 17;
     if (has_ret_code()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->ret_code());
+    }
+    
+    // optional .tss.LYCheckin checkin = 18;
+    if (has_checkin()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+          this->checkin());
     }
     
     // optional .tss.LYDeviceReport device_report = 19;
@@ -5613,8 +6329,6 @@ int LYMsgOnAir::ByteSize() const {
           this->device_report());
     }
     
-  }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     // optional .tss.LYTrafficSub traffic_sub = 36;
     if (has_traffic_sub()) {
       total_size += 2 +
@@ -5683,14 +6397,26 @@ void LYMsgOnAir::MergeFrom(const LYMsgOnAir& from) {
     if (from.has_msg_type()) {
       set_msg_type(from.msg_type());
     }
+    if (from.has_snd_id()) {
+      set_snd_id(from.snd_id());
+    }
+    if (from.has_rcv_id()) {
+      set_rcv_id(from.rcv_id());
+    }
+  }
+  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
+    if (from.has_signature()) {
+      set_signature(from.signature());
+    }
     if (from.has_ret_code()) {
       set_ret_code(from.ret_code());
+    }
+    if (from.has_checkin()) {
+      mutable_checkin()->::tss::LYCheckin::MergeFrom(from.checkin());
     }
     if (from.has_device_report()) {
       mutable_device_report()->::tss::LYDeviceReport::MergeFrom(from.device_report());
     }
-  }
-  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (from.has_traffic_sub()) {
       mutable_traffic_sub()->::tss::LYTrafficSub::MergeFrom(from.traffic_sub());
     }
@@ -5720,6 +6446,9 @@ void LYMsgOnAir::CopyFrom(const LYMsgOnAir& from) {
 bool LYMsgOnAir::IsInitialized() const {
   if ((_has_bits_[0] & 0x0000003f) != 0x0000003f) return false;
   
+  if (has_checkin()) {
+    if (!this->checkin().IsInitialized()) return false;
+  }
   if (has_device_report()) {
     if (!this->device_report().IsInitialized()) return false;
   }
@@ -5744,7 +6473,11 @@ void LYMsgOnAir::Swap(LYMsgOnAir* other) {
     std::swap(from_party_, other->from_party_);
     std::swap(to_party_, other->to_party_);
     std::swap(msg_type_, other->msg_type_);
+    std::swap(snd_id_, other->snd_id_);
+    std::swap(rcv_id_, other->rcv_id_);
+    std::swap(signature_, other->signature_);
     std::swap(ret_code_, other->ret_code_);
+    std::swap(checkin_, other->checkin_);
     std::swap(device_report_, other->device_report_);
     std::swap(traffic_sub_, other->traffic_sub_);
     std::swap(traffic_pub_, other->traffic_pub_);

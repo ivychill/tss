@@ -10,7 +10,7 @@
 #include "tss.pb.h"
 #include "tss_helper.h"
 #define CITY_NAME "深圳"
-#define ROAD_TRAFFIC_TIMEOUT 30 //minute
+#define ROAD_TRAFFIC_TIMEOUT 15 //minute
 #define CLIENT_REQUEST_TIMEOUT 30 //minute
 #define UPDATE_INTERVAL 120 //second
 #define TRAFFIC_PUB_MSG_ID 255
@@ -20,10 +20,6 @@ using namespace tss;
 //#include <google/protobuf/repeated_field.h>
 //using namespace google::protobuf;
 
-int JsonStringToJsonValue (const string& str_input, Json::Value& jv_roadset);
-int TimeStrToInt(const string& str_time);
-LYDirection DirectionStrToInt(const string& str_direction);
-//void PrepareSndMsg (LYMsgOnAir& msg, LYMsgType mt, int msgid);
 
 class TrafficObserver;
 
@@ -85,32 +81,6 @@ class TrafficObserver
     }
 };
 
-/*
-class EventObserver: public TrafficObserver
-{
-
-};
-
-class AdhocObserver: public TrafficObserver
-{
-
-};
-
-class CronObserver: public TrafficObserver
-{
-	LYCrontab crontab;
-
-public:
-	CronObserver (LYCrontab ct, LYRoute rt)
-	{
-		crontab = ct;
-		route = rt;
-	}
-
-	void Schedule ();
-};
-*/
-
 class ClientObservers
 {
 //    string address;
@@ -127,12 +97,6 @@ public:
     {
     	has_sub_hot_traffic = false;
     }
-    /*
-    TrafficObserver * operator [] (int id)
-    {
-        return map_route_relevant_traffic[id];
-    }
-    */
 };
 
 class OnRouteClientPanorama
@@ -147,19 +111,12 @@ class OnRouteClientPanorama
     int SubAdhocTraffic (string& adr, LYMsgOnAir& pkg);
     int SubCronTraffic (string& adr, LYMsgOnAir& pkg);
     */
-    OnRouteClientPanorama ();
+    void Init ();
 //    void SubHotTraffic (const string& adr, LYMsgOnAir& pkg);
     void CreateSubscription (const string& adr, LYMsgOnAir& pkg);
 //    void UpdateSubscription (const string& adr, LYMsgOnAir& pkg);
     void DeleteSubscription (const string& adr, LYMsgOnAir& pkg);
     int Publicate (zmq::socket_t& skt);
-
-    /*
-    map<int, TrafficObserver *>& operator [] (const string& adr)
-    {
-        return map_client_relevant_traffic[adr];
-    }
-    */
 };
 
 class ClientMsgProcessor
@@ -167,7 +124,8 @@ class ClientMsgProcessor
     string address;
     LYMsgOnAir rcv_msg;
     LYMsgOnAir snd_msg;
-    int ReturnToClient ();
+    int ReturnToClient (LYRetCode ret_code);
+    int ReturnToClient (LYCheckin checkin);
     int PreprocessRcvMsg (string& adr, LYMsgOnAir& msg);
     
   public:
@@ -180,4 +138,13 @@ class ClientMsgProcessor
     }
 
     int ProcessRcvMsg (string& adr, LYMsgOnAir& msg);
+};
+
+class VersionManager
+{
+	vector<LYCheckin> vec_latest_version;
+
+public:
+	void Init ();
+	bool GetLatestVersion (LYCheckin& checkin);
 };

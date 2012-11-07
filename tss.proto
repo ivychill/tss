@@ -27,6 +27,12 @@ message LYRoute {
     repeated LYSegment segments = 2;
 }
 
+enum LYOsType {
+    LY_ANDROID = 0;
+    LY_IOS = 1; 
+    LY_WP = 2; 
+}
+
 enum LYDirection {
     LY_UNKNOWN = 0;
     LY_EAST = 1; LY_NORTHEAST = 2;
@@ -34,15 +40,6 @@ enum LYDirection {
     LY_WEST = 5; LY_SOUTHWEST = 6; 
     LY_SOUTH = 7; LY_SOUTHEAST = 8;
 }
-
-//message LYTrafficReport {
-//    optional LYSegment segment = 1;
-//    optional LYCoordinate location = 2;
-//    optional int64 timestamp = 3;
-//    required LYDirection direction = 4;
-//    required int32 speed = 5;
-//    optional int32 acceleration = 6;
-//}
 
 message LYSegmentTraffic {
     required LYSegment segment = 1;
@@ -113,12 +110,23 @@ message LYTrafficPub {
     required LYCityTraffic city_traffic = 2;
 }
 
+//LYDeviceReport is dedicated for iOS
 message LYDeviceReport {
     required string device_id = 1;
     required bytes device_token = 2;
     required string device_name = 3;
     required string device_model = 4;
     required string device_os_version = 5;
+}
+
+//C-S间交互的第一条消息，来回都是这个协议
+message LYCheckin {
+    optional string device_model = 1; //设备型号，如iPhone, G7
+    required LYOsType os_type = 2; //设备类型，如Android, iOS, WP
+    optional string os_version = 3; //操作系统版本，如2.3, 4.0.1, 6.0.1
+    required int32 ly_major_release = 4; //路易95大版本，如果有变化，必须升级
+    required int32 ly_minor_release = 5; //路易95小版本，如果有变化，可以不升级
+    optional string download_url = 6; //路易95下载地址
 }
 
 message LYSamplePoint {
@@ -130,7 +138,6 @@ message LYSamplePoint {
 
 message LYTrafficReport {
     repeated LYSamplePoint points = 1; 	//采样点列表
-
 }
 
 // 返回代码说明
@@ -156,25 +163,31 @@ enum LYParty {
 }
 
 enum LYMsgType {
-    LY_VOID = 0X01;
-    LY_RET_CODE = 0x02;	//message RetCode
-    LY_TRAFFIC_SUB  = 0x04;	//message TrafficSub
-    LY_TRAFFIC_REPORT = 0x05;	//message TrafficReport
-    LY_DEVICE_REPORT = 0x06;	//message DeviceReport
-    LY_TRAFFIC_PUB = 0x13;	//message TrafficPub
+    LY_CHECKIN = 0X01;  //message LYCheckin
+    LY_RET_CODE = 0x02;	//message LYRetCode
+    LY_TRAFFIC_SUB  = 0x04;	//message LYTrafficSub
+    LY_TRAFFIC_REPORT = 0x05;	//message LYTrafficReport
+    LY_DEVICE_REPORT = 0x06;	//message LYDeviceReport
+    LY_TRAFFIC_PUB = 0x13;	//message LYTrafficPub
 }
 
+//用于router-feed间通信
 message LYMsgOnAir {
-    required int32 version = 1; //only value 1 supported till 2012-08-30, 2012-12-30 hopehully
+    required int32 version = 1;
     required int32 msg_id = 5;
     required int64 timestamp = 6;
     required LYParty from_party = 2;
     required LYParty to_party = 3;
     required LYMsgType msg_type = 4;
+    //这两个字段为新加，为客户端寻址用，发送时客户端设snd_id为device_id
+    optional string snd_id = 7;
+    optional string rcv_id = 8;
+    optional bytes signature = 9;
 
     extensions 128 to 255;
 
     optional LYRetCode ret_code = 0x11;
+    optional LYCheckin checkin = 0x12;
     optional LYDeviceReport device_report = 0x13; //to be moved to HTTP:roadclouding
     optional LYTrafficSub traffic_sub = 0x24;
     optional LYTrafficPub traffic_pub = 0x33;

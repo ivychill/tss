@@ -1,6 +1,7 @@
 //
 //
 
+#include "tss_helper.h"
 #include "tss_log.h"
 
 char *find_file_name(const char *name)
@@ -29,31 +30,11 @@ char* GetLogFile (char *file_name)
     return LogFile;
 }
 
-char * GetCfgFile ()
-{
-    char* CfgFile = new char[64];
-    char *tss_home = getenv("TSS_HOME");
-    if (tss_home != NULL)
-    {
-        sprintf (CfgFile, "%s/etc/log4cplus.cfg", tss_home);
-    }
-    else
-    {
-        sprintf (CfgFile, "etc/log4cplus.cfg");
-    }
-
-    if (access(CfgFile, R_OK) == 0)
-    {
-        return CfgFile;
-    }
-    return NULL;
-}
-
 void InitLog (char *argv0, Logger& log)
 {
     char *file_name = find_file_name (argv0);
     char* LogFile = GetLogFile (file_name);
-    char* CfgFile = GetCfgFile ();
+    char* CfgFile = GetCfgFile ("log4cplus.cfg");
 
     if (CfgFile == NULL)
     {

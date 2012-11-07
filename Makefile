@@ -1,4 +1,4 @@
-#started with '#' are comments
+ #started with '#' are comments
 JSON_HOME=/home/chenfeng/jsoncpp-src-0.5.0
 #INC=-I$(JSON_HOME)/include/json
 LIB=-L$(JSON_HOME)/libs/linux-gcc-4.6 -lzmq -llog4cplus -lprotobuf -ljson_linux-gcc-4.6_libmt
@@ -15,7 +15,7 @@ CC_FLAG=-Wall
 
 #/libjson_linux-gcc-4.2.1_libmt.a
 
-all: traffic_router traffic_forward traffic_feed traffic_apns test_probe test_client test_remote 
+all: proto traffic_router traffic_forward traffic_feed traffic_apns test_probe test_client test_remote 
 
 .cpp.o:
 	@echo "Compile $(OBJ) begin......"
@@ -27,37 +27,42 @@ all: traffic_router traffic_forward traffic_feed traffic_apns test_probe test_cl
 	$(CC) $(CC_FLAG) -c $<
 	@echo "Compile $(OBJ) end......"
 
-traffic_router: traffic_router.o tss_log.o tss.pb.o
+proto: tss.proto
+	@echo "compile proto begin......"
+	protoc -I. --cpp_out=. $^
+	@echo "compile proto end......"
+
+traffic_router: traffic_router.o tss_log.o tss_helper.o tss.pb.o tss_helper.h tss.pb.h
 	@echo "Link traffic_router begin......"
-	$(CC) $(CC_FLAG) -o $(BIN_PATH)/$@ $^ $(LIB)
+	$(CC) $(CC_FLAG) -o $(BIN_PATH)/$@ $^ $(LIB) $(LIB_ADD)
 	@echo "Link traffic_router end......"
 
-traffic_feed: traffic_feed_main.o traffic_feed_be.o traffic_feed_fe.o traffic_feed_cron.o tss.pb.o tss_log.o tss_helper.o traffic_feed.h
+traffic_feed: traffic_feed_main.o traffic_feed_be.o traffic_feed_fe.o tss_log.o tss_helper.o tss.pb.o traffic_feed.h tss_helper.h tss.pb.h
 	@echo "Link traffic_feed begin......"
 	$(CC) $(CC_FLAG) -o $(BIN_PATH)/$@ $^ $(LIB) $(LIB_ADD)
 	@echo "Link traffic_feed end......"
-
-traffic_apns: traffic_apns.o tss_helper.o tss_log.o traffic_apns.h
-	@echo "Link traffic_apns begin......"
-	$(CC) $(CC_FLAG) -o $(BIN_PATH)/$@ $^ $(LIB) $(LIB_ADD) -lssl
-	@echo "Link traffic_apns end......"
 
 traffic_forward: traffic_forward.o
 	@echo "Link traffic_forward begin......"
 	$(CC) $(CC_FLAG) -o $(BIN_PATH)/$@ $^ $(LIB)
 	@echo "Link traffic_forward end......"
+	
+traffic_apns: traffic_apns.o tss_log.o tss_helper.o tss.pb.o traffic_apns.h tss_helper.h tss.pb.h
+	@echo "Link traffic_apns begin......"
+	$(CC) $(CC_FLAG) -o $(BIN_PATH)/$@ $^ $(LIB) $(LIB_ADD) -lssl
+	@echo "Link traffic_apns end......"
 
 test_probe: test_probe.o
 	@echo "Link test_probe begin......"
 	$(CC) $(CC_FLAG) -o $(BIN_PATH)/$@ $^ $(LIB)
 	@echo "Link test_probe end......"
 
-test_client: test_client.o tss.pb.o tss_log.o tss_helper.o
+test_client: test_client.o tss.pb.o tss_log.o tss_helper.o tss_helper.h tss.pb.h
 	@echo "Link test_client begin......"
 	$(CC) $(CC_FLAG) -o $(BIN_PATH)/$@ $^ $(LIB) $(LIB_ADD)
 	@echo "Link test_client end......"
 
-test_remote: test_remote.o tss.pb.o tss_log.o tss_helper.o
+test_remote: test_remote.o tss.pb.o tss_log.o tss_helper.o tss_helper.h tss.pb.h
 	@echo "Link test_remote begin......"
 	$(CC) $(CC_FLAG) -o $(BIN_PATH)/$@ $^ $(LIB) $(LIB_ADD)
 	@echo "Link test_remote end......"

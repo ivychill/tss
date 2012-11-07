@@ -113,7 +113,7 @@ void *worker_routine (void *arg)
 
     zmq::socket_t skt_feed (*context, ZMQ_DEALER);
     skt_feed.setsockopt (ZMQ_IDENTITY, client_identity, strlen (client_identity));
-    skt_feed.connect ("tcp://42.121.99.247:7001");
+    skt_feed.connect ("tcp://42.121.99.247:6001");
 
     //  Initialize poll set
     zmq::pollitem_t items [] = {

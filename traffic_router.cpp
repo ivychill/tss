@@ -3,16 +3,68 @@
 //
 // Chen Feng < ivychill@163.com>
 
-#include <queue>
+#include <map>
 #include "zhelpers.hpp"
 #include "tss_log.h"
+#include "tss.pb.h"
+using namespace std;
+using namespace tss;
+#define CHECK_ACTIVE_INTERVAL 3600*24	//每天检查一次
+#define ACTIVE_TIMEOUT 3600*24*7		//一周上过线即为活跃用户
+#define SHARED_SECRET "LYUN"
+
 //#define MAX_MSG_NUM 16
 
+struct RouteSession
+{
+	string address;		//zmq_id，是由zmq随机分配的，同一个客户端重新连接后会发生变化
+	int    last_update;
+};
+
 Logger logger;
+static const std::string collector("traffic_collector");
+map <string, RouteSession> route_adapter;	//第一个参数：snd_id，即客户端的device_id
+
+/*
+int genCheckSum(string payload)
+{
+	if (payload == NULL || payload.length == 0) {
+		return 0;
+	}
+	string checkSum = SHARED_SECRET;
+	int howManyWords = payload.length/4;
+	int remainder = payload.length % 4;
+
+	for (int i=0; i<howManyWords; i++) {
+		for (int j=0; j<4; j++) {
+			checkSum[j] = checkSum[j] ^ payload[i*4+j];
+		}
+	}
+	if (remainder != 0) {
+		int j;
+		for (j=0; j<remainder; j++) {
+			checkSum[j] = checkSum[j] ^ payload[howManyWords*4+j];
+		}
+		for (; j<4; j++) {
+			checkSum[j] = (checkSum[j]) ^ (char)0;
+		}
+	}
+
+	int value = 0;
+	int mask = 0xff;
+	for (int j=0; j<4; j++) {
+		value <<= 8;
+		int tmpValue = checkSum[j] & mask;
+		value = value | tmpValue;
+	}
+	return value;
+}
+*/
 
 int main (int argc, char *argv[])
 {
     InitLog (argv[0], logger);
+    time_t last_check = time (NULL);
 
     // Prepare our context and sockets
     zmq::context_t context(1);
@@ -23,8 +75,8 @@ int main (int argc, char *argv[])
     //skt_client.setsockopt (ZMQ_IDENTITY, &msg_num, sizeof msg_num);
     //skt_feed.setsockopt (ZMQ_IDENTITY, &msg_num, sizeof msg_num);
     
-    skt_client.bind("tcp://*:7001");
-    skt_feed.bind("tcp://127.0.0.1:7002");
+    skt_client.bind("tcp://*:6001");
+    skt_feed.bind("tcp://127.0.0.1:6002");
 
     //  Logic of LRU loop
     //  - Poll skt_feed always, skt_client only if 1+ worker ready
@@ -74,10 +126,25 @@ int main (int argc, char *argv[])
             LOG4CPLUS_INFO (logger, "client address from worker: " << client_addr); 
 
             if (client_addr.compare("READY") != 0)
-            {               
+            {
                 std::string reply = s_recv (skt_feed);
+            	std::string to_address = client_addr;
+
+                //V2:如果能在route_adapter中找到，说明是新版本的客户端，则把地址从snd_id转为zmq_id。否则是旧版本客户端，不作转换
+    			map<string, RouteSession>::iterator it;
+            	it = route_adapter.find (client_addr);
+            	if (it != route_adapter.end())
+            	{
+            		to_address = it -> second.address;
+            		LOG4CPLUS_INFO (logger, "V2 client, rcv_id: " << client_addr << ", zmq_id: " << to_address);
+            	}
+            	else
+            	{
+            		LOG4CPLUS_INFO (logger, "V1 client, address: " << client_addr);
+            	}
+
                 //LOG4CPLUS_DEBUG (logger, "reply from worker: " << reply);
-                s_sendmore (skt_client, client_addr);
+                s_sendmore (skt_client, to_address);
                 s_send     (skt_client, reply);
             }
         }
@@ -85,20 +152,74 @@ int main (int argc, char *argv[])
         //  Handle client activity on skt_client
         if (items [1].revents & ZMQ_POLLIN)
         {
-        	
             //  Now get next client request, route to LRU worker
             //  Client request is [address] [request]
-            std::string client_addr = s_recv (skt_client); 
+            std::string client_addr = s_recv (skt_client);
             LOG4CPLUS_INFO (logger, "address from client: " << client_addr);
+            std::string from_addr = client_addr;
  
             std::string request = s_recv (skt_client);
-            LOG4CPLUS_DEBUG (logger, "request from client: " << request);
+//            LOG4CPLUS_DEBUG (logger, "request from client: " << request);
+//            LOG4CPLUS_INFO (logger, "schedule to worker: " << worker_addr);
             
-            LOG4CPLUS_INFO (logger, "schedule to worker: " << worker_addr);
-            
-            s_sendmore (skt_feed, worker_addr);
-            s_sendmore (skt_feed, client_addr);
-            s_send     (skt_feed, request);
+            LYMsgOnAir rcv_msg;
+
+            if (!rcv_msg.ParseFromString (request))
+            {
+                LOG4CPLUS_ERROR (logger, "fail to parse from string");
+            }
+
+            else
+            {
+            	//由于客户端设置zmq_id有问题，因此客户端不设固定的zmq_id。新的寻址方案以snd_id，即device_id为关键字。因此要把zmq_id转为snd_id发给feed。
+            	if (rcv_msg.has_snd_id ())
+            	{
+            		string snd_id = rcv_msg.snd_id ();
+            		route_adapter[snd_id].address = client_addr;
+            		from_addr = snd_id;
+            		time_t now = time (NULL);
+            		route_adapter[snd_id].last_update = now;
+            		LOG4CPLUS_INFO (logger, "snd_id: " << snd_id << ", address: " << client_addr << ", timestamp: " << ::ctime(&now));
+
+            		if (now >= last_check + CHECK_ACTIVE_INTERVAL)
+            		{
+            			last_check = now;
+            			std::map<string, RouteSession>::iterator it;
+            			for ( it = route_adapter.begin(); it != route_adapter.end(); it++ )
+            			{
+            				if ( now >= it->second.last_update + ACTIVE_TIMEOUT)
+            				{
+//            					route_adapter.erase (it);	//非活跃用户剔除。如果没有用户上报路况，不一定合适。
+            					LOG4CPLUS_INFO (logger, "inactive user: " << it->first);
+            				}
+            			}
+            			LOG4CPLUS_INFO (logger, "active user number: " << route_adapter.size ());
+            		}
+            	}
+
+            	else
+            	{
+            		LOG4CPLUS_INFO (logger, "old version client, address: " << client_addr);
+            	}
+
+            	if (::tss::LY_TC == rcv_msg.to_party ())
+                {
+                    LOG4CPLUS_INFO (logger, "send to collector");
+                    s_sendmore (skt_feed, collector);
+                    s_sendmore (skt_feed, from_addr);
+                    s_send     (skt_feed, request);
+                }
+                else if (::tss::LY_TSS == rcv_msg.to_party ())
+                {
+                    s_sendmore (skt_feed, worker_addr);
+                    s_sendmore (skt_feed, from_addr);
+                    s_send     (skt_feed, request);
+                }
+                else
+                {
+                	LOG4CPLUS_INFO (logger, "unknown to_party");
+                }
+            }
         }
     }
     return 0;

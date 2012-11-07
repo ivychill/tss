@@ -43,6 +43,7 @@ class LYCrontab;
 class LYTrafficSub;
 class LYTrafficPub;
 class LYDeviceReport;
+class LYCheckin;
 class LYSamplePoint;
 class LYTrafficReport;
 class LYMsgOnAir;
@@ -108,6 +109,26 @@ inline bool LYTrafficSub_LYPubType_Parse(
     const ::std::string& name, LYTrafficSub_LYPubType* value) {
   return ::google::protobuf::internal::ParseNamedEnum<LYTrafficSub_LYPubType>(
     LYTrafficSub_LYPubType_descriptor(), name, value);
+}
+enum LYOsType {
+  LY_ANDROID = 0,
+  LY_IOS = 1,
+  LY_WP = 2
+};
+bool LYOsType_IsValid(int value);
+const LYOsType LYOsType_MIN = LY_ANDROID;
+const LYOsType LYOsType_MAX = LY_WP;
+const int LYOsType_ARRAYSIZE = LYOsType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* LYOsType_descriptor();
+inline const ::std::string& LYOsType_Name(LYOsType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    LYOsType_descriptor(), value);
+}
+inline bool LYOsType_Parse(
+    const ::std::string& name, LYOsType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<LYOsType>(
+    LYOsType_descriptor(), name, value);
 }
 enum LYDirection {
   LY_UNKNOWN = 0,
@@ -180,7 +201,7 @@ inline bool LYParty_Parse(
     LYParty_descriptor(), name, value);
 }
 enum LYMsgType {
-  LY_VOID = 1,
+  LY_CHECKIN = 1,
   LY_RET_CODE = 2,
   LY_TRAFFIC_SUB = 4,
   LY_TRAFFIC_REPORT = 5,
@@ -188,7 +209,7 @@ enum LYMsgType {
   LY_TRAFFIC_PUB = 19
 };
 bool LYMsgType_IsValid(int value);
-const LYMsgType LYMsgType_MIN = LY_VOID;
+const LYMsgType LYMsgType_MIN = LY_CHECKIN;
 const LYMsgType LYMsgType_MAX = LY_TRAFFIC_PUB;
 const int LYMsgType_ARRAYSIZE = LYMsgType_MAX + 1;
 
@@ -1574,6 +1595,150 @@ class LYDeviceReport : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class LYCheckin : public ::google::protobuf::Message {
+ public:
+  LYCheckin();
+  virtual ~LYCheckin();
+  
+  LYCheckin(const LYCheckin& from);
+  
+  inline LYCheckin& operator=(const LYCheckin& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const LYCheckin& default_instance();
+  
+  void Swap(LYCheckin* other);
+  
+  // implements Message ----------------------------------------------
+  
+  LYCheckin* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const LYCheckin& from);
+  void MergeFrom(const LYCheckin& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // optional string device_model = 1;
+  inline bool has_device_model() const;
+  inline void clear_device_model();
+  static const int kDeviceModelFieldNumber = 1;
+  inline const ::std::string& device_model() const;
+  inline void set_device_model(const ::std::string& value);
+  inline void set_device_model(const char* value);
+  inline void set_device_model(const char* value, size_t size);
+  inline ::std::string* mutable_device_model();
+  inline ::std::string* release_device_model();
+  
+  // required .tss.LYOsType os_type = 2;
+  inline bool has_os_type() const;
+  inline void clear_os_type();
+  static const int kOsTypeFieldNumber = 2;
+  inline tss::LYOsType os_type() const;
+  inline void set_os_type(tss::LYOsType value);
+  
+  // optional string os_version = 3;
+  inline bool has_os_version() const;
+  inline void clear_os_version();
+  static const int kOsVersionFieldNumber = 3;
+  inline const ::std::string& os_version() const;
+  inline void set_os_version(const ::std::string& value);
+  inline void set_os_version(const char* value);
+  inline void set_os_version(const char* value, size_t size);
+  inline ::std::string* mutable_os_version();
+  inline ::std::string* release_os_version();
+  
+  // required int32 ly_major_release = 4;
+  inline bool has_ly_major_release() const;
+  inline void clear_ly_major_release();
+  static const int kLyMajorReleaseFieldNumber = 4;
+  inline ::google::protobuf::int32 ly_major_release() const;
+  inline void set_ly_major_release(::google::protobuf::int32 value);
+  
+  // required int32 ly_minor_release = 5;
+  inline bool has_ly_minor_release() const;
+  inline void clear_ly_minor_release();
+  static const int kLyMinorReleaseFieldNumber = 5;
+  inline ::google::protobuf::int32 ly_minor_release() const;
+  inline void set_ly_minor_release(::google::protobuf::int32 value);
+  
+  // optional string download_url = 6;
+  inline bool has_download_url() const;
+  inline void clear_download_url();
+  static const int kDownloadUrlFieldNumber = 6;
+  inline const ::std::string& download_url() const;
+  inline void set_download_url(const ::std::string& value);
+  inline void set_download_url(const char* value);
+  inline void set_download_url(const char* value, size_t size);
+  inline ::std::string* mutable_download_url();
+  inline ::std::string* release_download_url();
+  
+  // @@protoc_insertion_point(class_scope:tss.LYCheckin)
+ private:
+  inline void set_has_device_model();
+  inline void clear_has_device_model();
+  inline void set_has_os_type();
+  inline void clear_has_os_type();
+  inline void set_has_os_version();
+  inline void clear_has_os_version();
+  inline void set_has_ly_major_release();
+  inline void clear_has_ly_major_release();
+  inline void set_has_ly_minor_release();
+  inline void clear_has_ly_minor_release();
+  inline void set_has_download_url();
+  inline void clear_has_download_url();
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  ::std::string* device_model_;
+  ::std::string* os_version_;
+  int os_type_;
+  ::google::protobuf::int32 ly_major_release_;
+  ::std::string* download_url_;
+  ::google::protobuf::int32 ly_minor_release_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_tss_2eproto();
+  friend void protobuf_AssignDesc_tss_2eproto();
+  friend void protobuf_ShutdownFile_tss_2eproto();
+  
+  void InitAsDefaultInstance();
+  static LYCheckin* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class LYSamplePoint : public ::google::protobuf::Message {
  public:
   LYSamplePoint();
@@ -1868,12 +2033,53 @@ class LYMsgOnAir : public ::google::protobuf::Message {
   inline tss::LYMsgType msg_type() const;
   inline void set_msg_type(tss::LYMsgType value);
   
+  // optional string snd_id = 7;
+  inline bool has_snd_id() const;
+  inline void clear_snd_id();
+  static const int kSndIdFieldNumber = 7;
+  inline const ::std::string& snd_id() const;
+  inline void set_snd_id(const ::std::string& value);
+  inline void set_snd_id(const char* value);
+  inline void set_snd_id(const char* value, size_t size);
+  inline ::std::string* mutable_snd_id();
+  inline ::std::string* release_snd_id();
+  
+  // optional string rcv_id = 8;
+  inline bool has_rcv_id() const;
+  inline void clear_rcv_id();
+  static const int kRcvIdFieldNumber = 8;
+  inline const ::std::string& rcv_id() const;
+  inline void set_rcv_id(const ::std::string& value);
+  inline void set_rcv_id(const char* value);
+  inline void set_rcv_id(const char* value, size_t size);
+  inline ::std::string* mutable_rcv_id();
+  inline ::std::string* release_rcv_id();
+  
+  // optional bytes signature = 9;
+  inline bool has_signature() const;
+  inline void clear_signature();
+  static const int kSignatureFieldNumber = 9;
+  inline const ::std::string& signature() const;
+  inline void set_signature(const ::std::string& value);
+  inline void set_signature(const char* value);
+  inline void set_signature(const void* value, size_t size);
+  inline ::std::string* mutable_signature();
+  inline ::std::string* release_signature();
+  
   // optional .tss.LYRetCode ret_code = 17;
   inline bool has_ret_code() const;
   inline void clear_ret_code();
   static const int kRetCodeFieldNumber = 17;
   inline tss::LYRetCode ret_code() const;
   inline void set_ret_code(tss::LYRetCode value);
+  
+  // optional .tss.LYCheckin checkin = 18;
+  inline bool has_checkin() const;
+  inline void clear_checkin();
+  static const int kCheckinFieldNumber = 18;
+  inline const ::tss::LYCheckin& checkin() const;
+  inline ::tss::LYCheckin* mutable_checkin();
+  inline ::tss::LYCheckin* release_checkin();
   
   // optional .tss.LYDeviceReport device_report = 19;
   inline bool has_device_report() const;
@@ -1922,8 +2128,16 @@ class LYMsgOnAir : public ::google::protobuf::Message {
   inline void clear_has_to_party();
   inline void set_has_msg_type();
   inline void clear_has_msg_type();
+  inline void set_has_snd_id();
+  inline void clear_has_snd_id();
+  inline void set_has_rcv_id();
+  inline void clear_has_rcv_id();
+  inline void set_has_signature();
+  inline void clear_has_signature();
   inline void set_has_ret_code();
   inline void clear_has_ret_code();
+  inline void set_has_checkin();
+  inline void clear_has_checkin();
   inline void set_has_device_report();
   inline void clear_has_device_report();
   inline void set_has_traffic_sub();
@@ -1942,15 +2156,19 @@ class LYMsgOnAir : public ::google::protobuf::Message {
   ::google::protobuf::int64 timestamp_;
   int from_party_;
   int to_party_;
+  ::std::string* snd_id_;
+  ::std::string* rcv_id_;
   int msg_type_;
   int ret_code_;
+  ::std::string* signature_;
+  ::tss::LYCheckin* checkin_;
   ::tss::LYDeviceReport* device_report_;
   ::tss::LYTrafficSub* traffic_sub_;
   ::tss::LYTrafficPub* traffic_pub_;
   ::tss::LYTrafficReport* traffic_report_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(11 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(15 + 31) / 32];
   
   friend void  protobuf_AddDesc_tss_2eproto();
   friend void protobuf_AssignDesc_tss_2eproto();
@@ -3513,6 +3731,251 @@ inline ::std::string* LYDeviceReport::release_device_os_version() {
 
 // -------------------------------------------------------------------
 
+// LYCheckin
+
+// optional string device_model = 1;
+inline bool LYCheckin::has_device_model() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void LYCheckin::set_has_device_model() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void LYCheckin::clear_has_device_model() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void LYCheckin::clear_device_model() {
+  if (device_model_ != &::google::protobuf::internal::kEmptyString) {
+    device_model_->clear();
+  }
+  clear_has_device_model();
+}
+inline const ::std::string& LYCheckin::device_model() const {
+  return *device_model_;
+}
+inline void LYCheckin::set_device_model(const ::std::string& value) {
+  set_has_device_model();
+  if (device_model_ == &::google::protobuf::internal::kEmptyString) {
+    device_model_ = new ::std::string;
+  }
+  device_model_->assign(value);
+}
+inline void LYCheckin::set_device_model(const char* value) {
+  set_has_device_model();
+  if (device_model_ == &::google::protobuf::internal::kEmptyString) {
+    device_model_ = new ::std::string;
+  }
+  device_model_->assign(value);
+}
+inline void LYCheckin::set_device_model(const char* value, size_t size) {
+  set_has_device_model();
+  if (device_model_ == &::google::protobuf::internal::kEmptyString) {
+    device_model_ = new ::std::string;
+  }
+  device_model_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* LYCheckin::mutable_device_model() {
+  set_has_device_model();
+  if (device_model_ == &::google::protobuf::internal::kEmptyString) {
+    device_model_ = new ::std::string;
+  }
+  return device_model_;
+}
+inline ::std::string* LYCheckin::release_device_model() {
+  clear_has_device_model();
+  if (device_model_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = device_model_;
+    device_model_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+
+// required .tss.LYOsType os_type = 2;
+inline bool LYCheckin::has_os_type() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void LYCheckin::set_has_os_type() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void LYCheckin::clear_has_os_type() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void LYCheckin::clear_os_type() {
+  os_type_ = 0;
+  clear_has_os_type();
+}
+inline tss::LYOsType LYCheckin::os_type() const {
+  return static_cast< tss::LYOsType >(os_type_);
+}
+inline void LYCheckin::set_os_type(tss::LYOsType value) {
+  GOOGLE_DCHECK(tss::LYOsType_IsValid(value));
+  set_has_os_type();
+  os_type_ = value;
+}
+
+// optional string os_version = 3;
+inline bool LYCheckin::has_os_version() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void LYCheckin::set_has_os_version() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void LYCheckin::clear_has_os_version() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void LYCheckin::clear_os_version() {
+  if (os_version_ != &::google::protobuf::internal::kEmptyString) {
+    os_version_->clear();
+  }
+  clear_has_os_version();
+}
+inline const ::std::string& LYCheckin::os_version() const {
+  return *os_version_;
+}
+inline void LYCheckin::set_os_version(const ::std::string& value) {
+  set_has_os_version();
+  if (os_version_ == &::google::protobuf::internal::kEmptyString) {
+    os_version_ = new ::std::string;
+  }
+  os_version_->assign(value);
+}
+inline void LYCheckin::set_os_version(const char* value) {
+  set_has_os_version();
+  if (os_version_ == &::google::protobuf::internal::kEmptyString) {
+    os_version_ = new ::std::string;
+  }
+  os_version_->assign(value);
+}
+inline void LYCheckin::set_os_version(const char* value, size_t size) {
+  set_has_os_version();
+  if (os_version_ == &::google::protobuf::internal::kEmptyString) {
+    os_version_ = new ::std::string;
+  }
+  os_version_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* LYCheckin::mutable_os_version() {
+  set_has_os_version();
+  if (os_version_ == &::google::protobuf::internal::kEmptyString) {
+    os_version_ = new ::std::string;
+  }
+  return os_version_;
+}
+inline ::std::string* LYCheckin::release_os_version() {
+  clear_has_os_version();
+  if (os_version_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = os_version_;
+    os_version_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+
+// required int32 ly_major_release = 4;
+inline bool LYCheckin::has_ly_major_release() const {
+  return (_has_bits_[0] & 0x00000008u) != 0;
+}
+inline void LYCheckin::set_has_ly_major_release() {
+  _has_bits_[0] |= 0x00000008u;
+}
+inline void LYCheckin::clear_has_ly_major_release() {
+  _has_bits_[0] &= ~0x00000008u;
+}
+inline void LYCheckin::clear_ly_major_release() {
+  ly_major_release_ = 0;
+  clear_has_ly_major_release();
+}
+inline ::google::protobuf::int32 LYCheckin::ly_major_release() const {
+  return ly_major_release_;
+}
+inline void LYCheckin::set_ly_major_release(::google::protobuf::int32 value) {
+  set_has_ly_major_release();
+  ly_major_release_ = value;
+}
+
+// required int32 ly_minor_release = 5;
+inline bool LYCheckin::has_ly_minor_release() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void LYCheckin::set_has_ly_minor_release() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void LYCheckin::clear_has_ly_minor_release() {
+  _has_bits_[0] &= ~0x00000010u;
+}
+inline void LYCheckin::clear_ly_minor_release() {
+  ly_minor_release_ = 0;
+  clear_has_ly_minor_release();
+}
+inline ::google::protobuf::int32 LYCheckin::ly_minor_release() const {
+  return ly_minor_release_;
+}
+inline void LYCheckin::set_ly_minor_release(::google::protobuf::int32 value) {
+  set_has_ly_minor_release();
+  ly_minor_release_ = value;
+}
+
+// optional string download_url = 6;
+inline bool LYCheckin::has_download_url() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void LYCheckin::set_has_download_url() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void LYCheckin::clear_has_download_url() {
+  _has_bits_[0] &= ~0x00000020u;
+}
+inline void LYCheckin::clear_download_url() {
+  if (download_url_ != &::google::protobuf::internal::kEmptyString) {
+    download_url_->clear();
+  }
+  clear_has_download_url();
+}
+inline const ::std::string& LYCheckin::download_url() const {
+  return *download_url_;
+}
+inline void LYCheckin::set_download_url(const ::std::string& value) {
+  set_has_download_url();
+  if (download_url_ == &::google::protobuf::internal::kEmptyString) {
+    download_url_ = new ::std::string;
+  }
+  download_url_->assign(value);
+}
+inline void LYCheckin::set_download_url(const char* value) {
+  set_has_download_url();
+  if (download_url_ == &::google::protobuf::internal::kEmptyString) {
+    download_url_ = new ::std::string;
+  }
+  download_url_->assign(value);
+}
+inline void LYCheckin::set_download_url(const char* value, size_t size) {
+  set_has_download_url();
+  if (download_url_ == &::google::protobuf::internal::kEmptyString) {
+    download_url_ = new ::std::string;
+  }
+  download_url_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* LYCheckin::mutable_download_url() {
+  set_has_download_url();
+  if (download_url_ == &::google::protobuf::internal::kEmptyString) {
+    download_url_ = new ::std::string;
+  }
+  return download_url_;
+}
+inline ::std::string* LYCheckin::release_download_url() {
+  clear_has_download_url();
+  if (download_url_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = download_url_;
+    download_url_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+
+// -------------------------------------------------------------------
+
 // LYSamplePoint
 
 // required .tss.LYCoordinate sp_coordinate = 1;
@@ -3778,15 +4241,189 @@ inline void LYMsgOnAir::set_msg_type(tss::LYMsgType value) {
   msg_type_ = value;
 }
 
-// optional .tss.LYRetCode ret_code = 17;
-inline bool LYMsgOnAir::has_ret_code() const {
+// optional string snd_id = 7;
+inline bool LYMsgOnAir::has_snd_id() const {
   return (_has_bits_[0] & 0x00000040u) != 0;
 }
-inline void LYMsgOnAir::set_has_ret_code() {
+inline void LYMsgOnAir::set_has_snd_id() {
   _has_bits_[0] |= 0x00000040u;
 }
-inline void LYMsgOnAir::clear_has_ret_code() {
+inline void LYMsgOnAir::clear_has_snd_id() {
   _has_bits_[0] &= ~0x00000040u;
+}
+inline void LYMsgOnAir::clear_snd_id() {
+  if (snd_id_ != &::google::protobuf::internal::kEmptyString) {
+    snd_id_->clear();
+  }
+  clear_has_snd_id();
+}
+inline const ::std::string& LYMsgOnAir::snd_id() const {
+  return *snd_id_;
+}
+inline void LYMsgOnAir::set_snd_id(const ::std::string& value) {
+  set_has_snd_id();
+  if (snd_id_ == &::google::protobuf::internal::kEmptyString) {
+    snd_id_ = new ::std::string;
+  }
+  snd_id_->assign(value);
+}
+inline void LYMsgOnAir::set_snd_id(const char* value) {
+  set_has_snd_id();
+  if (snd_id_ == &::google::protobuf::internal::kEmptyString) {
+    snd_id_ = new ::std::string;
+  }
+  snd_id_->assign(value);
+}
+inline void LYMsgOnAir::set_snd_id(const char* value, size_t size) {
+  set_has_snd_id();
+  if (snd_id_ == &::google::protobuf::internal::kEmptyString) {
+    snd_id_ = new ::std::string;
+  }
+  snd_id_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* LYMsgOnAir::mutable_snd_id() {
+  set_has_snd_id();
+  if (snd_id_ == &::google::protobuf::internal::kEmptyString) {
+    snd_id_ = new ::std::string;
+  }
+  return snd_id_;
+}
+inline ::std::string* LYMsgOnAir::release_snd_id() {
+  clear_has_snd_id();
+  if (snd_id_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = snd_id_;
+    snd_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+
+// optional string rcv_id = 8;
+inline bool LYMsgOnAir::has_rcv_id() const {
+  return (_has_bits_[0] & 0x00000080u) != 0;
+}
+inline void LYMsgOnAir::set_has_rcv_id() {
+  _has_bits_[0] |= 0x00000080u;
+}
+inline void LYMsgOnAir::clear_has_rcv_id() {
+  _has_bits_[0] &= ~0x00000080u;
+}
+inline void LYMsgOnAir::clear_rcv_id() {
+  if (rcv_id_ != &::google::protobuf::internal::kEmptyString) {
+    rcv_id_->clear();
+  }
+  clear_has_rcv_id();
+}
+inline const ::std::string& LYMsgOnAir::rcv_id() const {
+  return *rcv_id_;
+}
+inline void LYMsgOnAir::set_rcv_id(const ::std::string& value) {
+  set_has_rcv_id();
+  if (rcv_id_ == &::google::protobuf::internal::kEmptyString) {
+    rcv_id_ = new ::std::string;
+  }
+  rcv_id_->assign(value);
+}
+inline void LYMsgOnAir::set_rcv_id(const char* value) {
+  set_has_rcv_id();
+  if (rcv_id_ == &::google::protobuf::internal::kEmptyString) {
+    rcv_id_ = new ::std::string;
+  }
+  rcv_id_->assign(value);
+}
+inline void LYMsgOnAir::set_rcv_id(const char* value, size_t size) {
+  set_has_rcv_id();
+  if (rcv_id_ == &::google::protobuf::internal::kEmptyString) {
+    rcv_id_ = new ::std::string;
+  }
+  rcv_id_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* LYMsgOnAir::mutable_rcv_id() {
+  set_has_rcv_id();
+  if (rcv_id_ == &::google::protobuf::internal::kEmptyString) {
+    rcv_id_ = new ::std::string;
+  }
+  return rcv_id_;
+}
+inline ::std::string* LYMsgOnAir::release_rcv_id() {
+  clear_has_rcv_id();
+  if (rcv_id_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = rcv_id_;
+    rcv_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+
+// optional bytes signature = 9;
+inline bool LYMsgOnAir::has_signature() const {
+  return (_has_bits_[0] & 0x00000100u) != 0;
+}
+inline void LYMsgOnAir::set_has_signature() {
+  _has_bits_[0] |= 0x00000100u;
+}
+inline void LYMsgOnAir::clear_has_signature() {
+  _has_bits_[0] &= ~0x00000100u;
+}
+inline void LYMsgOnAir::clear_signature() {
+  if (signature_ != &::google::protobuf::internal::kEmptyString) {
+    signature_->clear();
+  }
+  clear_has_signature();
+}
+inline const ::std::string& LYMsgOnAir::signature() const {
+  return *signature_;
+}
+inline void LYMsgOnAir::set_signature(const ::std::string& value) {
+  set_has_signature();
+  if (signature_ == &::google::protobuf::internal::kEmptyString) {
+    signature_ = new ::std::string;
+  }
+  signature_->assign(value);
+}
+inline void LYMsgOnAir::set_signature(const char* value) {
+  set_has_signature();
+  if (signature_ == &::google::protobuf::internal::kEmptyString) {
+    signature_ = new ::std::string;
+  }
+  signature_->assign(value);
+}
+inline void LYMsgOnAir::set_signature(const void* value, size_t size) {
+  set_has_signature();
+  if (signature_ == &::google::protobuf::internal::kEmptyString) {
+    signature_ = new ::std::string;
+  }
+  signature_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* LYMsgOnAir::mutable_signature() {
+  set_has_signature();
+  if (signature_ == &::google::protobuf::internal::kEmptyString) {
+    signature_ = new ::std::string;
+  }
+  return signature_;
+}
+inline ::std::string* LYMsgOnAir::release_signature() {
+  clear_has_signature();
+  if (signature_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = signature_;
+    signature_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+
+// optional .tss.LYRetCode ret_code = 17;
+inline bool LYMsgOnAir::has_ret_code() const {
+  return (_has_bits_[0] & 0x00000200u) != 0;
+}
+inline void LYMsgOnAir::set_has_ret_code() {
+  _has_bits_[0] |= 0x00000200u;
+}
+inline void LYMsgOnAir::clear_has_ret_code() {
+  _has_bits_[0] &= ~0x00000200u;
 }
 inline void LYMsgOnAir::clear_ret_code() {
   ret_code_ = 0;
@@ -3801,15 +4438,44 @@ inline void LYMsgOnAir::set_ret_code(tss::LYRetCode value) {
   ret_code_ = value;
 }
 
+// optional .tss.LYCheckin checkin = 18;
+inline bool LYMsgOnAir::has_checkin() const {
+  return (_has_bits_[0] & 0x00000400u) != 0;
+}
+inline void LYMsgOnAir::set_has_checkin() {
+  _has_bits_[0] |= 0x00000400u;
+}
+inline void LYMsgOnAir::clear_has_checkin() {
+  _has_bits_[0] &= ~0x00000400u;
+}
+inline void LYMsgOnAir::clear_checkin() {
+  if (checkin_ != NULL) checkin_->::tss::LYCheckin::Clear();
+  clear_has_checkin();
+}
+inline const ::tss::LYCheckin& LYMsgOnAir::checkin() const {
+  return checkin_ != NULL ? *checkin_ : *default_instance_->checkin_;
+}
+inline ::tss::LYCheckin* LYMsgOnAir::mutable_checkin() {
+  set_has_checkin();
+  if (checkin_ == NULL) checkin_ = new ::tss::LYCheckin;
+  return checkin_;
+}
+inline ::tss::LYCheckin* LYMsgOnAir::release_checkin() {
+  clear_has_checkin();
+  ::tss::LYCheckin* temp = checkin_;
+  checkin_ = NULL;
+  return temp;
+}
+
 // optional .tss.LYDeviceReport device_report = 19;
 inline bool LYMsgOnAir::has_device_report() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
+  return (_has_bits_[0] & 0x00000800u) != 0;
 }
 inline void LYMsgOnAir::set_has_device_report() {
-  _has_bits_[0] |= 0x00000080u;
+  _has_bits_[0] |= 0x00000800u;
 }
 inline void LYMsgOnAir::clear_has_device_report() {
-  _has_bits_[0] &= ~0x00000080u;
+  _has_bits_[0] &= ~0x00000800u;
 }
 inline void LYMsgOnAir::clear_device_report() {
   if (device_report_ != NULL) device_report_->::tss::LYDeviceReport::Clear();
@@ -3832,13 +4498,13 @@ inline ::tss::LYDeviceReport* LYMsgOnAir::release_device_report() {
 
 // optional .tss.LYTrafficSub traffic_sub = 36;
 inline bool LYMsgOnAir::has_traffic_sub() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
+  return (_has_bits_[0] & 0x00001000u) != 0;
 }
 inline void LYMsgOnAir::set_has_traffic_sub() {
-  _has_bits_[0] |= 0x00000100u;
+  _has_bits_[0] |= 0x00001000u;
 }
 inline void LYMsgOnAir::clear_has_traffic_sub() {
-  _has_bits_[0] &= ~0x00000100u;
+  _has_bits_[0] &= ~0x00001000u;
 }
 inline void LYMsgOnAir::clear_traffic_sub() {
   if (traffic_sub_ != NULL) traffic_sub_->::tss::LYTrafficSub::Clear();
@@ -3861,13 +4527,13 @@ inline ::tss::LYTrafficSub* LYMsgOnAir::release_traffic_sub() {
 
 // optional .tss.LYTrafficPub traffic_pub = 51;
 inline bool LYMsgOnAir::has_traffic_pub() const {
-  return (_has_bits_[0] & 0x00000200u) != 0;
+  return (_has_bits_[0] & 0x00002000u) != 0;
 }
 inline void LYMsgOnAir::set_has_traffic_pub() {
-  _has_bits_[0] |= 0x00000200u;
+  _has_bits_[0] |= 0x00002000u;
 }
 inline void LYMsgOnAir::clear_has_traffic_pub() {
-  _has_bits_[0] &= ~0x00000200u;
+  _has_bits_[0] &= ~0x00002000u;
 }
 inline void LYMsgOnAir::clear_traffic_pub() {
   if (traffic_pub_ != NULL) traffic_pub_->::tss::LYTrafficPub::Clear();
@@ -3890,13 +4556,13 @@ inline ::tss::LYTrafficPub* LYMsgOnAir::release_traffic_pub() {
 
 // optional .tss.LYTrafficReport traffic_report = 65;
 inline bool LYMsgOnAir::has_traffic_report() const {
-  return (_has_bits_[0] & 0x00000400u) != 0;
+  return (_has_bits_[0] & 0x00004000u) != 0;
 }
 inline void LYMsgOnAir::set_has_traffic_report() {
-  _has_bits_[0] |= 0x00000400u;
+  _has_bits_[0] |= 0x00004000u;
 }
 inline void LYMsgOnAir::clear_has_traffic_report() {
-  _has_bits_[0] &= ~0x00000400u;
+  _has_bits_[0] &= ~0x00004000u;
 }
 inline void LYMsgOnAir::clear_traffic_report() {
   if (traffic_report_ != NULL) traffic_report_->::tss::LYTrafficReport::Clear();
@@ -3937,6 +4603,10 @@ inline const EnumDescriptor* GetEnumDescriptor< ::tss::LYTrafficSub_LYOprType>()
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::tss::LYTrafficSub_LYPubType>() {
   return ::tss::LYTrafficSub_LYPubType_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< tss::LYOsType>() {
+  return tss::LYOsType_descriptor();
 }
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< tss::LYDirection>() {

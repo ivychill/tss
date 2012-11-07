@@ -8,6 +8,7 @@ CityTrafficPanorama citytrafficpanorama;
 OnRouteClientPanorama onrouteclientpanorama;
 ClientMsgProcessor client_msg_processor;
 DBClientConnection db_client;
+VersionManager version_manager;
 zmq::socket_t* p_skt_client;
 
 int main (int argc, char *argv[])
@@ -15,18 +16,20 @@ int main (int argc, char *argv[])
     GOOGLE_PROTOBUF_VERIFY_VERSION;
     InitLog (argv[0], logger);
     InitDB (db_client);
+    onrouteclientpanorama.Init();
+    version_manager.Init();
 
     // setup zeromq
     zmq::context_t context(1);
     zmq::socket_t skt_client (context, ZMQ_DEALER);
     skt_client.setsockopt (ZMQ_IDENTITY, "WORKER", 6);
-    skt_client.connect ("tcp://localhost:7002");
+    skt_client.connect ("tcp://localhost:6002");
     p_skt_client = &skt_client;
 
     zmq::socket_t skt_probe (context, ZMQ_SUB);
     skt_probe.setsockopt (ZMQ_SUBSCRIBE, "", 0);		//Subscribe on everything
     skt_probe.setsockopt (ZMQ_IDENTITY, "SINK", 5);
-    skt_probe.connect ("tcp://localhost:7004");
+    skt_probe.connect ("tcp://localhost:6004");
     
     // Tell traffic_router we're ready for work
     s_send (skt_client, "READY");

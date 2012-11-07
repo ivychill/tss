@@ -8,11 +8,15 @@ extern CityTrafficPanorama citytrafficpanorama;
 extern OnRouteClientPanorama onrouteclientpanorama;
 //extern ClientMsgProcessor client_msg_processor;
 extern DBClientConnection db_client;
+extern VersionManager version_manager;
 extern zmq::socket_t* p_skt_client;
 
-int ClientMsgProcessor::ReturnToClient ()
+//回复成功失败的信息
+int ClientMsgProcessor::ReturnToClient (LYRetCode ret_code)
 {
     snd_msg.set_timestamp (time (NULL));
+    snd_msg.set_msg_type (LY_RET_CODE);
+    snd_msg.set_ret_code (ret_code);
     LOG4CPLUS_DEBUG (logger, "return to client, address: " << address << ", package:\n" << snd_msg.DebugString ());
     string str_msg;
     if (!snd_msg.SerializeToString (&str_msg))
@@ -26,12 +30,35 @@ int ClientMsgProcessor::ReturnToClient ()
     return 0;
 }
 
+int ClientMsgProcessor::ReturnToClient (LYCheckin checkin)
+{
+    snd_msg.set_timestamp (time (NULL));
+    snd_msg.set_msg_type (LY_CHECKIN);
+    *snd_msg.mutable_checkin() = checkin;
+    LOG4CPLUS_DEBUG (logger, "return to client, address: " << address << ", package:\n" << snd_msg.DebugString ());
+    string str_msg;
+    if (!snd_msg.SerializeToString (&str_msg))
+    {
+        LOG4CPLUS_ERROR (logger, "Failed to write relevant city traffic.");
+        return -1;
+    }
+
+    s_sendmore (*p_skt_client, address);
+    s_send     (*p_skt_client, str_msg);
+    if (snd_msg.has_checkin ())
+    {
+    	snd_msg.clear_checkin();
+    }
+    return 0;
+}
+
 int ClientMsgProcessor::PreprocessRcvMsg (string& adr, LYMsgOnAir& msg)
 {
     //LOG4CPLUS_DEBUG (logger, "preprocess package: \n" <<  msg.DebugString ());
     address = adr;
     rcv_msg = msg;
-    snd_msg.set_msg_id (msg.msg_id());
+    InvertMsg (rcv_msg, snd_msg);
+
     int version;
     int ret_code = 0;
     time_t now = time (NULL);
@@ -41,29 +68,25 @@ int ClientMsgProcessor::PreprocessRcvMsg (string& adr, LYMsgOnAir& msg)
 
     if (now - ts > CLIENT_REQUEST_TIMEOUT * 60)
     {
-        snd_msg.set_ret_code (LY_TIMEOUT);
         LOG4CPLUS_WARN (logger, "package timeout, timestamp: " << ::ctime(&ts));
+        ReturnToClient (LY_TIMEOUT);
         ret_code = -1;
     }
 
     else if ((version = msg.version ()) != 1)
     {
-        snd_msg.set_ret_code (LY_VERSION_IMCOMPATIBLE);
         LOG4CPLUS_ERROR (logger, "invalid version: " << version);
+        ReturnToClient (LY_VERSION_IMCOMPATIBLE);
         ret_code = -1;
     }
 
     else if (from_party != LY_CLIENT || to_party != LY_TSS)
     {
-        snd_msg.set_ret_code (LY_PARTY_ERROR);
         LOG4CPLUS_ERROR (logger, "invalid message party, from:: " << from_party << ", to: " << to_party);
+        ReturnToClient (LY_PARTY_ERROR);
         ret_code = -1;
     }
 
-    if (ret_code == -1)
-    {
-        ReturnToClient ();
-    }
     return ret_code;
 }
 
@@ -81,32 +104,40 @@ int ClientMsgProcessor::ProcessRcvMsg (string& adr, LYMsgOnAir& msg)
     {
         case LY_TRAFFIC_SUB:
         {
-            snd_msg.set_ret_code (LY_SUCCESS);
-            ReturnToClient ();
+            ReturnToClient (LY_SUCCESS);
             onrouteclientpanorama.SubTraffic (adr, rcv_msg);
             return 0;
         }
 
         case LY_DEVICE_REPORT:
         {
-            snd_msg.set_ret_code (LY_SUCCESS);
-            ReturnToClient ();
+            ReturnToClient (LY_SUCCESS);
             LYDeviceReport device_report = rcv_msg.device_report ();
             RegisterDevice (db_client, device_report);
             return 0;
         }
 
-        case LY_TRAFFIC_REPORT:
-            snd_msg.set_ret_code (LY_SUCCESS);
-            ReturnToClient ();
-            LOG4CPLUS_ERROR (logger, "to be supported message type: " << msg_type);
+        case LY_CHECKIN:
+        {
+            LYCheckin checkin = rcv_msg.checkin();
+            if (version_manager.GetLatestVersion (checkin))
+            {
+                ReturnToClient (checkin);
+            }
+            else
+            {
+                LOG4CPLUS_ERROR (logger, "missing checkin: " << checkin.DebugString());
+                ReturnToClient (LY_OTHER_ERROR);
+            }
             return 0;
+        }
 
         default:
-            snd_msg.set_ret_code (LY_MSG_TYPE_ERROR);
-            ReturnToClient ();
+        {
+            ReturnToClient (LY_MSG_TYPE_ERROR);
             LOG4CPLUS_ERROR (logger, "invalid message type: " << msg_type);
             return -1;
+        }
     }
 
     LOG4CPLUS_ERROR (logger, "should not pass here");
@@ -284,7 +315,7 @@ void ClientObservers::DeleteSubscription (const string& adr, LYMsgOnAir& pkg)
     LOG4CPLUS_DEBUG (logger, "delete subscription, address: " << adr << " identity: " << identity);
 }
 
-OnRouteClientPanorama::OnRouteClientPanorama ()
+void OnRouteClientPanorama::Init ()
 {
     hot_traffic_sub.set_version (1);
     hot_traffic_sub.set_from_party (LY_CLIENT);
@@ -298,16 +329,48 @@ OnRouteClientPanorama::OnRouteClientPanorama ()
     traffic_sub->set_pub_type (LYTrafficSub::LY_PUB_EVENT);
     LYRoute *route = traffic_sub->mutable_route ();
     route->set_identity (HOT_TRAFFIC_ROUTE_ID);
-    string hot_road [] = {"北环大道", "梅观高速", "南海大道", "滨海路", "滨河大道", "皇岗路", "新洲路", "月亮湾大道", "沙河西路", "红荔路", "南坪快速", "福龙路", "香蜜湖路", "彩田路", "后海大道", "南山创业路", "宝安创业路", "南山大道", "留仙大道", "广深公路", "金田路", "扳雪岗大道", "布龙公路"};
 
-    for (int index = 0; index < sizeof(hot_road)/sizeof(string); index++)
+    std::ifstream ifs;
+    ifs.open (GetCfgFile ("hot_road.cfg"));
+    std::stringstream ostr;
+    ostr << ifs.rdbuf();
+    Json::Reader reader;
+    Json::Value jv_roadset;
+
+    bool parsingSuccessful = reader.parse ( ostr.str(), jv_roadset );
+    if ( !parsingSuccessful )
     {
-        LYSegment *segment = route->add_segments();
-        segment->set_road(hot_road[index]);
-        segment->mutable_start()->set_lng(0);
-        segment->mutable_start()->set_lat(0);
-        segment->mutable_end()->set_lng(0);
-        segment->mutable_end()->set_lat(0);
+        // report to the user the failure and their locations in the document.
+        LOG4CPLUS_ERROR (logger, "Failed to parse hot_road configuration\n" \
+               << reader.getFormatedErrorMessages());
+        string hot_road[] = {"北环大道", "梅观高速", "南海大道", "滨河大道", "皇岗路", "新洲路", "月亮湾大道", "沙河西路", "红荔路", "南坪快速", "福龙路", "香蜜湖路", "彩田路", "后海大道", "南山创业路", "宝安创业路", "南山大道", "留仙大道", "广深公路", "金田路", "扳雪岗大道", "布龙公路"};
+        for (int index = 0; index < sizeof(hot_road)/sizeof(string); index++)
+        {
+            LYSegment *segment = route->add_segments();
+            segment->set_road(hot_road[index]);
+            segment->mutable_start()->set_lng(0);
+            segment->mutable_start()->set_lat(0);
+            segment->mutable_end()->set_lng(0);
+            segment->mutable_end()->set_lat(0);
+        }
+    }
+    else
+    {
+        LOG4CPLUS_DEBUG (logger, "hot road:\n" << jv_roadset.toStyledString());
+        int hot_road_nbr = jv_roadset.size();
+        LOG4CPLUS_DEBUG (logger, "hot_road_nbr: " << hot_road_nbr);
+
+        for ( int indexi = 0; indexi < hot_road_nbr; ++indexi )
+        {
+            Json::Value jv_road = jv_roadset [indexi];
+            std::string roadname = jv_road ["name"].asString();
+            LYSegment *segment = route->add_segments();
+            segment->set_road(roadname);
+            segment->mutable_start()->set_lng(0);
+            segment->mutable_start()->set_lat(0);
+            segment->mutable_end()->set_lng(0);
+            segment->mutable_end()->set_lat(0);
+        }
     }
 }
 
@@ -322,4 +385,53 @@ void OnRouteClientPanorama::DeleteSubscription (const string& adr, LYMsgOnAir& p
 {
     LOG4CPLUS_DEBUG (logger, "delete subscription, address: " << adr);
     map_client_relevant_traffic[adr].DeleteSubscription(adr,pkg);
+}
+
+void VersionManager::Init()
+{
+    std::ifstream ifs;
+    ifs.open (GetCfgFile ("version.cfg"));
+    std::stringstream ostr;
+    ostr << ifs.rdbuf();
+    Json::Reader reader;
+    Json::Value jv_version_set;
+
+    bool parsingSuccessful = reader.parse ( ostr.str(), jv_version_set );
+    if ( !parsingSuccessful )
+    {
+        // report to the user the failure and their locations in the document.
+        LOG4CPLUS_ERROR (logger, "Failed to parse version configuration\n" \
+               << reader.getFormatedErrorMessages());
+    }
+    else
+    {
+        LOG4CPLUS_DEBUG (logger, "version:\n" << jv_version_set.toStyledString());
+        int version_nbr = jv_version_set.size();
+
+        for ( int indexi = 0; indexi < version_nbr; indexi++ )
+        {
+            LYCheckin checkin;
+            checkin.set_os_type (OsStrToInt(jv_version_set[indexi]["os_type"].asString()));
+            checkin.set_os_version(jv_version_set[indexi]["os_version"].asString());
+            checkin.set_ly_major_release(jv_version_set[indexi]["version"].asInt());
+            checkin.set_ly_minor_release(jv_version_set[indexi]["release"].asInt());
+            vec_latest_version.push_back(checkin);
+        }
+    }
+}
+
+//return: true: 找到; false: 未找到;
+bool VersionManager::GetLatestVersion (LYCheckin& checkin)
+{
+	vector<LYCheckin>::iterator it;
+    for ( it = vec_latest_version.begin(); it != vec_latest_version.end(); it++ )
+    {
+    	if (checkin.os_type() == it->os_type())
+    	{
+            checkin.set_ly_major_release(it->ly_major_release());
+            checkin.set_ly_minor_release(it->ly_minor_release());
+            return true;
+    	}
+    }
+    return false;
 }

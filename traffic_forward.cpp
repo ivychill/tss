@@ -8,11 +8,11 @@ int main (int argc, char *argv[])
     zmq::context_t context(1);
     zmq::socket_t skt_probe (context, ZMQ_SUB);
     skt_probe.setsockopt(ZMQ_SUBSCRIBE, "", 0);	//Subscribe on everything
-    skt_probe.bind("tcp://*:7003");
+    skt_probe.bind("tcp://*:6003");
     zmq::socket_t skt_feed (context, ZMQ_PUB);
     //int64_t msg_num = MAX_MSG_NUM;
     //skt_feed.setsockopt (ZMQ_IDENTITY, &msg_num, sizeof msg_num);
-    skt_feed.bind("tcp://*:7004");   
+    skt_feed.bind("tcp://*:6004");
     
     //  Start built-in device
     zmq::device (ZMQ_FORWARDER, skt_probe, skt_feed);
