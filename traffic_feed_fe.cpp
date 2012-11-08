@@ -415,6 +415,8 @@ void VersionManager::Init()
             checkin.set_os_version(jv_version_set[indexi]["os_version"].asString());
             checkin.set_ly_major_release(jv_version_set[indexi]["version"].asInt());
             checkin.set_ly_minor_release(jv_version_set[indexi]["release"].asInt());
+            checkin.set_download_url(jv_version_set[indexi]["download_url"].asString());
+            checkin.set_desc(jv_version_set[indexi]["desc"].asString());
             vec_latest_version.push_back(checkin);
         }
     }
@@ -430,6 +432,8 @@ bool VersionManager::GetLatestVersion (LYCheckin& checkin)
     	{
             checkin.set_ly_major_release(it->ly_major_release());
             checkin.set_ly_minor_release(it->ly_minor_release());
+            checkin.set_download_url(it->download_url());
+            checkin.set_desc(it->desc());
             return true;
     	}
     }

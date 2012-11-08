@@ -127,6 +127,7 @@ message LYCheckin {
     required int32 ly_major_release = 4; //路易95大版本，如果有变化，必须升级
     required int32 ly_minor_release = 5; //路易95小版本，如果有变化，可以不升级
     optional string download_url = 6; //路易95下载地址
+    optional string desc = 7; //路易95版本特性说明
 }
 
 message LYSamplePoint {

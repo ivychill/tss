@@ -281,13 +281,14 @@ void protobuf_AssignDesc_tss_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(LYDeviceReport));
   LYCheckin_descriptor_ = file->message_type(11);
-  static const int LYCheckin_offsets_[6] = {
+  static const int LYCheckin_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYCheckin, device_model_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYCheckin, os_type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYCheckin, os_version_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYCheckin, ly_major_release_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYCheckin, ly_minor_release_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYCheckin, download_url_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYCheckin, desc_),
   };
   LYCheckin_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -488,42 +489,42 @@ void protobuf_AddDesc_tss_2eproto() {
     "s.LYCityTraffic\"\177\n\016LYDeviceReport\022\021\n\tdev"
     "ice_id\030\001 \002(\t\022\024\n\014device_token\030\002 \002(\014\022\023\n\013de"
     "vice_name\030\003 \002(\t\022\024\n\014device_model\030\004 \002(\t\022\031\n"
-    "\021device_os_version\030\005 \002(\t\"\237\001\n\tLYCheckin\022\024"
+    "\021device_os_version\030\005 \002(\t\"\255\001\n\tLYCheckin\022\024"
     "\n\014device_model\030\001 \001(\t\022\036\n\007os_type\030\002 \002(\0162\r."
     "tss.LYOsType\022\022\n\nos_version\030\003 \001(\t\022\030\n\020ly_m"
     "ajor_release\030\004 \002(\005\022\030\n\020ly_minor_release\030\005"
-    " \002(\005\022\024\n\014download_url\030\006 \001(\t\"n\n\rLYSamplePo"
-    "int\022(\n\rsp_coordinate\030\001 \002(\0132\021.tss.LYCoord"
-    "inate\022\021\n\ttimestamp\030\002 \002(\003\022\020\n\010altitude\030\003 \001"
-    "(\001\022\016\n\006course\030\004 \001(\001\"5\n\017LYTrafficReport\022\"\n"
-    "\006points\030\001 \003(\0132\022.tss.LYSamplePoint\"\314\003\n\nLY"
-    "MsgOnAir\022\017\n\007version\030\001 \002(\005\022\016\n\006msg_id\030\005 \002("
-    "\005\022\021\n\ttimestamp\030\006 \002(\003\022 \n\nfrom_party\030\002 \002(\016"
-    "2\014.tss.LYParty\022\036\n\010to_party\030\003 \002(\0162\014.tss.L"
-    "YParty\022 \n\010msg_type\030\004 \002(\0162\016.tss.LYMsgType"
-    "\022\016\n\006snd_id\030\007 \001(\t\022\016\n\006rcv_id\030\010 \001(\t\022\021\n\tsign"
-    "ature\030\t \001(\014\022 \n\010ret_code\030\021 \001(\0162\016.tss.LYRe"
-    "tCode\022\037\n\007checkin\030\022 \001(\0132\016.tss.LYCheckin\022*"
-    "\n\rdevice_report\030\023 \001(\0132\023.tss.LYDeviceRepo"
-    "rt\022&\n\013traffic_sub\030$ \001(\0132\021.tss.LYTrafficS"
-    "ub\022&\n\013traffic_pub\0303 \001(\0132\021.tss.LYTrafficP"
-    "ub\022,\n\016traffic_report\030A \001(\0132\024.tss.LYTraff"
-    "icReport*\006\010\200\001\020\200\002*1\n\010LYOsType\022\016\n\nLY_ANDRO"
-    "ID\020\000\022\n\n\006LY_IOS\020\001\022\t\n\005LY_WP\020\002*\233\001\n\013LYDirect"
-    "ion\022\016\n\nLY_UNKNOWN\020\000\022\013\n\007LY_EAST\020\001\022\020\n\014LY_N"
-    "ORTHEAST\020\002\022\014\n\010LY_NORTH\020\003\022\020\n\014LY_NORTHWEST"
-    "\020\004\022\013\n\007LY_WEST\020\005\022\020\n\014LY_SOUTHWEST\020\006\022\014\n\010LY_"
-    "SOUTH\020\007\022\020\n\014LY_SOUTHEAST\020\010*\241\001\n\tLYRetCode\022"
-    "\016\n\nLY_SUCCESS\020\000\022\034\n\027LY_VERSION_IMCOMPATIB"
-    "LE\020\221\002\022\023\n\016LY_VERSION_LOW\020\243\002\022\023\n\016LY_PARTY_E"
-    "RROR\020\251\004\022\026\n\021LY_MSG_TYPE_ERROR\020\222\007\022\017\n\nLY_TI"
-    "MEOUT\020\223\t\022\023\n\016LY_OTHER_ERROR\020\231\023*/\n\007LYParty"
-    "\022\r\n\tLY_CLIENT\020\001\022\n\n\006LY_TSS\020\002\022\t\n\005LY_TC\020\003*\201"
-    "\001\n\tLYMsgType\022\016\n\nLY_CHECKIN\020\001\022\017\n\013LY_RET_C"
-    "ODE\020\002\022\022\n\016LY_TRAFFIC_SUB\020\004\022\025\n\021LY_TRAFFIC_"
-    "REPORT\020\005\022\024\n\020LY_DEVICE_REPORT\020\006\022\022\n\016LY_TRA"
-    "FFIC_PUB\020\023B\'\n\032com.luyun.easyway95.shared"
-    "B\tTSSProtos", 2811);
+    " \002(\005\022\024\n\014download_url\030\006 \001(\t\022\014\n\004desc\030\007 \001(\t"
+    "\"n\n\rLYSamplePoint\022(\n\rsp_coordinate\030\001 \002(\013"
+    "2\021.tss.LYCoordinate\022\021\n\ttimestamp\030\002 \002(\003\022\020"
+    "\n\010altitude\030\003 \001(\001\022\016\n\006course\030\004 \001(\001\"5\n\017LYTr"
+    "afficReport\022\"\n\006points\030\001 \003(\0132\022.tss.LYSamp"
+    "lePoint\"\314\003\n\nLYMsgOnAir\022\017\n\007version\030\001 \002(\005\022"
+    "\016\n\006msg_id\030\005 \002(\005\022\021\n\ttimestamp\030\006 \002(\003\022 \n\nfr"
+    "om_party\030\002 \002(\0162\014.tss.LYParty\022\036\n\010to_party"
+    "\030\003 \002(\0162\014.tss.LYParty\022 \n\010msg_type\030\004 \002(\0162\016"
+    ".tss.LYMsgType\022\016\n\006snd_id\030\007 \001(\t\022\016\n\006rcv_id"
+    "\030\010 \001(\t\022\021\n\tsignature\030\t \001(\014\022 \n\010ret_code\030\021 "
+    "\001(\0162\016.tss.LYRetCode\022\037\n\007checkin\030\022 \001(\0132\016.t"
+    "ss.LYCheckin\022*\n\rdevice_report\030\023 \001(\0132\023.ts"
+    "s.LYDeviceReport\022&\n\013traffic_sub\030$ \001(\0132\021."
+    "tss.LYTrafficSub\022&\n\013traffic_pub\0303 \001(\0132\021."
+    "tss.LYTrafficPub\022,\n\016traffic_report\030A \001(\013"
+    "2\024.tss.LYTrafficReport*\006\010\200\001\020\200\002*1\n\010LYOsTy"
+    "pe\022\016\n\nLY_ANDROID\020\000\022\n\n\006LY_IOS\020\001\022\t\n\005LY_WP\020"
+    "\002*\233\001\n\013LYDirection\022\016\n\nLY_UNKNOWN\020\000\022\013\n\007LY_"
+    "EAST\020\001\022\020\n\014LY_NORTHEAST\020\002\022\014\n\010LY_NORTH\020\003\022\020"
+    "\n\014LY_NORTHWEST\020\004\022\013\n\007LY_WEST\020\005\022\020\n\014LY_SOUT"
+    "HWEST\020\006\022\014\n\010LY_SOUTH\020\007\022\020\n\014LY_SOUTHEAST\020\010*"
+    "\241\001\n\tLYRetCode\022\016\n\nLY_SUCCESS\020\000\022\034\n\027LY_VERS"
+    "ION_IMCOMPATIBLE\020\221\002\022\023\n\016LY_VERSION_LOW\020\243\002"
+    "\022\023\n\016LY_PARTY_ERROR\020\251\004\022\026\n\021LY_MSG_TYPE_ERR"
+    "OR\020\222\007\022\017\n\nLY_TIMEOUT\020\223\t\022\023\n\016LY_OTHER_ERROR"
+    "\020\231\023*/\n\007LYParty\022\r\n\tLY_CLIENT\020\001\022\n\n\006LY_TSS\020"
+    "\002\022\t\n\005LY_TC\020\003*\201\001\n\tLYMsgType\022\016\n\nLY_CHECKIN"
+    "\020\001\022\017\n\013LY_RET_CODE\020\002\022\022\n\016LY_TRAFFIC_SUB\020\004\022"
+    "\025\n\021LY_TRAFFIC_REPORT\020\005\022\024\n\020LY_DEVICE_REPO"
+    "RT\020\006\022\022\n\016LY_TRAFFIC_PUB\020\023B\'\n\032com.luyun.ea"
+    "syway95.sharedB\tTSSProtos", 2825);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "tss.proto", &protobuf_RegisterTypes);
   LYCoordinate::default_instance_ = new LYCoordinate();
@@ -4606,6 +4607,7 @@ const int LYCheckin::kOsVersionFieldNumber;
 const int LYCheckin::kLyMajorReleaseFieldNumber;
 const int LYCheckin::kLyMinorReleaseFieldNumber;
 const int LYCheckin::kDownloadUrlFieldNumber;
+const int LYCheckin::kDescFieldNumber;
 #endif  // !_MSC_VER
 
 LYCheckin::LYCheckin()
@@ -4630,6 +4632,7 @@ void LYCheckin::SharedCtor() {
   ly_major_release_ = 0;
   ly_minor_release_ = 0;
   download_url_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  desc_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -4646,6 +4649,9 @@ void LYCheckin::SharedDtor() {
   }
   if (download_url_ != &::google::protobuf::internal::kEmptyString) {
     delete download_url_;
+  }
+  if (desc_ != &::google::protobuf::internal::kEmptyString) {
+    delete desc_;
   }
   if (this != default_instance_) {
   }
@@ -4689,6 +4695,11 @@ void LYCheckin::Clear() {
     if (has_download_url()) {
       if (download_url_ != &::google::protobuf::internal::kEmptyString) {
         download_url_->clear();
+      }
+    }
+    if (has_desc()) {
+      if (desc_ != &::google::protobuf::internal::kEmptyString) {
+        desc_->clear();
       }
     }
   }
@@ -4801,6 +4812,23 @@ bool LYCheckin::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(58)) goto parse_desc;
+        break;
+      }
+      
+      // optional string desc = 7;
+      case 7: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_desc:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_desc()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->desc().data(), this->desc().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -4866,6 +4894,15 @@ void LYCheckin::SerializeWithCachedSizes(
       6, this->download_url(), output);
   }
   
+  // optional string desc = 7;
+  if (has_desc()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->desc().data(), this->desc().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      7, this->desc(), output);
+  }
+  
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -4920,6 +4957,16 @@ void LYCheckin::SerializeWithCachedSizes(
         6, this->download_url(), target);
   }
   
+  // optional string desc = 7;
+  if (has_desc()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->desc().data(), this->desc().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        7, this->desc(), target);
+  }
+  
   if (!unknown_fields().empty()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
@@ -4972,6 +5019,13 @@ int LYCheckin::ByteSize() const {
           this->download_url());
     }
     
+    // optional string desc = 7;
+    if (has_desc()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->desc());
+    }
+    
   }
   if (!unknown_fields().empty()) {
     total_size +=
@@ -5017,6 +5071,9 @@ void LYCheckin::MergeFrom(const LYCheckin& from) {
     if (from.has_download_url()) {
       set_download_url(from.download_url());
     }
+    if (from.has_desc()) {
+      set_desc(from.desc());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -5047,6 +5104,7 @@ void LYCheckin::Swap(LYCheckin* other) {
     std::swap(ly_major_release_, other->ly_major_release_);
     std::swap(ly_minor_release_, other->ly_minor_release_);
     std::swap(download_url_, other->download_url_);
+    std::swap(desc_, other->desc_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
