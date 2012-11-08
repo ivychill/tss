@@ -44,7 +44,7 @@ int main (int argc, char *argv[])
 
     // cron
     CronSchelder cron_sched(context);
-    cron_sched.Init();
+//    cron_sched.Init();
     p_cron_sched = &cron_sched;
 
 	zmq::socket_t cron_client (context, ZMQ_PAIR);

@@ -37,7 +37,7 @@ traffic_router: traffic_router.o tss_log.o tss_helper.o tss.pb.o tss_helper.h ts
 	$(CC) $(CC_FLAG) -o $(BIN_PATH)/$@ $^ $(LIB) $(LIB_ADD)
 	@echo "Link traffic_router end......"
 
-traffic_feed: traffic_feed_main.o traffic_feed_be.o traffic_feed_fe.o tss_log.o tss_helper.o tss.pb.o traffic_feed.h tss_helper.h tss.pb.h
+traffic_feed: traffic_feed_main.o traffic_feed_cron.o  traffic_feed_be.o traffic_feed_fe.o tss_log.o tss_helper.o tss.pb.o traffic_feed.h tss_helper.h tss.pb.h
 	@echo "Link traffic_feed begin......"
 	$(CC) $(CC_FLAG) -o $(BIN_PATH)/$@ $^ $(LIB) $(LIB_ADD)
 	@echo "Link traffic_feed end......"
