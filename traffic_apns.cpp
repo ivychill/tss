@@ -1,6 +1,8 @@
+using namespace std;
 
 #include "traffic_apns.h"
-
+#include <boost/bind.hpp>
+#include <boost/thread.hpp>
 
 Logger logger;
 DBClientConnection db_client;
@@ -19,48 +21,59 @@ int main (int argc, char *argv[])
     InitDB (db_client);
     Apns apns;
 
-    while (true)
-    {
+    zmq::context_t ctxt(1);
+	zmq::socket_t  apns_skt(ctxt, ZMQ_PAIR);
+	apns_skt.bind("ipc://apns.ipc");
+
+
+    //  Initialize poll set
+    zmq::pollitem_t items [] = {
+        //  Always poll for worker activity on skt_feed
+        { apns_skt,  0, ZMQ_POLLIN, 0 }
+    };
+
+    apns.InitPush ();
+    boost::thread feedback(boost::bind(&Apns::checkFeedback, &apns));
+
+	while (true)
+	{
         time_t now = time (NULL);
         struct tm *timeinfo;
         timeinfo = ::localtime (&now);
-/*
-        if ((timeinfo->tm_wday >= 1 && timeinfo->tm_wday <= 5)
-            && (timeinfo->tm_hour == 6 || timeinfo->tm_hour == 17)
-            && (timeinfo->tm_min >= 15)) 
-*/
-        {
-            LOG4CPLUS_DEBUG (logger, "begin to push message, " << timeinfo->tm_year + 1900 << "-" << timeinfo->tm_mon + 1 << "-" << timeinfo->tm_mday << " " << timeinfo->tm_hour << ":" << timeinfo->tm_min << " week day " << timeinfo->tm_wday);
-            //char pld[] = "{\"aps\":{\"alert\":\"提醒您关注上下班拥堵路段\"}}";
 
-            Json::Value jv_payload;
-            //Json::Value jv_alert, jv_badge, jv_sound;
-            jv_payload["aps"]["alert"] = "提醒您关注上下班拥堵路段";
-            jv_payload["aps"]["badge"] = 1;
-            jv_payload["aps"]["sound"] = "chime";
-            Json::FastWriter writer;  
-            std::string str_payload = writer.write(jv_payload);  
-            LOG4CPLUS_DEBUG (logger, "payload: \n" << str_payload);
-            LOG4CPLUS_DEBUG (logger, "payload: \n" << jv_payload.toStyledString());  
+		zmq::poll (&items [0], 1, -1);
+//		int poll_in = items [0].revents & ZMQ_POLLIN;
 
-            apns.InitPush ();
-            LOG4CPLUS_DEBUG (logger, "device count: " << db_client.count("roadclouding_production.devices"));
-            auto_ptr<DBClientCursor> cursor = db_client.query("roadclouding_production.devices", BSONObj());
-            while (cursor->more())
-            {
-                mongo::BSONObj obj = cursor->next();
-                //LOG4CPLUS_DEBUG (logger, obj.toString());
-                //LOG4CPLUS_DEBUG (logger, obj.jsonString());
-                std::string str_hex_token =  obj.getStringField("dev_token");
-                LOG4CPLUS_DEBUG (logger, "str_hex_token: " << str_hex_token);
-                char byte_token [DEVICE_TOKEN_SIZE];
-                ByteDump (byte_token, str_hex_token.c_str(), DEVICE_TOKEN_SIZE);
-                apns.sendPayload (byte_token, str_payload.c_str (), str_payload.length ());
-            }
-            apns.ReleasePush ();
-        }
-        sleep (300);
-    }
+		if (items [0].revents & ZMQ_POLLIN)
+		{
+			LOG4CPLUS_DEBUG (logger, "begin to push message, " << timeinfo->tm_year + 1900 << "-" << timeinfo->tm_mon + 1 << "-" << timeinfo->tm_mday << " " << timeinfo->tm_hour << ":" << timeinfo->tm_min << " week day " << timeinfo->tm_wday);
+			//char pld[] = "{\"aps\":{\"alert\":\"提醒您关注上下班拥堵路段\"}}";
+
+			std::string dev_token = s_recv(apns_skt);
+			LOG4CPLUS_DEBUG (logger, "dev_tk size : " << dev_token.size());
+
+			std::string info = s_recv(apns_skt);
+			LOG4CPLUS_DEBUG (logger, "s_recv info : " << info.size());
+
+			Json::Value jv_payload;
+			//Json::Value jv_alert, jv_badge, jv_sound;
+			jv_payload["aps"]["alert"] = info;
+			jv_payload["aps"]["badge"] = 1;
+			jv_payload["aps"]["sound"] = "chime";
+			Json::FastWriter writer;
+			std::string str_payload = writer.write(jv_payload);
+			LOG4CPLUS_DEBUG (logger, "payload: \n" << str_payload);
+			LOG4CPLUS_DEBUG (logger, "payload: \n" << jv_payload.toStyledString());
+		    LOG4CPLUS_DEBUG (logger, "payload len: " << str_payload.length ());
+
+			char byte_token [DEVICE_TOKEN_SIZE];
+			ByteDump (byte_token, dev_token.data(), DEVICE_TOKEN_SIZE);
+
+			apns.sendPayload (byte_token, str_payload.c_str (), str_payload.length ());
+		}
+	}
+
+	apns.ReleasePush ();
 
     return 0;
 }
@@ -82,6 +95,7 @@ Apns::Apns ()
     passphrase = PDT_PASSPHRASE;    
     LOG4CPLUS_DEBUG (logger, "production env");
 #endif
+
     Init (feedback);
 }
 
@@ -161,8 +175,9 @@ bool Apns::sendPayload (char *deviceTokenBinary, const char *payloadBuff, size_t
       memcpy(binaryMessagePt, payloadBuff, payloadLength);
       binaryMessagePt += payloadLength;
 
-      //LOG4CPLUS_DEBUG (logger, "before SSL_write");
+//      LOG4CPLUS_DEBUG (logger, "before SSL_write tm: ");
       int wbytes;
+
       if ((wbytes = SSL_write(push.ssl, binaryMessageBuff, (binaryMessagePt - binaryMessageBuff))) > 0)
       {
           LOG4CPLUS_DEBUG (logger, "write push bytes: " << wbytes);
@@ -179,39 +194,43 @@ bool Apns::sendPayload (char *deviceTokenBinary, const char *payloadBuff, size_t
               LOG4CPLUS_DEBUG (logger, "dump error response: " << hex_buff);
               rtn = false;
           }
+          else
+          {
+              LOG4CPLUS_DEBUG (logger, "read null " << rbytes);
+          }
       }
       else
       {
           LOG4CPLUS_DEBUG (logger, "fail to write push");
           rtn = false;
       }
-      //LOG4CPLUS_DEBUG (logger, "after SSL_write");
+      LOG4CPLUS_DEBUG (logger, "after SSL_write");
   }
 
-  checkFeedback ();
   return rtn;
 }
 
-bool Apns::checkFeedback ()
+void Apns::checkFeedback ()
 {
-    bool rtn = false;
     char byte_buff [FEEDBACK_SIZE];
     char hex_buff [FEEDBACK_SIZE * 2];
     int rbytes;
 
     InitFeedback ();
-    //LOG4CPLUS_DEBUG (logger, "before SSL_read");
-    while ((rbytes = SSL_read (feedback.ssl, byte_buff, FEEDBACK_SIZE)) > 0) //to be improved
+    while(true)
     {
-        LOG4CPLUS_DEBUG (logger, "read feedback bytes: " << rbytes);
-        HexDump (hex_buff, byte_buff, FEEDBACK_SIZE);
-        std::string str_feedback (hex_buff, FEEDBACK_SIZE * 2);
-        LOG4CPLUS_DEBUG (logger, "dump feedback: " << hex_buff);
-        std::string device_token ( hex_buff + FEEDBACK_HEAD_SIZE * 2, (FEEDBACK_SIZE - FEEDBACK_HEAD_SIZE ) * 2);
-        UnregisterDevice (db_client, device_token);
-        rtn = true;
+        while ((rbytes = SSL_read (feedback.ssl, byte_buff, FEEDBACK_SIZE)) > 0) //to be improved
+        {
+            LOG4CPLUS_DEBUG (logger, "read feedback bytes: " << rbytes);
+            HexDump (hex_buff, byte_buff, FEEDBACK_SIZE);
+            std::string str_feedback (hex_buff, FEEDBACK_SIZE * 2);
+            LOG4CPLUS_DEBUG (logger, "dump feedback: " << hex_buff);
+            std::string device_token ( hex_buff + FEEDBACK_HEAD_SIZE * 2, (FEEDBACK_SIZE - FEEDBACK_HEAD_SIZE ) * 2);
+            UnregisterDevice (db_client, device_token);
+        }
+
+        s_sleep(1* 1000); // sleep
     }
-    //LOG4CPLUS_DEBUG (logger, "after SSL_read");
+
     ReleaseFeedback ();
-    return rtn;
 }

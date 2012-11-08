@@ -2,14 +2,22 @@
 //
 
 #include "traffic_feed.h"
+#include <boost/thread.hpp>
+#include <boost/bind.hpp>
+#include <boost/lexical_cast.hpp>
 
 Logger logger;
 CityTrafficPanorama citytrafficpanorama;
 OnRouteClientPanorama onrouteclientpanorama;
+CronClientPanorama cronclientpanorama;
 ClientMsgProcessor client_msg_processor;
 DBClientConnection db_client;
 VersionManager version_manager;
 zmq::socket_t* p_skt_client;
+
+zmq::socket_t* p_skt_cron_client;
+zmq::socket_t* p_skt_apns_client;
+CronSchelder* p_cron_sched;
 
 int main (int argc, char *argv[])
 {
@@ -34,6 +42,23 @@ int main (int argc, char *argv[])
     // Tell traffic_router we're ready for work
     s_send (skt_client, "READY");
 
+    // cron
+    CronSchelder cron_sched(context);
+    cron_sched.Init();
+    p_cron_sched = &cron_sched;
+
+	zmq::socket_t cron_client (context, ZMQ_PAIR);
+	cron_client.connect("ipc://cron_scheler.ipc");
+    p_skt_cron_client = &cron_client;
+
+	zmq::socket_t apns_client (context, ZMQ_PAIR);
+	apns_client.connect("ipc://apns.ipc");
+    p_skt_apns_client = &apns_client;
+
+
+    // no citytraffic ,  need wait 5 min to do the init
+//    cronclientpanorama.Init();
+
     while (1)
     {
 
@@ -41,11 +66,12 @@ int main (int argc, char *argv[])
         zmq::pollitem_t items [] = {
             { skt_probe, 0, ZMQ_POLLIN, 0 },
             // to be improved, Poll filter only if we have available sink
-            { skt_client,  0, ZMQ_POLLIN, 0 }
+            { skt_client,  0, ZMQ_POLLIN, 0 },
+            { cron_client, 0, ZMQ_POLLIN, 0}
         };
         
         // to be improved, poll skt_client only in presence of skt_probe;
-        zmq::poll (&items [0], 2, -1);
+        zmq::poll (&items [0], 3, -1);
                 
         //  Handle pub activity on skt_probe
         if (items [0].revents & ZMQ_POLLIN)
@@ -98,6 +124,15 @@ int main (int argc, char *argv[])
             {
                 LOG4CPLUS_ERROR (logger, "fail to process package");
             }
+        }
+
+        //cron sched info
+        if (items [2].revents & ZMQ_POLLIN)
+        {
+        	LOG4CPLUS_INFO (logger, "feed_main receive cron msg: ");
+        	std::string dev_token = s_recv(cron_client);
+        	std::string routeid = s_recv(cron_client);
+        	cronclientpanorama.ProcSchedInfo(dev_token, routeid);
         }
     }
     

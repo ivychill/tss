@@ -6,10 +6,12 @@
 extern Logger logger;
 extern CityTrafficPanorama citytrafficpanorama;
 extern OnRouteClientPanorama onrouteclientpanorama;
+extern CronClientPanorama cronclientpanorama;
 //extern ClientMsgProcessor client_msg_processor;
 extern DBClientConnection db_client;
 extern VersionManager version_manager;
 extern zmq::socket_t* p_skt_client;
+extern zmq::socket_t* p_skt_apns_client;
 
 //回复成功失败的信息
 int ClientMsgProcessor::ReturnToClient (LYRetCode ret_code)
@@ -18,6 +20,7 @@ int ClientMsgProcessor::ReturnToClient (LYRetCode ret_code)
     snd_msg.set_msg_type (LY_RET_CODE);
     snd_msg.set_ret_code (ret_code);
     LOG4CPLUS_DEBUG (logger, "return to client, address: " << address << ", package:\n" << snd_msg.DebugString ());
+
     string str_msg;
     if (!snd_msg.SerializeToString (&str_msg))
     {
@@ -105,7 +108,17 @@ int ClientMsgProcessor::ProcessRcvMsg (string& adr, LYMsgOnAir& msg)
         case LY_TRAFFIC_SUB:
         {
             ReturnToClient (LY_SUCCESS);
-            onrouteclientpanorama.SubTraffic (adr, rcv_msg);
+
+            if(rcv_msg.traffic_sub().pub_type() == LYTrafficSub::LY_PUB_CRON)
+            {
+//                LOG4CPLUS_DEBUG (logger, "LY_PUB_CRON operation type: ");
+                cronclientpanorama.SubTraffic(adr, rcv_msg);
+            }
+            else
+            {
+                onrouteclientpanorama.SubTraffic (adr, rcv_msg);
+            }
+
             return 0;
         }
 
@@ -115,6 +128,14 @@ int ClientMsgProcessor::ProcessRcvMsg (string& adr, LYMsgOnAir& msg)
             LYDeviceReport device_report = rcv_msg.device_report ();
             RegisterDevice (db_client, device_report);
             return 0;
+        }
+
+        case LY_TRAFFIC_REPORT:
+        {
+            ReturnToClient (LY_SUCCESS);
+            LYTrafficReport report = rcv_msg.traffic_report();
+            onrouteclientpanorama.ProcTrafficReport(adr, report);
+            LOG4CPLUS_ERROR (logger, "LY_TRAFFIC_REPORT recv ");
         }
 
         case LY_CHECKIN:
@@ -129,6 +150,7 @@ int ClientMsgProcessor::ProcessRcvMsg (string& adr, LYMsgOnAir& msg)
                 LOG4CPLUS_ERROR (logger, "missing checkin: " << checkin.DebugString());
                 ReturnToClient (LY_OTHER_ERROR);
             }
+
             return 0;
         }
 
@@ -175,7 +197,7 @@ void TrafficObserver::Update (RoadTrafficSubject *sub, bool should_pub)
         LOG4CPLUS_DEBUG (logger, "add road traffic:\n" << sub->GetRoadTraffic().DebugString() << " to observer: " << address);
     }
 
-    if (should_pub && relevant_traffic->road_traffics_size () != 0)
+    if (should_pub && relevant_traffic->road_traffics_size () != 0 )
     {
         ReplyToClient ();
         last_update = now;
@@ -189,7 +211,7 @@ void TrafficObserver::Update (RoadTrafficSubject *sub, bool should_pub)
     */
 }
 
-void TrafficObserver::Register (const string& adr, LYTrafficSub& ts)
+void TrafficObserver::AttachToTraffic(const string& adr, LYTrafficSub& ts)
 {
     address = adr;
     traffic_sub = ts;
@@ -212,6 +234,11 @@ void TrafficObserver::Register (const string& adr, LYTrafficSub& ts)
         LOG4CPLUS_DEBUG (logger, "register road: " << roadname);
         citytrafficpanorama.Attach (this, roadname);
     }
+}
+
+void TrafficObserver::Register (const string& adr, LYTrafficSub& ts)
+{
+    this->AttachToTraffic(adr, ts);
 
     time_t now = time (NULL);
     LOG4CPLUS_DEBUG (logger, "now: " << ::ctime(&now) << ", last update: " << ::ctime(&last_update));
@@ -224,13 +251,16 @@ void TrafficObserver::Register (const string& adr, LYTrafficSub& ts)
     }
 
     LYTrafficSub::LYPubType pub_type = traffic_sub.pub_type();
+    //LOG4CPLUS_DEBUG (logger, "register pub type: " << pub_type);
+
     if (pub_type == LYTrafficSub::LY_PUB_ADHOC)
     {
     	Unregister ();
     }
     else if (pub_type == LYTrafficSub::LY_PUB_CRON)
     {
-    	// TODO
+      	//submit the cron request to cron_worker
+    	LOG4CPLUS_DEBUG (logger, "can't reach here ");
     }
 }
 
@@ -281,10 +311,13 @@ int OnRouteClientPanorama::SubTraffic (string& adr, LYMsgOnAir& pkg)
 void ClientObservers::CreateSubscription (const string& adr, LYMsgOnAir& pkg)
 {
     LYTrafficSub traffic_sub = pkg.traffic_sub ();
+
+    LOG4CPLUS_ERROR (logger, "run to CreateSubscription: ");
+    //LOG4CPLUS_ERROR (logger, "ts pub type "<< traffic_sub.pub_type());
+
     LYRoute route = traffic_sub.route ();
     int identity = route.identity ();
 
-	/*
     if ( identity == HOT_TRAFFIC_ROUTE_ID)
     {
     	if (has_sub_hot_traffic)
@@ -296,7 +329,6 @@ void ClientObservers::CreateSubscription (const string& adr, LYMsgOnAir& pkg)
     		has_sub_hot_traffic = true;
     	}
     }
-	*/
 
 //    address = adr;
     LOG4CPLUS_DEBUG (logger, "insert/update subscription, address: " << adr << " identity: " << identity);
@@ -377,14 +409,46 @@ void OnRouteClientPanorama::Init ()
 // Add if there does not exist, update if there exists.
 void OnRouteClientPanorama::CreateSubscription (const string& adr, LYMsgOnAir& pkg)
 {
-    LOG4CPLUS_DEBUG (logger, "insert/update subscription, address: " << adr);
-    map_client_relevant_traffic[adr].CreateSubscription(adr,pkg);
+    LOG4CPLUS_DEBUG (logger, "insert/update subscription, address: " );//<< adr);
+    map_client_relevant_traffic[adr].CreateSubscription(adr, pkg);
 }
 
 void OnRouteClientPanorama::DeleteSubscription (const string& adr, LYMsgOnAir& pkg)
 {
-    LOG4CPLUS_DEBUG (logger, "delete subscription, address: " << adr);
+    //LOG4CPLUS_DEBUG (logger, "delete subscription, address: " << adr);
     map_client_relevant_traffic[adr].DeleteSubscription(adr,pkg);
+}
+
+void OnRouteClientPanorama::ProcTrafficReport(const string& adr, LYTrafficReport& report)
+{
+    static const string dbc = "roadclouding_production.traffic_rpt";
+
+    char hex_token [DEVICE_TOKEN_SIZE * 2];
+    HexDump (hex_token, adr.c_str(), DEVICE_TOKEN_SIZE);
+    std::string s_hex_token (hex_token, DEVICE_TOKEN_SIZE * 2);
+
+    mongo::BSONObjBuilder query;
+    query << mongo::GENOID;
+    query << "dev_id" << s_hex_token;
+
+   for(int i = 0; i < report.points_size(); i++)
+   {
+       query.appendNumber("timestamp", (long long)report.points(i).timestamp());
+       query.append("lng", report.points(i).sp_coordinate().lng());
+       query.append("lat", report.points(i).sp_coordinate().lat());
+
+       if(report.points(i).has_altitude())
+       {
+           query.append("altitude", report.points(i).altitude());
+       }
+
+       if(report.points(i).has_course())
+       {
+           query.append("course", report.points(i).course());
+       }
+   }
+
+   db_client.insert(dbc, query.obj());
 }
 
 void VersionManager::Init()

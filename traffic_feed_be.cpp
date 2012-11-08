@@ -10,6 +10,9 @@ extern OnRouteClientPanorama onrouteclientpanorama;
 void RoadTrafficSubject::Attach(TrafficObserver *obs)
 {
     set_observers.insert(obs);
+
+    LOG4CPLUS_DEBUG (logger, "set_observers size: " << set_observers.size());
+
     Notify (obs);
 }
 
@@ -130,5 +133,10 @@ int CityTrafficPanorama::SetState (const Json::Value& jv_roadset)
             it->second->SetState(jv_road);
         }
     }
+
+    //tommy TODO
+    extern CronClientPanorama cronclientpanorama;
+    cronclientpanorama.Init();
+
     return 0;
 }
