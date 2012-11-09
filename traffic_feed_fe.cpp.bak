@@ -1,0 +1,282 @@
+//
+//
+
+#include <unistd.h>
+#include "traffic_feed.h"
+#include "tss_log.h"
+
+extern Logger logger;
+extern CityTrafficPanorama citytrafficpanorama;
+extern OnRouteClientPanorama onrouteclientpanorama;
+
+void PreparePackageHead (tss::Package& pkg, tss::CmdType ct, tss::PldType st)
+{
+    pkg.set_version (1);
+    pkg.set_cmd_type (ct);
+    pkg.set_snd_type (st);
+    pkg.set_timestamp (time (NULL));
+}
+
+int ReturnErrToClient (zmq::socket_t& skt, std::string& adr, tss::ErrCode error_code)
+{
+    tss::Package snd_package;
+    PreparePackageHead (snd_package, tss::RETURN_ERR, tss::VOID);
+    snd_package.set_id ((int)error_code);
+    std::string str_package;
+    if (!snd_package.SerializeToString (&str_package))
+    {
+        LOG4CPLUS_ERROR (logger, "Failed to write relevant city traffic.");
+        return -1;
+    }
+
+    s_sendmore (skt, adr);
+    s_send     (skt, str_package);
+    return 0;
+}
+
+int PreprocessPackage (const std::string& adr, tss::Package& pkg, tss::ErrCode& ec)
+{
+    time_t now = time (NULL);
+    time_t ts = pkg.timestamp ();
+    time_t expires = pkg.expires();
+    int version;
+
+    if (now - ts > expires * 60)
+    {
+        ec = tss::TIMEOUT;
+        LOG4CPLUS_WARN (logger, "expired package, timestamp: " << ctime(&ts) << ", expires: " << expires << " minutes");
+        return -1;
+    }
+
+    if ((version = pkg.version ()) != 1)
+    {
+        ec = tss::VERSION_IMCOMPATIBLE;
+        LOG4CPLUS_ERROR (logger, "invalid version: " << version);
+        return -1;
+    }
+
+    if ((tss::MsgDir msg_dir = pkg.msg_type ()) != CLIENT2TSS)
+    {
+        ec = tss::MSG_DIR_ERROR;
+        LOG4CPLUS_ERROR (logger, "invalid message direction: " << msg_dir);
+        return -1;
+    }
+}
+
+int ProcessPackage (const std::string& adr, tss::Package& pkg, tss::ErrCode& ec)
+{
+    switch (tss::MsgType msg_type = pkg.msg_type ())
+    {
+        case tss::TRAFFIC_SUBSCRIBE:
+            tss::TrafficSub traffic_sub = pkg.traffic_sub();
+            tss::Route route = traffic_sub.route();
+            tss::OprType opr_type = traffic_sub.opr_type();
+            switch (opr_type)
+            {
+                case tss::SUB_CREATE:
+                    onrouteclientpanorama.CreateSubscription (adr, route);
+                    return 1; //sucess, with followup
+
+                case tss::SUB_UPDATE:
+                    onrouteclientpanorama.UpdateSubscription (adr, route);
+                    return 1; //sucess, with followup
+
+                case tss::SUB_DELETE:
+                    onrouteclientpanorama.DeleteSubscription (adr, route);
+                    return 0; //sucess, without followup
+
+                default:
+                    LOG4CPLUS_ERROR (logger, "invalid operation type: " << opr_type);
+                    return -1; //failure
+            }
+            return 0;
+
+        case tss::TRAFFIC_REPORT:
+        case tss::DEVICE_TOKEN_REPORT:
+            LOG4CPLUS_ERROR (logger, "to be supported message type: " << msg_type);
+            return 0;
+
+        default:
+            LOG4CPLUS_ERROR (logger, "invalid message type: " << msg_type);
+            return -1;
+    }
+
+    LOG4CPLUS_ERROR (logger, "should not pass here");
+    return 0;
+}
+
+int TrafficObserver::ReplyToClient (zmq::socket_t& skt)
+{
+    PreparePackageHead (package, tss::RETURN_SUC, tss::CITY_TRAFFIC);
+    std::string str_package;
+    if (!package.SerializeToString (&str_package))
+    {
+        LOG4CPLUS_ERROR (logger, "Failed to write relevant city traffic.");
+        return -1;
+    }
+
+    s_sendmore (skt, address);
+    s_send     (skt, str_package);
+    return 0;
+}
+
+void TrafficObserver::UpdateSubject (RoadTrafficSubject *sub)
+{
+    //TODO: timeout judge
+    time_t now = time (NULL);
+    time_t ts = sub->GetRoadTraffic().timestamp();
+    if (now - ts > ROAD_TRAFFIC_TIMEOUT * 60)
+    {
+        LOG4CPLUS_INFO (logger, "expired road traffic, road: " << sub->GetRoadTraffic().road() << ", timestamp: " << ctime(&ts));
+        return;
+    }
+
+    tss::RoadTraffic *rdtf = relevant_traffic->add_road_traffics();
+    *rdtf = sub->GetRoadTraffic();
+    LOG4CPLUS_DEBUG (logger, "add road traffic:\n" << sub->GetRoadTraffic().DebugString() << " to observer: " << address);
+
+    /* core dump induced, because the following clear will clear *sub
+    LOG4CPLUS_DEBUG (logger, "add road traffic: " << sub->GetRoadTraffic().DebugString() << " to observer: " << address);
+    RepeatedPtrField<tss::RoadTraffic>* rdtf = relevant_traffic->mutable_road_traffics();
+    rdtf->AddAllocated (sub->GetRoadTraffic());
+    */
+}
+
+void TrafficObserver::CreateSubscription (tss::Route& drrt)
+{
+    route = drrt;
+    relevant_traffic = package.mutable_city_traffic();
+    if (relevant_traffic->road_traffics_size () != 0)
+    {
+        LOG4CPLUS_WARN (logger, "there exists relevant traffic before register: " << relevant_traffic->DebugString());
+        ClearRelevantTraffic ();
+    }
+
+    relevant_traffic->set_city (citytrafficpanorama.GetCityTraffic().city());
+    //relevant_traffic->set_timestamp (citytrafficpanorama.GetCityTraffic().timestamp()); 
+    for (int indexk = 0; indexk < route.segments_size (); indexk++)
+    {
+        const tss::Segment& segment = route.segments(indexk);
+        const std::string roadname = segment.road();
+        LOG4CPLUS_DEBUG (logger, "register road: " << roadname);
+        citytrafficpanorama.Attach (this, roadname);
+    }
+}
+
+void TrafficObserver::UpdateSubscription (tss::Route& drrt)
+{
+    route = drrt;
+    relevant_traffic = package.mutable_city_traffic();
+    if (relevant_traffic->road_traffics_size () != 0)
+    {
+        LOG4CPLUS_WARN (logger, "there exists relevant traffic before register: " << relevant_traffic->DebugString());
+        ClearRelevantTraffic ();
+    }
+
+    relevant_traffic->set_city (citytrafficpanorama.GetCityTraffic().city());
+    //relevant_traffic->set_timestamp (citytrafficpanorama.GetCityTraffic().timestamp()); 
+    for (int indexk = 0; indexk < route.segments_size (); indexk++)
+    {
+        const tss::Segment& segment = route.segments(indexk);
+        const std::string roadname = segment.road();
+        LOG4CPLUS_DEBUG (logger, "register road: " << roadname);
+        citytrafficpanorama.Attach (this, roadname);
+    }
+}
+
+void TrafficObserver::DeleteSubscription (tss::Route& drrt)
+{
+    if (relevant_traffic->road_traffics_size () != 0)
+    {
+        LOG4CPLUS_DEBUG (logger, "clear relevant traffic:\n" << relevant_traffic->DebugString());
+        ClearRelevantTraffic ();
+    }
+    else
+    {
+        LOG4CPLUS_INFO (logger, "no relevant traffic before ungister");
+    }
+
+    for (int indexk = 0; indexk < route.segments_size(); indexk++)
+    {
+        const tss::Segment& segment = route.segments(indexk);
+        const std::string roadname = segment.road();
+        LOG4CPLUS_DEBUG (logger, "unregister road: " << roadname);
+        citytrafficpanorama.Detach (this, roadname);
+    }
+}
+
+// Add if there does not exist, update if there exists.
+void OnRouteClientPanorama::CreateSubscription (const std::string& adr, tss::Route& drrt)
+{
+    std::map<std::string, TrafficObserver *>::iterator it;
+    it = map_clientrelevanttraffic.find (adr);
+    
+    if (it == map_clientrelevanttraffic.end()) // insert
+    {
+        TrafficObserver *trafficobserver = new TrafficObserver (adr);
+        map_clientrelevanttraffic.insert (std::pair <std::string, TrafficObserver *>(adr, trafficobserver));
+        LOG4CPLUS_DEBUG (logger, "insert client: " << adr);
+        trafficobserver->CreateSubscription (drrt);
+    }
+    else // update
+    {
+        it->second->CreateSubsctiption (drrt);
+        LOG4CPLUS_DEBUG (logger, "create subscription of existent client: " << it->first);
+    }
+}
+
+// Add if there does not exist, update if there exists.
+void OnRouteClientPanorama::UpdateSubscription (const std::string& adr, tss::Route& drrt)
+{
+    std::map<std::string, TrafficObserver *>::iterator it;
+    it = map_clientrelevanttraffic.find (adr);
+    
+    if (it == map_clientrelevanttraffic.end()) // insert
+    {
+        LOG4CPLUS_WARN (logger, "update subscription of nonexistent client: " << adr);
+        TrafficObserver *trafficobserver = new TrafficObserver (adr);
+        map_clientrelevanttraffic.insert (std::pair <std::string, TrafficObserver *>(adr, trafficobserver));
+        trafficobserver->CreateSubscription (drrt);
+    }
+    else // update
+    {
+        it->second->UpdateSubsctiption (drrt);
+        LOG4CPLUS_DEBUG (logger, "update subscription of existent client: " << it->first);
+    }
+}
+
+void OnRouteClientPanorama::DeleteSubscription (const std::string& adr)
+{
+/*
+    TrafficObserver *trafficobserver = map_clientrelevanttraffic [adr];
+    trafficobserver->Unregister ();
+    delete trafficobserver;
+    map_clientrelevanttraffic.erase (adr);
+*/
+
+    std::map<std::string, TrafficObserver *>::iterator it;
+    it = map_clientrelevanttraffic.find (adr);
+    
+    if (it == map_clientrelevanttraffic.end())
+    {
+        LOG4CPLUS_WARN (logger, "delete subscription of nonexistent client: " << adr);
+    }
+    else
+    {
+        it->second->DeleteSubsctiption (drrt);
+        LOG4CPLUS_DEBUG (logger, "delete subscription of existent client: " << it->first);
+    }
+}
+
+int OnRouteClientPanorama::Publicate (zmq::socket_t& skt)
+{
+    std::map < std::string, TrafficObserver *>::iterator it;
+    for ( it = map_clientrelevanttraffic.begin(); it != map_clientrelevanttraffic.end(); it++ )
+    {
+        if (it->second->ReplyToClient(skt) != 0)
+        {
+            LOG4CPLUS_ERROR (logger, "Failed to write relevant city traffic.");
+        }
+    }
+    return 0;
+}

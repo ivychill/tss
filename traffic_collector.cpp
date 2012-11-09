@@ -50,15 +50,17 @@ void TrafficReportCollector::ProcTrafficReport(const string& adr, const LYTraffi
     HexDump (hex_token, adr.c_str(), DEVICE_TOKEN_SIZE);
     std::string s_hex_token (hex_token, DEVICE_TOKEN_SIZE * 2);
 
-    mongo::BSONObjBuilder query;
-    query << mongo::GENOID;
-    query << "dev_token" << s_hex_token;
-
 //    LOG4CPLUS_INFO(logger, "recv a report");
 
    for(int i = 0; i < report.points_size(); i++)
    {
-       query.appendNumber("timestamp", (long long)report.points(i).timestamp());
+       mongo::BSONObjBuilder query;
+       query << mongo::GENOID;
+       query << "dev_token" << s_hex_token;
+
+       query.append("timestamp", boost::lexical_cast<string>(report.points(i).timestamp()));
+
+//       query.appendNumber("timestamp", (long long)report.points(i).timestamp());
        query.append("lng", report.points(i).sp_coordinate().lng());
        query.append("lat", report.points(i).sp_coordinate().lat());
 
@@ -71,9 +73,9 @@ void TrafficReportCollector::ProcTrafficReport(const string& adr, const LYTraffi
        {
            query.append("course", report.points(i).course());
        }
-   }
 
-   db.insert(db_traffic_rpt, query.obj());
+       db.insert(db_traffic_rpt, query.obj());
+   }
 }
 
 void TrafficReportCollector::Run()

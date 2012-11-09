@@ -111,7 +111,7 @@ int ClientMsgProcessor::ProcessRcvMsg (string& adr, LYMsgOnAir& msg)
 
             if(rcv_msg.traffic_sub().pub_type() == LYTrafficSub::LY_PUB_CRON)
             {
-//                LOG4CPLUS_DEBUG (logger, "LY_PUB_CRON operation type: ");
+                LOG4CPLUS_DEBUG (logger, "LY_PUB_CRON operation type: ");
                 cronclientpanorama.SubTraffic(adr, rcv_msg);
             }
             else
