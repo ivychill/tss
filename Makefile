@@ -5,7 +5,7 @@ LIB=-L$(JSON_HOME)/libs/linux-gcc-4.6 -lzmq -llog4cplus -lprotobuf -ljson_linux-
 LIB_ADD = -lmongoclient -lboost_thread -lboost_system -lboost_filesystem -lboost_program_options
 
 BIN_PATH=bin
-PRG=traffic_router traffic_forward traffic_feed traffic_apns test_probe test_client test_remote
+PRG=traffic_router traffic_forward traffic_feed traffic_apns test_probe test_client test_remote traffic_collect 
 OBJ=*.o
 
 CC=g++
@@ -15,7 +15,7 @@ CC_FLAG=-Wall
 
 #/libjson_linux-gcc-4.2.1_libmt.a
 
-all: proto traffic_router traffic_forward traffic_feed traffic_apns test_probe test_client test_remote 
+all: proto traffic_router traffic_forward traffic_feed traffic_apns test_probe test_client test_remote traffic_collect 
 
 .cpp.o:
 	@echo "Compile $(OBJ) begin......"
@@ -51,6 +51,11 @@ traffic_apns: traffic_apns.o tss_log.o tss_helper.o tss.pb.o traffic_apns.h tss_
 	@echo "Link traffic_apns begin......"
 	$(CC) $(CC_FLAG) -o $(BIN_PATH)/$@ $^ $(LIB) $(LIB_ADD) -lssl
 	@echo "Link traffic_apns end......"
+
+traffic_collect: traffic_collector.o tss_log.o tss_helper.o tss.pb.o tss.pb.h tss_helper.h 
+	@echo "Link traffic_collect begin......"
+	$(CC) $(CC_FLAG) -o $(BIN_PATH)/$@ $^ $(LIB) $(LIB_ADD) 
+	@echo "Link traffic_collect end......"
 
 test_probe: test_probe.o
 	@echo "Link test_probe begin......"

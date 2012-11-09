@@ -8,6 +8,33 @@ Logger logger;
 DBClientConnection db_client;
 uint32_t whicheverOrderIWantToGetBackInAErrorResponse_ID = 0;
 
+class FeedbackChecker{
+private:
+    bool is_running;
+    Apns& apns;
+    boost::thread holder;
+    void monitor(){
+        boost::thread feedback(boost::bind(&Apns::checkFeedback, &apns));
+        feedback.join();
+        is_running = false;
+    }
+
+public:
+    FeedbackChecker(Apns& apns):is_running(false),apns(apns){}
+
+    void start(){
+        if(is_running)
+        {
+            return;
+        }
+        else
+        {
+            is_running = true;
+            holder = boost::thread(boost::bind(&FeedbackChecker::monitor, this));
+        }
+    }
+};
+
 int main (int argc, char *argv[])
 {
     signal(SIGTTOU,SIG_IGN);  
@@ -33,7 +60,8 @@ int main (int argc, char *argv[])
     };
 
     apns.InitPush ();
-    boost::thread feedback(boost::bind(&Apns::checkFeedback, &apns));
+    apns.InitFeedback();
+    FeedbackChecker checker(apns);
 
 	while (true)
 	{
@@ -70,10 +98,12 @@ int main (int argc, char *argv[])
 			ByteDump (byte_token, dev_token.data(), DEVICE_TOKEN_SIZE);
 
 			apns.sendPayload (byte_token, str_payload.c_str (), str_payload.length ());
+			checker.start();
 		}
 	}
 
-	apns.ReleasePush ();
+	apns.ReleasePush();
+	apns.ReleaseFeedback();
 
     return 0;
 }
@@ -115,6 +145,8 @@ void Apns::Init (UrlAndSSL& uas)
     bio = BIO_new_ssl_connect(uas.ctx);
     BIO_get_ssl(bio, &uas.ssl);
     SSL_set_mode(uas.ssl, SSL_MODE_AUTO_RETRY);
+
+//    BIO_set_nbio(bio, 1); // 1 non block
 
     /* Attempt to connect */
     BIO_set_conn_hostname(bio, uas.url.c_str());
@@ -196,15 +228,15 @@ bool Apns::sendPayload (char *deviceTokenBinary, const char *payloadBuff, size_t
           }
           else
           {
-              LOG4CPLUS_DEBUG (logger, "read null " << rbytes);
+              LOG4CPLUS_DEBUG (logger, "read null: " << SSL_get_error(push.ssl, rbytes));
           }
       }
       else
       {
-          LOG4CPLUS_DEBUG (logger, "fail to write push");
+          LOG4CPLUS_DEBUG (logger, "fail to write push: " <<  SSL_get_error(push.ssl, wbytes));
           rtn = false;
       }
-      LOG4CPLUS_DEBUG (logger, "after SSL_write");
+//      LOG4CPLUS_DEBUG (logger, "after SSL_write");
   }
 
   return rtn;
@@ -216,21 +248,15 @@ void Apns::checkFeedback ()
     char hex_buff [FEEDBACK_SIZE * 2];
     int rbytes;
 
-    InitFeedback ();
-    while(true)
+    while ((rbytes = SSL_read (feedback.ssl, byte_buff, FEEDBACK_SIZE)) > 0) //to be improved
     {
-        while ((rbytes = SSL_read (feedback.ssl, byte_buff, FEEDBACK_SIZE)) > 0) //to be improved
-        {
-            LOG4CPLUS_DEBUG (logger, "read feedback bytes: " << rbytes);
-            HexDump (hex_buff, byte_buff, FEEDBACK_SIZE);
-            std::string str_feedback (hex_buff, FEEDBACK_SIZE * 2);
-            LOG4CPLUS_DEBUG (logger, "dump feedback: " << hex_buff);
-            std::string device_token ( hex_buff + FEEDBACK_HEAD_SIZE * 2, (FEEDBACK_SIZE - FEEDBACK_HEAD_SIZE ) * 2);
-            UnregisterDevice (db_client, device_token);
-        }
-
-        s_sleep(1* 1000); // sleep
+        LOG4CPLUS_DEBUG (logger, "read feedback bytes: " << rbytes);
+        HexDump (hex_buff, byte_buff, FEEDBACK_SIZE);
+        std::string str_feedback (hex_buff, FEEDBACK_SIZE * 2);
+        LOG4CPLUS_DEBUG (logger, "dump feedback: " << hex_buff);
+        std::string device_token ( hex_buff + FEEDBACK_HEAD_SIZE * 2, (FEEDBACK_SIZE - FEEDBACK_HEAD_SIZE ) * 2);
+        UnregisterDevice (db_client, device_token);
     }
 
-    ReleaseFeedback ();
+//    LOG4CPLUS_DEBUG (logger, "checkFeedBack out: ");
 }

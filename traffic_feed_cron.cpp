@@ -286,7 +286,7 @@ void CronSchelder::OnTimer()
 
 void CronSchelder::Init()
 {
-    skt_.bind("ipc://cron_scheler.ipc");
+    skt_.bind("ipc://cron_schelder.ipc");
     p_cron_server = &skt_;
     boost::thread timer(boost::bind(TimerEntry, this));
 }
@@ -544,9 +544,9 @@ void CronClientPanorama::Init ()
 {
     if(inited)
     {
-        inited = true;
         return;
     }
+    inited = true;
 
     char byte_token[DEVICE_TOKEN_SIZE];
 

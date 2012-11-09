@@ -133,9 +133,8 @@ int ClientMsgProcessor::ProcessRcvMsg (string& adr, LYMsgOnAir& msg)
         case LY_TRAFFIC_REPORT:
         {
             ReturnToClient (LY_SUCCESS);
-            LYTrafficReport report = rcv_msg.traffic_report();
-            onrouteclientpanorama.ProcTrafficReport(adr, report);
-            LOG4CPLUS_ERROR (logger, "LY_TRAFFIC_REPORT recv ");
+            LOG4CPLUS_ERROR (logger, "LY_TRAFFIC_REPORT ");
+            break;
         }
 
         case LY_CHECKIN:
@@ -417,38 +416,6 @@ void OnRouteClientPanorama::DeleteSubscription (const string& adr, LYMsgOnAir& p
 {
     //LOG4CPLUS_DEBUG (logger, "delete subscription, address: " << adr);
     map_client_relevant_traffic[adr].DeleteSubscription(adr,pkg);
-}
-
-void OnRouteClientPanorama::ProcTrafficReport(const string& adr, LYTrafficReport& report)
-{
-    static const string dbc = "roadclouding_production.traffic_rpt";
-
-    char hex_token [DEVICE_TOKEN_SIZE * 2];
-    HexDump (hex_token, adr.c_str(), DEVICE_TOKEN_SIZE);
-    std::string s_hex_token (hex_token, DEVICE_TOKEN_SIZE * 2);
-
-    mongo::BSONObjBuilder query;
-    query << mongo::GENOID;
-    query << "dev_id" << s_hex_token;
-
-   for(int i = 0; i < report.points_size(); i++)
-   {
-       query.appendNumber("timestamp", (long long)report.points(i).timestamp());
-       query.append("lng", report.points(i).sp_coordinate().lng());
-       query.append("lat", report.points(i).sp_coordinate().lat());
-
-       if(report.points(i).has_altitude())
-       {
-           query.append("altitude", report.points(i).altitude());
-       }
-
-       if(report.points(i).has_course())
-       {
-           query.append("course", report.points(i).course());
-       }
-   }
-
-   db_client.insert(dbc, query.obj());
 }
 
 void VersionManager::Init()

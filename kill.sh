@@ -4,3 +4,4 @@ killall traffic_apns
 killall traffic_feed
 killall traffic_forward
 killall traffic_router
+killall traffic_collect

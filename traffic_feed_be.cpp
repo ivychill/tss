@@ -6,6 +6,7 @@
 extern Logger logger;
 extern CityTrafficPanorama citytrafficpanorama;
 extern OnRouteClientPanorama onrouteclientpanorama;
+extern CronClientPanorama cronclientpanorama;
 
 void RoadTrafficSubject::Attach(TrafficObserver *obs)
 {
@@ -135,7 +136,6 @@ int CityTrafficPanorama::SetState (const Json::Value& jv_roadset)
     }
 
     //tommy TODO
-    extern CronClientPanorama cronclientpanorama;
     cronclientpanorama.Init();
 
     return 0;

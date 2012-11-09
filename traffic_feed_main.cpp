@@ -39,22 +39,24 @@ int main (int argc, char *argv[])
     skt_probe.setsockopt (ZMQ_IDENTITY, "SINK", 5);
     skt_probe.connect ("tcp://localhost:6004");
     
-    // Tell traffic_router we're ready for work
-    s_send (skt_client, "READY");
-
     // cron
     CronSchelder cron_sched(context);
-//    cron_sched.Init();
+    cron_sched.Init();
     p_cron_sched = &cron_sched;
 
+    // TODO
+    cronclientpanorama.Init();
+
 	zmq::socket_t cron_client (context, ZMQ_PAIR);
-	cron_client.connect("ipc://cron_scheler.ipc");
+	cron_client.connect("ipc://cron_schelder.ipc");
     p_skt_cron_client = &cron_client;
 
 	zmq::socket_t apns_client (context, ZMQ_PAIR);
 	apns_client.connect("ipc://apns.ipc");
     p_skt_apns_client = &apns_client;
 
+    // Tell traffic_router we're ready for work
+    s_send (skt_client, "READY");
 
     // no citytraffic ,  need wait 5 min to do the init
 //    cronclientpanorama.Init();
