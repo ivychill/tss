@@ -18,9 +18,9 @@ private:
     void ProcTrafficReport(const string& adr, const LYTrafficReport& report);
 
 public:
-    TrafficReportCollector(zmq::context_t& ctxt):skt_feed(ctxt, ZMQ_ROUTER){};
+    TrafficReportCollector(zmq::context_t& ctxt):skt_feed(ctxt, ZMQ_DEALER){};
     void Init();
-    void run();
+    void Run();
 
 //    ~TrafficReportCollector(){
 //    }
@@ -29,8 +29,8 @@ public:
 
 void TrafficReportCollector::Init()
 {
-    skt_feed.setsockopt (ZMQ_IDENTITY, collector.c_str(), sizeof(collector));
-    skt_feed.connect("tcp://*:6002");
+    skt_feed.setsockopt (ZMQ_IDENTITY, collector.c_str(), collector.size());
+    skt_feed.connect("tcp://localhost:6002");
 
     try
     {
@@ -54,6 +54,8 @@ void TrafficReportCollector::ProcTrafficReport(const string& adr, const LYTraffi
     query << mongo::GENOID;
     query << "dev_token" << s_hex_token;
 
+//    LOG4CPLUS_INFO(logger, "recv a report");
+
    for(int i = 0; i < report.points_size(); i++)
    {
        query.appendNumber("timestamp", (long long)report.points(i).timestamp());
@@ -74,7 +76,7 @@ void TrafficReportCollector::ProcTrafficReport(const string& adr, const LYTraffi
    db.insert(db_traffic_rpt, query.obj());
 }
 
-void TrafficReportCollector::run()
+void TrafficReportCollector::Run()
 {
     zmq::pollitem_t items[] = {
             {skt_feed,  0, ZMQ_POLLIN, 0 },
@@ -89,8 +91,9 @@ void TrafficReportCollector::run()
             const std::string address = s_recv (skt_feed);
             std::string request = s_recv (skt_feed);
 
-            //LOG4CPLUS_ERROR (logger, "receive address: " << address);
-            //LOG4CPLUS_ERROR (logger, "receive request: " << request);
+//            LOG4CPLUS_ERROR (logger, "receive address: " << address);
+//            LOG4CPLUS_ERROR (logger, "receive request: " << request);
+
             LYMsgOnAir rcv_msg;
 
             if (!rcv_msg.ParseFromString (request))
@@ -112,9 +115,14 @@ void TrafficReportCollector::run()
 
 int main (int argc, char *argv[])
 {
+    InitLog (argv[0], logger);
+
+    LOG4CPLUS_INFO (logger, "collector init...");
+
     zmq::context_t context(1);
     TrafficReportCollector collectors(context);
-    collectors.run();
+    collectors.Init();
+    collectors.Run();
 
     return 0;
 }
