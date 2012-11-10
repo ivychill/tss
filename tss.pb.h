@@ -851,6 +851,17 @@ class LYRoadTraffic : public ::google::protobuf::Message {
   inline ::google::protobuf::RepeatedPtrField< ::tss::LYSegmentTraffic >*
       mutable_segment_traffics();
   
+  // optional string alias = 4;
+  inline bool has_alias() const;
+  inline void clear_alias();
+  static const int kAliasFieldNumber = 4;
+  inline const ::std::string& alias() const;
+  inline void set_alias(const ::std::string& value);
+  inline void set_alias(const char* value);
+  inline void set_alias(const char* value, size_t size);
+  inline ::std::string* mutable_alias();
+  inline ::std::string* release_alias();
+  
   // optional string href = 12;
   inline bool has_href() const;
   inline void clear_href();
@@ -879,6 +890,8 @@ class LYRoadTraffic : public ::google::protobuf::Message {
   inline void clear_has_road();
   inline void set_has_timestamp();
   inline void clear_has_timestamp();
+  inline void set_has_alias();
+  inline void clear_has_alias();
   inline void set_has_href();
   inline void clear_has_href();
   inline void set_has_desc();
@@ -889,11 +902,12 @@ class LYRoadTraffic : public ::google::protobuf::Message {
   ::std::string* road_;
   ::google::protobuf::int64 timestamp_;
   ::google::protobuf::RepeatedPtrField< ::tss::LYSegmentTraffic > segment_traffics_;
+  ::std::string* alias_;
   ::std::string* href_;
   ::std::string* desc_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(5 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(6 + 31) / 32];
   
   friend void  protobuf_AddDesc_tss_2eproto();
   friend void protobuf_AssignDesc_tss_2eproto();
@@ -2844,15 +2858,73 @@ LYRoadTraffic::mutable_segment_traffics() {
   return &segment_traffics_;
 }
 
-// optional string href = 12;
-inline bool LYRoadTraffic::has_href() const {
+// optional string alias = 4;
+inline bool LYRoadTraffic::has_alias() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
-inline void LYRoadTraffic::set_has_href() {
+inline void LYRoadTraffic::set_has_alias() {
   _has_bits_[0] |= 0x00000008u;
 }
-inline void LYRoadTraffic::clear_has_href() {
+inline void LYRoadTraffic::clear_has_alias() {
   _has_bits_[0] &= ~0x00000008u;
+}
+inline void LYRoadTraffic::clear_alias() {
+  if (alias_ != &::google::protobuf::internal::kEmptyString) {
+    alias_->clear();
+  }
+  clear_has_alias();
+}
+inline const ::std::string& LYRoadTraffic::alias() const {
+  return *alias_;
+}
+inline void LYRoadTraffic::set_alias(const ::std::string& value) {
+  set_has_alias();
+  if (alias_ == &::google::protobuf::internal::kEmptyString) {
+    alias_ = new ::std::string;
+  }
+  alias_->assign(value);
+}
+inline void LYRoadTraffic::set_alias(const char* value) {
+  set_has_alias();
+  if (alias_ == &::google::protobuf::internal::kEmptyString) {
+    alias_ = new ::std::string;
+  }
+  alias_->assign(value);
+}
+inline void LYRoadTraffic::set_alias(const char* value, size_t size) {
+  set_has_alias();
+  if (alias_ == &::google::protobuf::internal::kEmptyString) {
+    alias_ = new ::std::string;
+  }
+  alias_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* LYRoadTraffic::mutable_alias() {
+  set_has_alias();
+  if (alias_ == &::google::protobuf::internal::kEmptyString) {
+    alias_ = new ::std::string;
+  }
+  return alias_;
+}
+inline ::std::string* LYRoadTraffic::release_alias() {
+  clear_has_alias();
+  if (alias_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = alias_;
+    alias_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+
+// optional string href = 12;
+inline bool LYRoadTraffic::has_href() const {
+  return (_has_bits_[0] & 0x00000010u) != 0;
+}
+inline void LYRoadTraffic::set_has_href() {
+  _has_bits_[0] |= 0x00000010u;
+}
+inline void LYRoadTraffic::clear_has_href() {
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void LYRoadTraffic::clear_href() {
   if (href_ != &::google::protobuf::internal::kEmptyString) {
@@ -2904,13 +2976,13 @@ inline ::std::string* LYRoadTraffic::release_href() {
 
 // optional string desc = 11;
 inline bool LYRoadTraffic::has_desc() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
+  return (_has_bits_[0] & 0x00000020u) != 0;
 }
 inline void LYRoadTraffic::set_has_desc() {
-  _has_bits_[0] |= 0x00000010u;
+  _has_bits_[0] |= 0x00000020u;
 }
 inline void LYRoadTraffic::clear_has_desc() {
-  _has_bits_[0] &= ~0x00000010u;
+  _has_bits_[0] &= ~0x00000020u;
 }
 inline void LYRoadTraffic::clear_desc() {
   if (desc_ != &::google::protobuf::internal::kEmptyString) {

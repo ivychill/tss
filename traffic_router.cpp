@@ -7,6 +7,7 @@
 #include "zhelpers.hpp"
 #include "tss_log.h"
 #include "tss.pb.h"
+#include <set>
 using namespace std;
 using namespace tss;
 #define CHECK_ACTIVE_INTERVAL 3600*24	//每天检查一次
@@ -23,7 +24,8 @@ struct RouteSession
 
 Logger logger;
 static const std::string collector("traffic_collector");
-map <string, RouteSession> route_adapter;	//第一个参数：snd_id，即客户端的device_id
+set<string> set_address; //V1客户端，参数为zmq_id
+map<string, RouteSession> route_adapter;	//V2客户端。第一个参数：snd_id，即device_id
 
 /*
 int genCheckSum(string payload)
@@ -127,25 +129,50 @@ int main (int argc, char *argv[])
 
             if (client_addr.compare("READY") != 0)
             {
-                std::string reply = s_recv (skt_feed);
-            	std::string to_address = client_addr;
-
-                //V2:如果能在route_adapter中找到，说明是新版本的客户端，则把地址从snd_id转为zmq_id。否则是旧版本客户端，不作转换
-    			map<string, RouteSession>::iterator it;
-            	it = route_adapter.find (client_addr);
-            	if (it != route_adapter.end())
+            	if (client_addr.compare("*") == 0)	//广播，用于热点路况
             	{
-            		to_address = it -> second.address;
-            		LOG4CPLUS_INFO (logger, "V2 client, rcv_id: " << client_addr << ", zmq_id: " << to_address);
+            		LOG4CPLUS_INFO (logger, "hotroad broadcast");
+            		std::string reply = s_recv (skt_feed);
+
+            		map<string, RouteSession>::iterator itv2;
+            	    for ( itv2 = route_adapter.begin(); itv2 != route_adapter.end(); itv2++ )
+            	    {
+                		s_sendmore (skt_client, itv2->second.address);
+            			LOG4CPLUS_INFO (logger, "broadcast for V2 client, rcv_id: " << itv2->first << ", zmq_id: " << itv2->second.address);
+                		s_send     (skt_client, reply);
+            	    }
+
+            	    set<string>::iterator itv1;
+            	    for ( itv1 = set_address.begin(); itv1 != set_address.end(); itv1++ )
+            	    {
+            	    	s_sendmore (skt_client, *itv1);
+            			LOG4CPLUS_INFO (logger, "broadcast for V1 client, address: " << *itv1);
+            	    	s_send     (skt_client, reply);
+            	    }
             	}
+
             	else
             	{
-            		LOG4CPLUS_INFO (logger, "V1 client, address: " << client_addr);
-            	}
+            		std::string reply = s_recv (skt_feed);
+            		std::string to_address = client_addr;
 
-                //LOG4CPLUS_DEBUG (logger, "reply from worker: " << reply);
-                s_sendmore (skt_client, to_address);
-                s_send     (skt_client, reply);
+            		//V2:如果能在route_adapter中找到，说明是新版本的客户端，则把地址从snd_id转为zmq_id。否则是旧版本客户端，不作转换
+            		map<string, RouteSession>::iterator it;
+            		it = route_adapter.find (client_addr);
+            		if (it != route_adapter.end())
+            		{
+            			to_address = it -> second.address;
+            			LOG4CPLUS_INFO (logger, "reply for V2 client, rcv_id: " << client_addr << ", zmq_id: " << to_address);
+            		}
+            		else
+            		{
+            			LOG4CPLUS_INFO (logger, "reply for V1 client, address: " << client_addr);
+            		}
+
+            		//LOG4CPLUS_DEBUG (logger, "reply from worker: " << reply);
+            		s_sendmore (skt_client, to_address);
+            		s_send     (skt_client, reply);
+            	}
             }
         }
         
@@ -179,7 +206,7 @@ int main (int argc, char *argv[])
             		from_addr = snd_id;
             		time_t now = time (NULL);
             		route_adapter[snd_id].last_update = now;
-            		LOG4CPLUS_INFO (logger, "snd_id: " << snd_id << ", address: " << client_addr << ", timestamp: " << ::ctime(&now));
+            		LOG4CPLUS_INFO (logger, "request from V2 client, snd_id: " << snd_id << ", address: " << client_addr << ", timestamp: " << ::ctime(&now));
 
             		if (now >= last_check + CHECK_ACTIVE_INTERVAL)
             		{
@@ -190,16 +217,18 @@ int main (int argc, char *argv[])
             				if ( now >= it->second.last_update + ACTIVE_TIMEOUT)
             				{
 //            					route_adapter.erase (it);	//非活跃用户剔除。如果没有用户上报路况，不一定合适。
-            					LOG4CPLUS_INFO (logger, "inactive user: " << it->first);
+            					LOG4CPLUS_INFO (logger, "inactive client: " << it->first);
             				}
             			}
-            			LOG4CPLUS_INFO (logger, "active user number: " << route_adapter.size ());
+            			LOG4CPLUS_INFO (logger, "active V1 client number: " << route_adapter.size ());
             		}
             	}
 
             	else
             	{
-            		LOG4CPLUS_INFO (logger, "old version client, address: " << client_addr);
+            		LOG4CPLUS_INFO (logger, "request from  V1 client, address: " << client_addr);
+            		set_address.insert(client_addr);
+            		LOG4CPLUS_INFO (logger, "active client number: " << set_address.size ());
             	}
 
             	if (::tss::LY_TC == rcv_msg.to_party ())

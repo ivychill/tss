@@ -53,6 +53,7 @@ message LYRoadTraffic {
     required string road = 1;
     optional int64 timestamp = 2;
     repeated LYSegmentTraffic segment_traffics = 3;
+    optional string alias = 4; //路名别名，因为有的路有两个名字，有的有错别字
     optional string href = 12;
     optional string desc = 11;
 }

@@ -47,24 +47,29 @@ class RoadTrafficSubject
         return road_traffic;
     }
 
-    void Attach(TrafficObserver *obs);
-    void Detach(TrafficObserver *obs);
+    void Attach (TrafficObserver *obs);
+    void Detach (TrafficObserver *obs);
     void Notify ();
     void Notify (TrafficObserver *obs);
-    int SetState(const Json::Value& jv_road);
+    void SetRoad (string& road);
+    void SetState (const Json::Value& jv_road);
 };
 
 class CityTrafficPanorama
 {
     LYCityTraffic city_traffic;
-    map<string, RoadTrafficSubject *> map_roadtraffic;
+    map<string, RoadTrafficSubject> map_roadtraffic;
+    vector<string> vec_hot_road;
 
   public:
-    CityTrafficPanorama ();
+//    CityTrafficPanorama ();
+    void Init ();
     LYCityTraffic& GetCityTraffic ();
-    void Attach (TrafficObserver *obs, const string& road);
-    void Detach (TrafficObserver *obs, const string& road);
-    int SetState (const Json::Value& jv_city);
+    vector<string>& GetHotRoad ();
+    void Attach (TrafficObserver *obs, string& road);
+    void Detach (TrafficObserver *obs, string& road);
+//    void CreateSubject (string& road);
+    void SetState (const Json::Value& jv_city);
 };
 
 class TrafficObserver
@@ -126,11 +131,6 @@ class OnRouteClientPanorama
 
   public:
     int SubTraffic (string& adr, LYMsgOnAir& pkg);
-    /*
-    int SubEventTraffic (string& adr, LYMsgOnAir& pkg);
-    int SubAdhocTraffic (string& adr, LYMsgOnAir& pkg);
-    int SubCronTraffic (string& adr, LYMsgOnAir& pkg);
-    */
     void Init ();
 //    void SubHotTraffic (const string& adr, LYMsgOnAir& pkg);
     void CreateSubscription (const string& adr, LYMsgOnAir& pkg);
