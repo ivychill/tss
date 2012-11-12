@@ -355,20 +355,29 @@ int CronTrafficObserver::ReplyToClient ()
 //                if(pub.city_traffic().road_traffics_size() > 0)
                 for(int rd = 0; rd< pub.city_traffic().road_traffics_size(); rd++)
                 {
-//                    string rn = pub.city_traffic().road_traffics(0).road();
                     const LYRoadTraffic&  road = pub.city_traffic().road_traffics(rd);
                     reply += road.road();
+
+                    string sg;
 
 //                    LOG4CPLUS_DEBUG (logger, "send to client msg:" << pub.city_traffic().road_traffics().size());
                     for(int segment = 0; segment < road.segment_traffics_size(); segment++)
                     {
                         const LYSegmentTraffic& sgmt = road.segment_traffics(segment);
-                        reply += sgmt.details();
+                        sg += sgmt.details();
 //                        reply += "方向";
-                        reply += sgmt.direction();
+                        sg += sgmt.direction();
 //                        reply += "速度";
-                        if(reply.size() < 140)
-                            reply += sgmt.speed();
+                        sg += sgmt.speed();
+                    }
+
+                    if(reply.size() + sg.size() < 160)
+                    {
+                        reply += sg;
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
             }

@@ -8,6 +8,19 @@ Logger logger;
 DBClientConnection db_client;
 uint32_t whicheverOrderIWantToGetBackInAErrorResponse_ID = 0;
 
+Apns *papns=0;
+void destroy(int arg)
+{
+    LOG4CPLUS_DEBUG (logger, "destroy by : "<< arg);
+    if(papns)
+    {
+        papns->ReleaseFeedback();
+        papns->ReleasePush();
+    }
+    sleep(1);
+    exit(0);
+}
+
 class FeedbackChecker{
 private:
     bool is_running;
@@ -43,10 +56,13 @@ int main (int argc, char *argv[])
     signal(SIGHUP ,SIG_IGN); 
     signal(SIGPIPE,SIG_IGN);
     signal(SIGCHLD,SIG_IGN);
+    signal(SIGINT,&destroy);
+    signal(SIGKILL,&destroy);
 
     InitLog (argv[0], logger);
     InitDB (db_client);
     Apns apns;
+    papns = &apns;
 
     zmq::context_t ctxt(1);
 	zmq::socket_t  apns_skt(ctxt, ZMQ_PAIR);
@@ -70,15 +86,13 @@ int main (int argc, char *argv[])
         timeinfo = ::localtime (&now);
 
 		zmq::poll (&items [0], 1, -1);
-//		int poll_in = items [0].revents & ZMQ_POLLIN;
-
 		if (items [0].revents & ZMQ_POLLIN)
 		{
 			LOG4CPLUS_DEBUG (logger, "begin to push message, " << timeinfo->tm_year + 1900 << "-" << timeinfo->tm_mon + 1 << "-" << timeinfo->tm_mday << " " << timeinfo->tm_hour << ":" << timeinfo->tm_min << " week day " << timeinfo->tm_wday);
 			//char pld[] = "{\"aps\":{\"alert\":\"提醒您关注上下班拥堵路段\"}}";
 
 			std::string dev_token = s_recv(apns_skt);
-			LOG4CPLUS_DEBUG (logger, "dev_tk size : " << dev_token.size());
+//			LOG4CPLUS_DEBUG (logger, "dev_tk size : " << dev_token.size());
 
 			std::string info = s_recv(apns_skt);
 			LOG4CPLUS_DEBUG (logger, "s_recv info : " << info.size());
@@ -95,16 +109,14 @@ int main (int argc, char *argv[])
 		    LOG4CPLUS_DEBUG (logger, "payload len: " << str_payload.length ());
 
 			char byte_token [DEVICE_TOKEN_SIZE];
-			ByteDump (byte_token, dev_token.data(), DEVICE_TOKEN_SIZE);
+			ByteDump (byte_token, dev_token.c_str(), DEVICE_TOKEN_SIZE);
 
 			apns.sendPayload (byte_token, str_payload.c_str (), str_payload.length ());
 			checker.start();
 		}
 	}
 
-	apns.ReleasePush();
-	apns.ReleaseFeedback();
-
+	LOG4CPLUS_DEBUG (logger, "normal exit. ");
     return 0;
 }
 
@@ -125,8 +137,6 @@ Apns::Apns ()
     passphrase = PDT_PASSPHRASE;    
     LOG4CPLUS_DEBUG (logger, "production env");
 #endif
-
-    Init (feedback);
 }
 
 void Apns::Init (UrlAndSSL& uas)
@@ -228,12 +238,14 @@ bool Apns::sendPayload (char *deviceTokenBinary, const char *payloadBuff, size_t
           }
           else
           {
-              LOG4CPLUS_DEBUG (logger, "read null: " << SSL_get_error(push.ssl, rbytes));
+              LOG4CPLUS_ERROR (logger, "read null: " << SSL_get_error(push.ssl, rbytes));
+              ResetPush();
           }
       }
       else
       {
-          LOG4CPLUS_DEBUG (logger, "fail to write push: " <<  SSL_get_error(push.ssl, wbytes));
+          LOG4CPLUS_ERROR (logger, "fail to write push: " <<  SSL_get_error(push.ssl, wbytes));
+          ResetPush();
           rtn = false;
       }
 //      LOG4CPLUS_DEBUG (logger, "after SSL_write");
@@ -248,15 +260,30 @@ void Apns::checkFeedback ()
     char hex_buff [FEEDBACK_SIZE * 2];
     int rbytes;
 
-    while ((rbytes = SSL_read (feedback.ssl, byte_buff, FEEDBACK_SIZE)) > 0) //to be improved
-    {
-        LOG4CPLUS_DEBUG (logger, "read feedback bytes: " << rbytes);
-        HexDump (hex_buff, byte_buff, FEEDBACK_SIZE);
-        std::string str_feedback (hex_buff, FEEDBACK_SIZE * 2);
-        LOG4CPLUS_DEBUG (logger, "dump feedback: " << hex_buff);
-        std::string device_token ( hex_buff + FEEDBACK_HEAD_SIZE * 2, (FEEDBACK_SIZE - FEEDBACK_HEAD_SIZE ) * 2);
-        UnregisterDevice (db_client, device_token);
-    }
+    int circle = 10;
 
-//    LOG4CPLUS_DEBUG (logger, "checkFeedBack out: ");
+    while(circle--)
+    {
+        if ((rbytes = SSL_read (feedback.ssl, byte_buff, FEEDBACK_SIZE)) > 0) //to be improved
+        {
+            LOG4CPLUS_DEBUG (logger, "read feedback bytes: " << rbytes);
+            HexDump (hex_buff, byte_buff, FEEDBACK_SIZE);
+            std::string str_feedback (hex_buff, FEEDBACK_SIZE * 2);
+            LOG4CPLUS_DEBUG (logger, "dump feedback: " << hex_buff);
+            std::string device_token ( hex_buff + FEEDBACK_HEAD_SIZE * 2, (FEEDBACK_SIZE - FEEDBACK_HEAD_SIZE ) * 2);
+            UnregisterDevice (db_client, device_token);
+        }
+        else if(rbytes < 0)
+        {
+            LOG4CPLUS_ERROR (logger, "fail to checkFeedback: " <<  SSL_get_error(push.ssl, rbytes));
+            ResetFeedback();
+        }
+    }
+}
+
+Apns::~Apns()
+{
+    LOG4CPLUS_DEBUG (logger, "normal ~Apns ");
+    ReleasePush();
+    ReleaseFeedback();
 }

@@ -76,8 +76,18 @@ class Apns
     bool sendPayload (char *deviceTokenBinary, const char *payloadBuff, size_t payloadLength);
     void checkFeedback ();
 
-    ~Apns(){
-        ReleasePush();
-        ReleaseFeedback();
+    void ResetPush ()
+    {
+        Release (push);
+        Init (push);
     }
+
+    void ResetFeedback ()
+    {
+      Release (feedback);
+      Init (feedback);
+    }
+
+
+    ~Apns();
 };
