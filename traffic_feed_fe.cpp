@@ -11,7 +11,7 @@ extern CronClientPanorama cronclientpanorama;
 extern DBClientConnection db_client;
 extern VersionManager version_manager;
 extern zmq::socket_t* p_skt_client;
-extern zmq::socket_t* p_skt_apns_client;
+//extern zmq::socket_t* p_skt_apns_client;
 
 //回复成功失败的信息
 int ClientMsgProcessor::ReturnToClient (LYRetCode ret_code)
@@ -191,9 +191,13 @@ void TrafficObserver::Update (RoadTrafficSubject *sub, bool should_pub)
     }
     else
     {
-        LYRoadTraffic *rdtf = relevant_traffic->add_road_traffics();
-        *rdtf = sub->GetRoadTraffic();
-        LOG4CPLUS_DEBUG (logger, "add road traffic:\n" << sub->GetRoadTraffic().DebugString() << " to observer: " << address);
+    	LYRoadTraffic road_traffic = sub->GetRoadTraffic();
+    	if (road_traffic.segment_traffics_size () != 0)
+    	{
+            LYRoadTraffic *rdtf = relevant_traffic->add_road_traffics();
+            *rdtf = road_traffic;
+            LOG4CPLUS_DEBUG (logger, "add road traffic:\n" << road_traffic.DebugString() << " to observer: " << address);
+    	}
     }
 
     if (should_pub && relevant_traffic->road_traffics_size () != 0 )
@@ -229,7 +233,7 @@ void TrafficObserver::AttachToTraffic(const string& adr, LYTrafficSub& ts)
     for (int indexk = 0; indexk < route.segments_size (); indexk++)
     {
         const LYSegment& segment = route.segments(indexk);
-        const string roadname = segment.road();
+        string roadname = segment.road();
         LOG4CPLUS_DEBUG (logger, "register road: " << roadname);
         citytrafficpanorama.Attach (this, roadname);
     }
@@ -279,7 +283,7 @@ void TrafficObserver::Unregister ()
     for (int indexk = 0; indexk < route.segments_size(); indexk++)
     {
         const LYSegment& segment = route.segments(indexk);
-        const string roadname = segment.road();
+        string roadname = segment.road();
         LOG4CPLUS_DEBUG (logger, "unregister road: " << roadname);
         citytrafficpanorama.Detach (this, roadname);
     }
@@ -287,7 +291,7 @@ void TrafficObserver::Unregister ()
 
 int OnRouteClientPanorama::SubTraffic (string& adr, LYMsgOnAir& pkg)
 {
-    CreateSubscription (adr, hot_traffic_sub);
+//    CreateSubscription (adr, hot_traffic_sub);
     LYTrafficSub traffic_sub = pkg.traffic_sub ();
     LYTrafficSub::LYOprType opr_type = traffic_sub.opr_type ();
     switch (opr_type)
@@ -310,25 +314,8 @@ int OnRouteClientPanorama::SubTraffic (string& adr, LYMsgOnAir& pkg)
 void ClientObservers::CreateSubscription (const string& adr, LYMsgOnAir& pkg)
 {
     LYTrafficSub traffic_sub = pkg.traffic_sub ();
-
-    LOG4CPLUS_ERROR (logger, "run to CreateSubscription: ");
-    //LOG4CPLUS_ERROR (logger, "ts pub type "<< traffic_sub.pub_type());
-
     LYRoute route = traffic_sub.route ();
     int identity = route.identity ();
-
-    if ( identity == HOT_TRAFFIC_ROUTE_ID)
-    {
-    	if (has_sub_hot_traffic)
-    	{
-    		return;
-    	}
-    	else
-    	{
-    		has_sub_hot_traffic = true;
-    	}
-    }
-
 //    address = adr;
     LOG4CPLUS_DEBUG (logger, "insert/update subscription, address: " << adr << " identity: " << identity);
     map_route_relevant_traffic [identity].Unregister ();
@@ -361,48 +348,18 @@ void OnRouteClientPanorama::Init ()
     LYRoute *route = traffic_sub->mutable_route ();
     route->set_identity (HOT_TRAFFIC_ROUTE_ID);
 
-    std::ifstream ifs;
-    ifs.open (GetCfgFile ("hot_road.cfg"));
-    std::stringstream ostr;
-    ostr << ifs.rdbuf();
-    Json::Reader reader;
-    Json::Value jv_roadset;
-
-    bool parsingSuccessful = reader.parse ( ostr.str(), jv_roadset );
-    if ( !parsingSuccessful )
+    vector<string> vec_hot_road = citytrafficpanorama.GetHotRoad ();
+    for (int index = 0; index < vec_hot_road.size(); index++)
     {
-        // report to the user the failure and their locations in the document.
-        LOG4CPLUS_ERROR (logger, "Failed to parse hot_road configuration\n" \
-               << reader.getFormatedErrorMessages());
-        string hot_road[] = {"北环大道", "梅观高速", "南海大道", "滨河大道", "皇岗路", "新洲路", "月亮湾大道", "沙河西路", "红荔路", "南坪快速", "福龙路", "香蜜湖路", "彩田路", "后海大道", "南山创业路", "宝安创业路", "南山大道", "留仙大道", "广深公路", "金田路", "扳雪岗大道", "布龙公路"};
-        for (int index = 0; index < sizeof(hot_road)/sizeof(string); index++)
-        {
-            LYSegment *segment = route->add_segments();
-            segment->set_road(hot_road[index]);
-            segment->mutable_start()->set_lng(0);
-            segment->mutable_start()->set_lat(0);
-            segment->mutable_end()->set_lng(0);
-            segment->mutable_end()->set_lat(0);
-        }
+    	LYSegment *segment = route->add_segments();
+    	segment->set_road(vec_hot_road[index]);
+    	segment->mutable_start()->set_lng(0);
+    	segment->mutable_start()->set_lat(0);
+    	segment->mutable_end()->set_lng(0);
+    	segment->mutable_end()->set_lat(0);
     }
-    else
-    {
-        LOG4CPLUS_DEBUG (logger, "hot road:\n" << jv_roadset.toStyledString());
-        int hot_road_nbr = jv_roadset.size();
-        LOG4CPLUS_DEBUG (logger, "hot_road_nbr: " << hot_road_nbr);
 
-        for ( int indexi = 0; indexi < hot_road_nbr; ++indexi )
-        {
-            Json::Value jv_road = jv_roadset [indexi];
-            std::string roadname = jv_road ["name"].asString();
-            LYSegment *segment = route->add_segments();
-            segment->set_road(roadname);
-            segment->mutable_start()->set_lng(0);
-            segment->mutable_start()->set_lat(0);
-            segment->mutable_end()->set_lng(0);
-            segment->mutable_end()->set_lat(0);
-        }
-    }
+    CreateSubscription ("*", hot_traffic_sub); //*表示所有的客户端都订阅
 }
 
 // Add if there does not exist, update if there exists.

@@ -167,10 +167,11 @@ void protobuf_AssignDesc_tss_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(LYSegmentTraffic));
   LYRoadTraffic_descriptor_ = file->message_type(5);
-  static const int LYRoadTraffic_offsets_[5] = {
+  static const int LYRoadTraffic_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYRoadTraffic, road_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYRoadTraffic, timestamp_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYRoadTraffic, segment_traffics_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYRoadTraffic, alias_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYRoadTraffic, href_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(LYRoadTraffic, desc_),
   };
@@ -464,67 +465,68 @@ void protobuf_AddDesc_tss_2eproto() {
     "t\"\213\001\n\020LYSegmentTraffic\022\037\n\007segment\030\001 \002(\0132"
     "\016.tss.LYSegment\022\021\n\ttimestamp\030\003 \001(\003\022#\n\tdi"
     "rection\030\004 \002(\0162\020.tss.LYDirection\022\r\n\005speed"
-    "\030\005 \002(\005\022\017\n\007details\030\013 \001(\t\"}\n\rLYRoadTraffic"
-    "\022\014\n\004road\030\001 \002(\t\022\021\n\ttimestamp\030\002 \001(\003\022/\n\020seg"
-    "ment_traffics\030\003 \003(\0132\025.tss.LYSegmentTraff"
-    "ic\022\014\n\004href\030\014 \001(\t\022\014\n\004desc\030\013 \001(\t\"[\n\rLYCity"
-    "Traffic\022\014\n\004city\030\001 \001(\t\022\021\n\ttimestamp\030\002 \001(\003"
-    "\022)\n\rroad_traffics\030\003 \003(\0132\022.tss.LYRoadTraf"
-    "fic\"\344\001\n\tLYCrontab\022,\n\tcron_type\030\001 \002(\0162\031.t"
-    "ss.LYCrontab.LYCronType\022\016\n\006minute\030\002 \001(\003\022"
-    "\014\n\004hour\030\003 \001(\003\022\013\n\003dom\030\004 \001(\005\022\r\n\005month\030\005 \001("
-    "\005\022\013\n\003dow\030\006 \001(\005\"b\n\nLYCronType\022\021\n\rLY_REP_M"
-    "INUTE\020\001\022\017\n\013LY_REP_HOUR\020\002\022\016\n\nLY_REP_DOM\020\004"
-    "\022\020\n\014LY_REP_MONTH\020\010\022\016\n\nLY_REP_DOW\020\020\"\326\002\n\014L"
-    "YTrafficSub\022\014\n\004city\030\001 \002(\t\022\033\n\005route\030\002 \002(\013"
-    "2\014.tss.LYRoute\022-\n\010opr_type\030\003 \002(\0162\033.tss.L"
-    "YTrafficSub.LYOprType\022-\n\010pub_type\030\004 \002(\0162"
-    "\033.tss.LYTrafficSub.LYPubType\022\023\n\007expires\030"
-    "\005 \001(\005:\00230\022 \n\010cron_tab\030\006 \001(\0132\016.tss.LYCron"
-    "tab\"D\n\tLYOprType\022\021\n\rLY_SUB_CREATE\020\001\022\021\n\rL"
-    "Y_SUB_DELETE\020\002\022\021\n\rLY_SUB_UPDATE\020\003\"@\n\tLYP"
-    "ubType\022\020\n\014LY_PUB_ADHOC\020\001\022\020\n\014LY_PUB_EVENT"
-    "\020\002\022\017\n\013LY_PUB_CRON\020\003\"J\n\014LYTrafficPub\022\020\n\010r"
-    "oute_id\030\001 \002(\005\022(\n\014city_traffic\030\002 \002(\0132\022.ts"
-    "s.LYCityTraffic\"\177\n\016LYDeviceReport\022\021\n\tdev"
-    "ice_id\030\001 \002(\t\022\024\n\014device_token\030\002 \002(\014\022\023\n\013de"
-    "vice_name\030\003 \002(\t\022\024\n\014device_model\030\004 \002(\t\022\031\n"
-    "\021device_os_version\030\005 \002(\t\"\255\001\n\tLYCheckin\022\024"
-    "\n\014device_model\030\001 \001(\t\022\036\n\007os_type\030\002 \002(\0162\r."
-    "tss.LYOsType\022\022\n\nos_version\030\003 \001(\t\022\030\n\020ly_m"
-    "ajor_release\030\004 \002(\005\022\030\n\020ly_minor_release\030\005"
-    " \002(\005\022\024\n\014download_url\030\006 \001(\t\022\014\n\004desc\030\007 \001(\t"
-    "\"n\n\rLYSamplePoint\022(\n\rsp_coordinate\030\001 \002(\013"
-    "2\021.tss.LYCoordinate\022\021\n\ttimestamp\030\002 \002(\003\022\020"
-    "\n\010altitude\030\003 \001(\001\022\016\n\006course\030\004 \001(\001\"5\n\017LYTr"
-    "afficReport\022\"\n\006points\030\001 \003(\0132\022.tss.LYSamp"
-    "lePoint\"\314\003\n\nLYMsgOnAir\022\017\n\007version\030\001 \002(\005\022"
-    "\016\n\006msg_id\030\005 \002(\005\022\021\n\ttimestamp\030\006 \002(\003\022 \n\nfr"
-    "om_party\030\002 \002(\0162\014.tss.LYParty\022\036\n\010to_party"
-    "\030\003 \002(\0162\014.tss.LYParty\022 \n\010msg_type\030\004 \002(\0162\016"
-    ".tss.LYMsgType\022\016\n\006snd_id\030\007 \001(\t\022\016\n\006rcv_id"
-    "\030\010 \001(\t\022\021\n\tsignature\030\t \001(\014\022 \n\010ret_code\030\021 "
-    "\001(\0162\016.tss.LYRetCode\022\037\n\007checkin\030\022 \001(\0132\016.t"
-    "ss.LYCheckin\022*\n\rdevice_report\030\023 \001(\0132\023.ts"
-    "s.LYDeviceReport\022&\n\013traffic_sub\030$ \001(\0132\021."
-    "tss.LYTrafficSub\022&\n\013traffic_pub\0303 \001(\0132\021."
-    "tss.LYTrafficPub\022,\n\016traffic_report\030A \001(\013"
-    "2\024.tss.LYTrafficReport*\006\010\200\001\020\200\002*1\n\010LYOsTy"
-    "pe\022\016\n\nLY_ANDROID\020\000\022\n\n\006LY_IOS\020\001\022\t\n\005LY_WP\020"
-    "\002*\233\001\n\013LYDirection\022\016\n\nLY_UNKNOWN\020\000\022\013\n\007LY_"
-    "EAST\020\001\022\020\n\014LY_NORTHEAST\020\002\022\014\n\010LY_NORTH\020\003\022\020"
-    "\n\014LY_NORTHWEST\020\004\022\013\n\007LY_WEST\020\005\022\020\n\014LY_SOUT"
-    "HWEST\020\006\022\014\n\010LY_SOUTH\020\007\022\020\n\014LY_SOUTHEAST\020\010*"
-    "\241\001\n\tLYRetCode\022\016\n\nLY_SUCCESS\020\000\022\034\n\027LY_VERS"
-    "ION_IMCOMPATIBLE\020\221\002\022\023\n\016LY_VERSION_LOW\020\243\002"
-    "\022\023\n\016LY_PARTY_ERROR\020\251\004\022\026\n\021LY_MSG_TYPE_ERR"
-    "OR\020\222\007\022\017\n\nLY_TIMEOUT\020\223\t\022\023\n\016LY_OTHER_ERROR"
-    "\020\231\023*/\n\007LYParty\022\r\n\tLY_CLIENT\020\001\022\n\n\006LY_TSS\020"
-    "\002\022\t\n\005LY_TC\020\003*\201\001\n\tLYMsgType\022\016\n\nLY_CHECKIN"
-    "\020\001\022\017\n\013LY_RET_CODE\020\002\022\022\n\016LY_TRAFFIC_SUB\020\004\022"
-    "\025\n\021LY_TRAFFIC_REPORT\020\005\022\024\n\020LY_DEVICE_REPO"
-    "RT\020\006\022\022\n\016LY_TRAFFIC_PUB\020\023B\'\n\032com.luyun.ea"
-    "syway95.sharedB\tTSSProtos", 2825);
+    "\030\005 \002(\005\022\017\n\007details\030\013 \001(\t\"\214\001\n\rLYRoadTraffi"
+    "c\022\014\n\004road\030\001 \002(\t\022\021\n\ttimestamp\030\002 \001(\003\022/\n\020se"
+    "gment_traffics\030\003 \003(\0132\025.tss.LYSegmentTraf"
+    "fic\022\r\n\005alias\030\004 \001(\t\022\014\n\004href\030\014 \001(\t\022\014\n\004desc"
+    "\030\013 \001(\t\"[\n\rLYCityTraffic\022\014\n\004city\030\001 \001(\t\022\021\n"
+    "\ttimestamp\030\002 \001(\003\022)\n\rroad_traffics\030\003 \003(\0132"
+    "\022.tss.LYRoadTraffic\"\344\001\n\tLYCrontab\022,\n\tcro"
+    "n_type\030\001 \002(\0162\031.tss.LYCrontab.LYCronType\022"
+    "\016\n\006minute\030\002 \001(\003\022\014\n\004hour\030\003 \001(\003\022\013\n\003dom\030\004 \001"
+    "(\005\022\r\n\005month\030\005 \001(\005\022\013\n\003dow\030\006 \001(\005\"b\n\nLYCron"
+    "Type\022\021\n\rLY_REP_MINUTE\020\001\022\017\n\013LY_REP_HOUR\020\002"
+    "\022\016\n\nLY_REP_DOM\020\004\022\020\n\014LY_REP_MONTH\020\010\022\016\n\nLY"
+    "_REP_DOW\020\020\"\326\002\n\014LYTrafficSub\022\014\n\004city\030\001 \002("
+    "\t\022\033\n\005route\030\002 \002(\0132\014.tss.LYRoute\022-\n\010opr_ty"
+    "pe\030\003 \002(\0162\033.tss.LYTrafficSub.LYOprType\022-\n"
+    "\010pub_type\030\004 \002(\0162\033.tss.LYTrafficSub.LYPub"
+    "Type\022\023\n\007expires\030\005 \001(\005:\00230\022 \n\010cron_tab\030\006 "
+    "\001(\0132\016.tss.LYCrontab\"D\n\tLYOprType\022\021\n\rLY_S"
+    "UB_CREATE\020\001\022\021\n\rLY_SUB_DELETE\020\002\022\021\n\rLY_SUB"
+    "_UPDATE\020\003\"@\n\tLYPubType\022\020\n\014LY_PUB_ADHOC\020\001"
+    "\022\020\n\014LY_PUB_EVENT\020\002\022\017\n\013LY_PUB_CRON\020\003\"J\n\014L"
+    "YTrafficPub\022\020\n\010route_id\030\001 \002(\005\022(\n\014city_tr"
+    "affic\030\002 \002(\0132\022.tss.LYCityTraffic\"\177\n\016LYDev"
+    "iceReport\022\021\n\tdevice_id\030\001 \002(\t\022\024\n\014device_t"
+    "oken\030\002 \002(\014\022\023\n\013device_name\030\003 \002(\t\022\024\n\014devic"
+    "e_model\030\004 \002(\t\022\031\n\021device_os_version\030\005 \002(\t"
+    "\"\255\001\n\tLYCheckin\022\024\n\014device_model\030\001 \001(\t\022\036\n\007"
+    "os_type\030\002 \002(\0162\r.tss.LYOsType\022\022\n\nos_versi"
+    "on\030\003 \001(\t\022\030\n\020ly_major_release\030\004 \002(\005\022\030\n\020ly"
+    "_minor_release\030\005 \002(\005\022\024\n\014download_url\030\006 \001"
+    "(\t\022\014\n\004desc\030\007 \001(\t\"n\n\rLYSamplePoint\022(\n\rsp_"
+    "coordinate\030\001 \002(\0132\021.tss.LYCoordinate\022\021\n\tt"
+    "imestamp\030\002 \002(\003\022\020\n\010altitude\030\003 \001(\001\022\016\n\006cour"
+    "se\030\004 \001(\001\"5\n\017LYTrafficReport\022\"\n\006points\030\001 "
+    "\003(\0132\022.tss.LYSamplePoint\"\314\003\n\nLYMsgOnAir\022\017"
+    "\n\007version\030\001 \002(\005\022\016\n\006msg_id\030\005 \002(\005\022\021\n\ttimes"
+    "tamp\030\006 \002(\003\022 \n\nfrom_party\030\002 \002(\0162\014.tss.LYP"
+    "arty\022\036\n\010to_party\030\003 \002(\0162\014.tss.LYParty\022 \n\010"
+    "msg_type\030\004 \002(\0162\016.tss.LYMsgType\022\016\n\006snd_id"
+    "\030\007 \001(\t\022\016\n\006rcv_id\030\010 \001(\t\022\021\n\tsignature\030\t \001("
+    "\014\022 \n\010ret_code\030\021 \001(\0162\016.tss.LYRetCode\022\037\n\007c"
+    "heckin\030\022 \001(\0132\016.tss.LYCheckin\022*\n\rdevice_r"
+    "eport\030\023 \001(\0132\023.tss.LYDeviceReport\022&\n\013traf"
+    "fic_sub\030$ \001(\0132\021.tss.LYTrafficSub\022&\n\013traf"
+    "fic_pub\0303 \001(\0132\021.tss.LYTrafficPub\022,\n\016traf"
+    "fic_report\030A \001(\0132\024.tss.LYTrafficReport*\006"
+    "\010\200\001\020\200\002*1\n\010LYOsType\022\016\n\nLY_ANDROID\020\000\022\n\n\006LY"
+    "_IOS\020\001\022\t\n\005LY_WP\020\002*\233\001\n\013LYDirection\022\016\n\nLY_"
+    "UNKNOWN\020\000\022\013\n\007LY_EAST\020\001\022\020\n\014LY_NORTHEAST\020\002"
+    "\022\014\n\010LY_NORTH\020\003\022\020\n\014LY_NORTHWEST\020\004\022\013\n\007LY_W"
+    "EST\020\005\022\020\n\014LY_SOUTHWEST\020\006\022\014\n\010LY_SOUTH\020\007\022\020\n"
+    "\014LY_SOUTHEAST\020\010*\241\001\n\tLYRetCode\022\016\n\nLY_SUCC"
+    "ESS\020\000\022\034\n\027LY_VERSION_IMCOMPATIBLE\020\221\002\022\023\n\016L"
+    "Y_VERSION_LOW\020\243\002\022\023\n\016LY_PARTY_ERROR\020\251\004\022\026\n"
+    "\021LY_MSG_TYPE_ERROR\020\222\007\022\017\n\nLY_TIMEOUT\020\223\t\022\023"
+    "\n\016LY_OTHER_ERROR\020\231\023*/\n\007LYParty\022\r\n\tLY_CLI"
+    "ENT\020\001\022\n\n\006LY_TSS\020\002\022\t\n\005LY_TC\020\003*\201\001\n\tLYMsgTy"
+    "pe\022\016\n\nLY_CHECKIN\020\001\022\017\n\013LY_RET_CODE\020\002\022\022\n\016L"
+    "Y_TRAFFIC_SUB\020\004\022\025\n\021LY_TRAFFIC_REPORT\020\005\022\024"
+    "\n\020LY_DEVICE_REPORT\020\006\022\022\n\016LY_TRAFFIC_PUB\020\023"
+    "B\'\n\032com.luyun.easyway95.sharedB\tTSSProto"
+    "s", 2841);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "tss.proto", &protobuf_RegisterTypes);
   LYCoordinate::default_instance_ = new LYCoordinate();
@@ -2235,6 +2237,7 @@ void LYSegmentTraffic::Swap(LYSegmentTraffic* other) {
 const int LYRoadTraffic::kRoadFieldNumber;
 const int LYRoadTraffic::kTimestampFieldNumber;
 const int LYRoadTraffic::kSegmentTrafficsFieldNumber;
+const int LYRoadTraffic::kAliasFieldNumber;
 const int LYRoadTraffic::kHrefFieldNumber;
 const int LYRoadTraffic::kDescFieldNumber;
 #endif  // !_MSC_VER
@@ -2257,6 +2260,7 @@ void LYRoadTraffic::SharedCtor() {
   _cached_size_ = 0;
   road_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   timestamp_ = GOOGLE_LONGLONG(0);
+  alias_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   href_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   desc_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -2269,6 +2273,9 @@ LYRoadTraffic::~LYRoadTraffic() {
 void LYRoadTraffic::SharedDtor() {
   if (road_ != &::google::protobuf::internal::kEmptyString) {
     delete road_;
+  }
+  if (alias_ != &::google::protobuf::internal::kEmptyString) {
+    delete alias_;
   }
   if (href_ != &::google::protobuf::internal::kEmptyString) {
     delete href_;
@@ -2308,6 +2315,11 @@ void LYRoadTraffic::Clear() {
       }
     }
     timestamp_ = GOOGLE_LONGLONG(0);
+    if (has_alias()) {
+      if (alias_ != &::google::protobuf::internal::kEmptyString) {
+        alias_->clear();
+      }
+    }
     if (has_href()) {
       if (href_ != &::google::protobuf::internal::kEmptyString) {
         href_->clear();
@@ -2373,6 +2385,23 @@ bool LYRoadTraffic::MergePartialFromCodedStream(
           goto handle_uninterpreted;
         }
         if (input->ExpectTag(26)) goto parse_segment_traffics;
+        if (input->ExpectTag(34)) goto parse_alias;
+        break;
+      }
+      
+      // optional string alias = 4;
+      case 4: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_alias:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_alias()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->alias().data(), this->alias().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectTag(90)) goto parse_desc;
         break;
       }
@@ -2449,6 +2478,15 @@ void LYRoadTraffic::SerializeWithCachedSizes(
       3, this->segment_traffics(i), output);
   }
   
+  // optional string alias = 4;
+  if (has_alias()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->alias().data(), this->alias().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      4, this->alias(), output);
+  }
+  
   // optional string desc = 11;
   if (has_desc()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
@@ -2497,6 +2535,16 @@ void LYRoadTraffic::SerializeWithCachedSizes(
         3, this->segment_traffics(i), target);
   }
   
+  // optional string alias = 4;
+  if (has_alias()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->alias().data(), this->alias().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        4, this->alias(), target);
+  }
+  
   // optional string desc = 11;
   if (has_desc()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
@@ -2540,6 +2588,13 @@ int LYRoadTraffic::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int64Size(
           this->timestamp());
+    }
+    
+    // optional string alias = 4;
+    if (has_alias()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->alias());
     }
     
     // optional string href = 12;
@@ -2598,6 +2653,9 @@ void LYRoadTraffic::MergeFrom(const LYRoadTraffic& from) {
     if (from.has_timestamp()) {
       set_timestamp(from.timestamp());
     }
+    if (from.has_alias()) {
+      set_alias(from.alias());
+    }
     if (from.has_href()) {
       set_href(from.href());
     }
@@ -2634,6 +2692,7 @@ void LYRoadTraffic::Swap(LYRoadTraffic* other) {
     std::swap(road_, other->road_);
     std::swap(timestamp_, other->timestamp_);
     segment_traffics_.Swap(&other->segment_traffics_);
+    std::swap(alias_, other->alias_);
     std::swap(href_, other->href_);
     std::swap(desc_, other->desc_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);

@@ -22,8 +22,11 @@ CronSchelder* p_cron_sched;
 int main (int argc, char *argv[])
 {
     GOOGLE_PROTOBUF_VERIFY_VERSION;
+    //这个要放在以下几个初始化的第一个，因为后面几个都要记日志。
     InitLog (argv[0], logger);
     InitDB (db_client);
+    //这两个顺序不能颠倒，因为先有热点路况，后有订阅。
+    citytrafficpanorama.Init();
     onrouteclientpanorama.Init();
     version_manager.Init();
 
