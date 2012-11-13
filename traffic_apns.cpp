@@ -75,7 +75,6 @@ int main (int argc, char *argv[])
         { apns_skt,  0, ZMQ_POLLIN, 0 }
     };
 
-    apns.InitPush ();
     apns.InitFeedback();
     FeedbackChecker checker(apns);
 
@@ -111,7 +110,10 @@ int main (int argc, char *argv[])
 			char byte_token [DEVICE_TOKEN_SIZE];
 			ByteDump (byte_token, dev_token.c_str(), DEVICE_TOKEN_SIZE);
 
+		    apns.InitPush ();
 			apns.sendPayload (byte_token, str_payload.c_str (), str_payload.length ());
+			apns.ReleasePush();
+
 			checker.start();
 		}
 	}
@@ -239,13 +241,13 @@ bool Apns::sendPayload (char *deviceTokenBinary, const char *payloadBuff, size_t
           else
           {
               LOG4CPLUS_ERROR (logger, "read null: " << SSL_get_error(push.ssl, rbytes));
-              ResetPush();
+//              ResetPush();
           }
       }
       else
       {
           LOG4CPLUS_ERROR (logger, "fail to write push: " <<  SSL_get_error(push.ssl, wbytes));
-          ResetPush();
+//          ResetPush();
           rtn = false;
       }
 //      LOG4CPLUS_DEBUG (logger, "after SSL_write");
