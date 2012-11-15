@@ -110,6 +110,26 @@ inline bool LYTrafficSub_LYPubType_Parse(
   return ::google::protobuf::internal::ParseNamedEnum<LYTrafficSub_LYPubType>(
     LYTrafficSub_LYPubType_descriptor(), name, value);
 }
+enum LYTrafficPub_LYPubType {
+  LYTrafficPub_LYPubType_LY_PUB_ADHOC = 1,
+  LYTrafficPub_LYPubType_LY_PUB_EVENT = 2,
+  LYTrafficPub_LYPubType_LY_PUB_CRON = 3
+};
+bool LYTrafficPub_LYPubType_IsValid(int value);
+const LYTrafficPub_LYPubType LYTrafficPub_LYPubType_LYPubType_MIN = LYTrafficPub_LYPubType_LY_PUB_ADHOC;
+const LYTrafficPub_LYPubType LYTrafficPub_LYPubType_LYPubType_MAX = LYTrafficPub_LYPubType_LY_PUB_CRON;
+const int LYTrafficPub_LYPubType_LYPubType_ARRAYSIZE = LYTrafficPub_LYPubType_LYPubType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* LYTrafficPub_LYPubType_descriptor();
+inline const ::std::string& LYTrafficPub_LYPubType_Name(LYTrafficPub_LYPubType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    LYTrafficPub_LYPubType_descriptor(), value);
+}
+inline bool LYTrafficPub_LYPubType_Parse(
+    const ::std::string& name, LYTrafficPub_LYPubType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<LYTrafficPub_LYPubType>(
+    LYTrafficPub_LYPubType_descriptor(), name, value);
+}
 enum LYOsType {
   LY_ANDROID = 0,
   LY_IOS = 1,
@@ -1426,6 +1446,31 @@ class LYTrafficPub : public ::google::protobuf::Message {
   
   // nested types ----------------------------------------------------
   
+  typedef LYTrafficPub_LYPubType LYPubType;
+  static const LYPubType LY_PUB_ADHOC = LYTrafficPub_LYPubType_LY_PUB_ADHOC;
+  static const LYPubType LY_PUB_EVENT = LYTrafficPub_LYPubType_LY_PUB_EVENT;
+  static const LYPubType LY_PUB_CRON = LYTrafficPub_LYPubType_LY_PUB_CRON;
+  static inline bool LYPubType_IsValid(int value) {
+    return LYTrafficPub_LYPubType_IsValid(value);
+  }
+  static const LYPubType LYPubType_MIN =
+    LYTrafficPub_LYPubType_LYPubType_MIN;
+  static const LYPubType LYPubType_MAX =
+    LYTrafficPub_LYPubType_LYPubType_MAX;
+  static const int LYPubType_ARRAYSIZE =
+    LYTrafficPub_LYPubType_LYPubType_ARRAYSIZE;
+  static inline const ::google::protobuf::EnumDescriptor*
+  LYPubType_descriptor() {
+    return LYTrafficPub_LYPubType_descriptor();
+  }
+  static inline const ::std::string& LYPubType_Name(LYPubType value) {
+    return LYTrafficPub_LYPubType_Name(value);
+  }
+  static inline bool LYPubType_Parse(const ::std::string& name,
+      LYPubType* value) {
+    return LYTrafficPub_LYPubType_Parse(name, value);
+  }
+  
   // accessors -------------------------------------------------------
   
   // required int32 route_id = 1;
@@ -1443,20 +1488,30 @@ class LYTrafficPub : public ::google::protobuf::Message {
   inline ::tss::LYCityTraffic* mutable_city_traffic();
   inline ::tss::LYCityTraffic* release_city_traffic();
   
+  // optional .tss.LYTrafficPub.LYPubType pub_type = 4;
+  inline bool has_pub_type() const;
+  inline void clear_pub_type();
+  static const int kPubTypeFieldNumber = 4;
+  inline ::tss::LYTrafficPub_LYPubType pub_type() const;
+  inline void set_pub_type(::tss::LYTrafficPub_LYPubType value);
+  
   // @@protoc_insertion_point(class_scope:tss.LYTrafficPub)
  private:
   inline void set_has_route_id();
   inline void clear_has_route_id();
   inline void set_has_city_traffic();
   inline void clear_has_city_traffic();
+  inline void set_has_pub_type();
+  inline void clear_has_pub_type();
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
   ::tss::LYCityTraffic* city_traffic_;
   ::google::protobuf::int32 route_id_;
+  int pub_type_;
   
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
   
   friend void  protobuf_AddDesc_tss_2eproto();
   friend void protobuf_AssignDesc_tss_2eproto();
@@ -3521,6 +3576,29 @@ inline ::tss::LYCityTraffic* LYTrafficPub::release_city_traffic() {
   return temp;
 }
 
+// optional .tss.LYTrafficPub.LYPubType pub_type = 4;
+inline bool LYTrafficPub::has_pub_type() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void LYTrafficPub::set_has_pub_type() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void LYTrafficPub::clear_has_pub_type() {
+  _has_bits_[0] &= ~0x00000004u;
+}
+inline void LYTrafficPub::clear_pub_type() {
+  pub_type_ = 1;
+  clear_has_pub_type();
+}
+inline ::tss::LYTrafficPub_LYPubType LYTrafficPub::pub_type() const {
+  return static_cast< ::tss::LYTrafficPub_LYPubType >(pub_type_);
+}
+inline void LYTrafficPub::set_pub_type(::tss::LYTrafficPub_LYPubType value) {
+  GOOGLE_DCHECK(::tss::LYTrafficPub_LYPubType_IsValid(value));
+  set_has_pub_type();
+  pub_type_ = value;
+}
+
 // -------------------------------------------------------------------
 
 // LYDeviceReport
@@ -4747,6 +4825,10 @@ inline const EnumDescriptor* GetEnumDescriptor< ::tss::LYTrafficSub_LYOprType>()
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::tss::LYTrafficSub_LYPubType>() {
   return ::tss::LYTrafficSub_LYPubType_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::tss::LYTrafficPub_LYPubType>() {
+  return ::tss::LYTrafficPub_LYPubType_descriptor();
 }
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< tss::LYOsType>() {

@@ -392,6 +392,9 @@ int CronTrafficObserver::ReplyToClient ()
     else
     {
         LOG4CPLUS_INFO (logger, "android ReplyToClient: " );
+        LYTrafficPub* traffic_pub = snd_msg.mutable_traffic_pub();
+        traffic_pub->set_pub_type(LYTrafficPub_LYPubType_LY_PUB_CRON);
+
         TrafficObserver::ReplyToClient();
     }
 
@@ -441,6 +444,7 @@ void CronTrafficObserver::Register (const string& adr, LYTrafficSub& ts)
     else
     {
         LOG4CPLUS_INFO (logger, "device not register: " << s_hex_token);
+        p_cron_sched->AddJob(adr, ts, this);
     }
 }
 

@@ -82,6 +82,7 @@ message LYCrontab {
     optional int32 dow     = 6;//day of week
 }
 
+
 //发起订阅的消息结构
 message LYTrafficSub {
     //订阅记录的操作类型
@@ -90,7 +91,7 @@ message LYTrafficSub {
         LY_SUB_DELETE = 2;
         LY_SUB_UPDATE = 3;
     }
-
+    
     //订阅的发布类型
     enum LYPubType {
         LY_PUB_ADHOC = 1; //一次性的
@@ -109,6 +110,15 @@ message LYTrafficSub {
 message LYTrafficPub {
     required int32 route_id = 1;
     required LYCityTraffic city_traffic = 2;
+    
+    //订阅的发布类型
+    enum LYPubType {
+        LY_PUB_ADHOC = 1; //一次性的
+        LY_PUB_EVENT = 2; //事件触发，抑制后实际上是interval timer
+        LY_PUB_CRON = 3; //chronology，类似linux的cron
+    }
+    
+    optional LYPubType pub_type = 4;
 }
 
 //LYDeviceReport is dedicated for iOS

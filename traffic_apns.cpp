@@ -36,12 +36,10 @@ public:
     FeedbackChecker(Apns& apns):is_running(false),apns(apns){}
 
     void start(){
-        if(is_running)
-        {
+        if(is_running) {
             return;
         }
-        else
-        {
+        else {
             is_running = true;
             holder = boost::thread(boost::bind(&FeedbackChecker::monitor, this));
         }
