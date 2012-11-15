@@ -20,6 +20,19 @@
 #endif
 #endif
 
+#define MAX_PUSH_LEN 180
+static const string k_dir_str[LY_SOUTHEAST + 1] = {
+    "未知",
+    "东向",
+    "东北方向",
+    "北向",
+    "西北方向",
+    "西向",
+    "西南方向",
+    "东向",
+    "东北方向"
+};
+
 #define DAYS_WEEK 7
 #define MINUTES_DAY 1440
 
@@ -358,20 +371,23 @@ int CronTrafficObserver::ReplyToClient ()
                     const LYRoadTraffic&  road = pub.city_traffic().road_traffics(rd);
                     reply += road.road();
 
-                    string sg;
+                    string sg("");
 
 //                    LOG4CPLUS_DEBUG (logger, "send to client msg:" << pub.city_traffic().road_traffics().size());
                     for(int segment = 0; segment < road.segment_traffics_size(); segment++)
                     {
                         const LYSegmentTraffic& sgmt = road.segment_traffics(segment);
                         sg += sgmt.details();
-//                        reply += "方向";
-                        sg += sgmt.direction();
-//                        reply += "速度";
-                        sg += sgmt.speed();
+
+                        if(sgmt.direction() <= tss::LY_SOUTHEAST)
+                            sg += k_dir_str[sgmt.direction()];
+
+                        sg += "时速";
+                        sg += boost::lexical_cast<string>(sgmt.speed());
+                        sg += " km";
                     }
 
-                    if(reply.size() + sg.size() < 160)
+                    if(reply.size() + sg.size() < MAX_PUSH_LEN)
                     {
                         reply += sg;
                     }
