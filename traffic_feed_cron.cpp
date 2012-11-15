@@ -30,7 +30,7 @@ static const string k_dir_str[LY_SOUTHEAST + 1] = {
     "西向",
     "西南方向",
     "东向",
-    "东北方向"
+    "东南方向"
 };
 
 #define DAYS_WEEK 7
