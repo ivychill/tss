@@ -64,6 +64,10 @@ message LYCityTraffic {
     repeated LYRoadTraffic road_traffics = 3;
 }
 
+message LYCronTime{
+	optional int32 minute = 1;
+	optional int32 hour   = 2;
+}
 message LYCrontab {
     enum LYCronType {
         LY_REP_MINUTE = 1; 
@@ -75,8 +79,8 @@ message LYCrontab {
 
     //bitmap，类似linux的crontab
     required LYCronType cron_type = 1;
-    optional int64 minute  = 2;
-    optional int64 hour    = 3;
+	optional LYCronTime gowork = 2;
+	optional LYCronTime gohome = 3;
     optional int32 dom     = 4;//date of month
     optional int32 month   = 5;
     optional int32 dow     = 6;//day of week

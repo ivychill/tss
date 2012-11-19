@@ -140,20 +140,24 @@ int CronJob::CalcWaitTime(const LYCrontab& tab)
     tm n = to_tm(second_clock::local_time());
     ptime now(today, hours(n.tm_hour)+minutes(n.tm_min)+seconds(n.tm_sec));
 
-    int work_hour = 8;
-    int home_hour = 18;
     //default time
-    if(tab.has_hour())
-    {
-        work_hour = tab.hour() >> 32;
-        home_hour = tab.hour() & 0xff;
+    int work_hour = 8;
+    int work_min = 0;
+    int home_hour = 18;
+    int home_min = 0;
 
-        LOG4CPLUS_DEBUG (logger, "gowork : " <<work_hour<< " gohome :"<< home_hour);
-        if(home_hour < work_hour)
-        {
-            LOG4CPLUS_DEBUG (logger, "wrong home hour "<< home_hour);
-            return -1;
-        }
+    if(tab.has_gowork())
+    {
+        work_hour = tab.gowork().has_hour()  ? tab.gowork().hour(): 8;
+        work_min = tab.gowork().has_minute() ? tab.gowork().minute() : 0;
+        LOG4CPLUS_DEBUG (logger, "gowork: " <<work_hour<< ":"<< work_min);
+    }
+
+    if(tab.has_gohome())
+    {
+        home_hour = tab.gohome().has_hour()  ? tab.gohome().hour(): 18;
+        home_min = tab.gohome().has_minute() ? tab.gohome().minute() : 0;
+        LOG4CPLUS_DEBUG (logger, "gohome: " <<home_hour<< ":"<< home_min);
     }
 
 	switch(tab.cron_type())
@@ -169,8 +173,8 @@ int CronJob::CalcWaitTime(const LYCrontab& tab)
                 home_hour += days*24;
             }
 
-            ptime gowork(today, hours(work_hour)+minutes(0));
-            ptime gohome(today, hours(home_hour)+minutes(0));
+            ptime gowork(today, hours(work_hour)+minutes(work_min));
+            ptime gohome(today, hours(home_hour)+minutes(home_min));
 
             int time_len;  //unit: second
             time_duration timetowork = gowork - now;
@@ -344,9 +348,9 @@ void CronTrafficObserver::Update (RoadTrafficSubject *sub, bool should_pub)
 
         LYRoadTraffic *rdtf = relevant_traffic->add_road_traffics();
         *rdtf = sub->GetRoadTraffic();
-        LOG4CPLUS_DEBUG (logger, "add road traffic:\n" << sub->GetRoadTraffic().DebugString() << " to observer: " << address);
     }
 
+    LOG4CPLUS_DEBUG (logger, "add road traffic:\n" << sub->GetRoadTraffic().DebugString() << " to observer: " << address);
     last_update = now;
 }
 
@@ -354,51 +358,54 @@ int CronTrafficObserver::ReplyToClient ()
 {
     string reply;
 
-    if(this->os_ver == IOS)
+    if(LY_TRAFFIC_PUB == snd_msg.msg_type())
     {
-        if(LY_TRAFFIC_PUB == snd_msg.msg_type())
-        {
-            const tss::LYTrafficPub& pub = snd_msg.traffic_pub();
-            LOG4CPLUS_DEBUG (logger, "LY_TRAFFIC_PUB: " << pub.city_traffic().road_traffics_size());
+        const tss::LYTrafficPub& pub = snd_msg.traffic_pub();
+        LOG4CPLUS_DEBUG (logger, "LY_TRAFFIC_PUB: " << pub.city_traffic().road_traffics_size());
 
-            if(pub.has_city_traffic())
-            {
-                LOG4CPLUS_DEBUG (logger, "has_city_traffic: ");
+        if(pub.has_city_traffic())
+        {
+            LOG4CPLUS_DEBUG (logger, "has_city_traffic: ");
 
 //                if(pub.city_traffic().road_traffics_size() > 0)
-                for(int rd = 0; rd< pub.city_traffic().road_traffics_size(); rd++)
-                {
-                    const LYRoadTraffic&  road = pub.city_traffic().road_traffics(rd);
-                    reply += road.road();
+            for(int rd = 0; rd< pub.city_traffic().road_traffics_size(); rd++)
+            {
+                const LYRoadTraffic&  road = pub.city_traffic().road_traffics(rd);
+                reply += road.road();
 
-                    string sg("");
+                string sg("");
 
 //                    LOG4CPLUS_DEBUG (logger, "send to client msg:" << pub.city_traffic().road_traffics().size());
-                    for(int segment = 0; segment < road.segment_traffics_size(); segment++)
-                    {
-                        const LYSegmentTraffic& sgmt = road.segment_traffics(segment);
-                        sg += sgmt.details();
+                for(int segment = 0; segment < road.segment_traffics_size(); segment++)
+                {
+                    const LYSegmentTraffic& sgmt = road.segment_traffics(segment);
+                    sg += sgmt.details();
 
-                        if(sgmt.direction() <= tss::LY_SOUTHEAST)
-                            sg += k_dir_str[sgmt.direction()];
+                    if(sgmt.direction() <= tss::LY_SOUTHEAST &&
+                            sgmt.direction() > tss::LY_UNKNOWN)
+                        sg += k_dir_str[sgmt.direction()];
 
-                        sg += "时速";
-                        sg += boost::lexical_cast<string>(sgmt.speed());
-                        sg += " km";
-                    }
+                    sg += "时速";
+                    sg += boost::lexical_cast<string>(sgmt.speed());
+                    sg += "km ";
+                }
 
-                    if(reply.size() + sg.size() < MAX_PUSH_LEN)
-                    {
-                        reply += sg;
-                    }
-                    else
-                    {
-                        break;
-                    }
+                if(reply.size() + sg.size() < MAX_PUSH_LEN)
+                {
+                    reply += sg;
+                }
+                else
+                {
+                    break;
                 }
             }
         }
+    }
 
+    LOG4CPLUS_DEBUG (logger, "reply to client "<<reply);
+
+    if(this->os_ver == IOS)
+    {
 //        LOG4CPLUS_DEBUG (logger, "send to apns token: " << dev_token.size());
         LOG4CPLUS_DEBUG (logger, "IOS send to apns msg len: "<<reply.size());
 

@@ -39,6 +39,7 @@ class LYRoute;
 class LYSegmentTraffic;
 class LYRoadTraffic;
 class LYCityTraffic;
+class LYCronTime;
 class LYCrontab;
 class LYTrafficSub;
 class LYTrafficPub;
@@ -1047,6 +1048,98 @@ class LYCityTraffic : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class LYCronTime : public ::google::protobuf::Message {
+ public:
+  LYCronTime();
+  virtual ~LYCronTime();
+  
+  LYCronTime(const LYCronTime& from);
+  
+  inline LYCronTime& operator=(const LYCronTime& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+  
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+  
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const LYCronTime& default_instance();
+  
+  void Swap(LYCronTime* other);
+  
+  // implements Message ----------------------------------------------
+  
+  LYCronTime* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const LYCronTime& from);
+  void MergeFrom(const LYCronTime& from);
+  void Clear();
+  bool IsInitialized() const;
+  
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+  
+  ::google::protobuf::Metadata GetMetadata() const;
+  
+  // nested types ----------------------------------------------------
+  
+  // accessors -------------------------------------------------------
+  
+  // optional int32 minute = 1;
+  inline bool has_minute() const;
+  inline void clear_minute();
+  static const int kMinuteFieldNumber = 1;
+  inline ::google::protobuf::int32 minute() const;
+  inline void set_minute(::google::protobuf::int32 value);
+  
+  // optional int32 hour = 2;
+  inline bool has_hour() const;
+  inline void clear_hour();
+  static const int kHourFieldNumber = 2;
+  inline ::google::protobuf::int32 hour() const;
+  inline void set_hour(::google::protobuf::int32 value);
+  
+  // @@protoc_insertion_point(class_scope:tss.LYCronTime)
+ private:
+  inline void set_has_minute();
+  inline void clear_has_minute();
+  inline void set_has_hour();
+  inline void clear_has_hour();
+  
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+  
+  ::google::protobuf::int32 minute_;
+  ::google::protobuf::int32 hour_;
+  
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
+  
+  friend void  protobuf_AddDesc_tss_2eproto();
+  friend void protobuf_AssignDesc_tss_2eproto();
+  friend void protobuf_ShutdownFile_tss_2eproto();
+  
+  void InitAsDefaultInstance();
+  static LYCronTime* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class LYCrontab : public ::google::protobuf::Message {
  public:
   LYCrontab();
@@ -1135,19 +1228,21 @@ class LYCrontab : public ::google::protobuf::Message {
   inline ::tss::LYCrontab_LYCronType cron_type() const;
   inline void set_cron_type(::tss::LYCrontab_LYCronType value);
   
-  // optional int64 minute = 2;
-  inline bool has_minute() const;
-  inline void clear_minute();
-  static const int kMinuteFieldNumber = 2;
-  inline ::google::protobuf::int64 minute() const;
-  inline void set_minute(::google::protobuf::int64 value);
+  // optional .tss.LYCronTime gowork = 2;
+  inline bool has_gowork() const;
+  inline void clear_gowork();
+  static const int kGoworkFieldNumber = 2;
+  inline const ::tss::LYCronTime& gowork() const;
+  inline ::tss::LYCronTime* mutable_gowork();
+  inline ::tss::LYCronTime* release_gowork();
   
-  // optional int64 hour = 3;
-  inline bool has_hour() const;
-  inline void clear_hour();
-  static const int kHourFieldNumber = 3;
-  inline ::google::protobuf::int64 hour() const;
-  inline void set_hour(::google::protobuf::int64 value);
+  // optional .tss.LYCronTime gohome = 3;
+  inline bool has_gohome() const;
+  inline void clear_gohome();
+  static const int kGohomeFieldNumber = 3;
+  inline const ::tss::LYCronTime& gohome() const;
+  inline ::tss::LYCronTime* mutable_gohome();
+  inline ::tss::LYCronTime* release_gohome();
   
   // optional int32 dom = 4;
   inline bool has_dom() const;
@@ -1174,10 +1269,10 @@ class LYCrontab : public ::google::protobuf::Message {
  private:
   inline void set_has_cron_type();
   inline void clear_has_cron_type();
-  inline void set_has_minute();
-  inline void clear_has_minute();
-  inline void set_has_hour();
-  inline void clear_has_hour();
+  inline void set_has_gowork();
+  inline void clear_has_gowork();
+  inline void set_has_gohome();
+  inline void clear_has_gohome();
   inline void set_has_dom();
   inline void clear_has_dom();
   inline void set_has_month();
@@ -1187,10 +1282,10 @@ class LYCrontab : public ::google::protobuf::Message {
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
-  ::google::protobuf::int64 minute_;
+  ::tss::LYCronTime* gowork_;
   int cron_type_;
   ::google::protobuf::int32 dom_;
-  ::google::protobuf::int64 hour_;
+  ::tss::LYCronTime* gohome_;
   ::google::protobuf::int32 month_;
   ::google::protobuf::int32 dow_;
   
@@ -3198,6 +3293,54 @@ LYCityTraffic::mutable_road_traffics() {
 
 // -------------------------------------------------------------------
 
+// LYCronTime
+
+// optional int32 minute = 1;
+inline bool LYCronTime::has_minute() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+inline void LYCronTime::set_has_minute() {
+  _has_bits_[0] |= 0x00000001u;
+}
+inline void LYCronTime::clear_has_minute() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+inline void LYCronTime::clear_minute() {
+  minute_ = 0;
+  clear_has_minute();
+}
+inline ::google::protobuf::int32 LYCronTime::minute() const {
+  return minute_;
+}
+inline void LYCronTime::set_minute(::google::protobuf::int32 value) {
+  set_has_minute();
+  minute_ = value;
+}
+
+// optional int32 hour = 2;
+inline bool LYCronTime::has_hour() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+inline void LYCronTime::set_has_hour() {
+  _has_bits_[0] |= 0x00000002u;
+}
+inline void LYCronTime::clear_has_hour() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+inline void LYCronTime::clear_hour() {
+  hour_ = 0;
+  clear_has_hour();
+}
+inline ::google::protobuf::int32 LYCronTime::hour() const {
+  return hour_;
+}
+inline void LYCronTime::set_hour(::google::protobuf::int32 value) {
+  set_has_hour();
+  hour_ = value;
+}
+
+// -------------------------------------------------------------------
+
 // LYCrontab
 
 // required .tss.LYCrontab.LYCronType cron_type = 1;
@@ -3223,48 +3366,62 @@ inline void LYCrontab::set_cron_type(::tss::LYCrontab_LYCronType value) {
   cron_type_ = value;
 }
 
-// optional int64 minute = 2;
-inline bool LYCrontab::has_minute() const {
+// optional .tss.LYCronTime gowork = 2;
+inline bool LYCrontab::has_gowork() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void LYCrontab::set_has_minute() {
+inline void LYCrontab::set_has_gowork() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void LYCrontab::clear_has_minute() {
+inline void LYCrontab::clear_has_gowork() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void LYCrontab::clear_minute() {
-  minute_ = GOOGLE_LONGLONG(0);
-  clear_has_minute();
+inline void LYCrontab::clear_gowork() {
+  if (gowork_ != NULL) gowork_->::tss::LYCronTime::Clear();
+  clear_has_gowork();
 }
-inline ::google::protobuf::int64 LYCrontab::minute() const {
-  return minute_;
+inline const ::tss::LYCronTime& LYCrontab::gowork() const {
+  return gowork_ != NULL ? *gowork_ : *default_instance_->gowork_;
 }
-inline void LYCrontab::set_minute(::google::protobuf::int64 value) {
-  set_has_minute();
-  minute_ = value;
+inline ::tss::LYCronTime* LYCrontab::mutable_gowork() {
+  set_has_gowork();
+  if (gowork_ == NULL) gowork_ = new ::tss::LYCronTime;
+  return gowork_;
+}
+inline ::tss::LYCronTime* LYCrontab::release_gowork() {
+  clear_has_gowork();
+  ::tss::LYCronTime* temp = gowork_;
+  gowork_ = NULL;
+  return temp;
 }
 
-// optional int64 hour = 3;
-inline bool LYCrontab::has_hour() const {
+// optional .tss.LYCronTime gohome = 3;
+inline bool LYCrontab::has_gohome() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void LYCrontab::set_has_hour() {
+inline void LYCrontab::set_has_gohome() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void LYCrontab::clear_has_hour() {
+inline void LYCrontab::clear_has_gohome() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void LYCrontab::clear_hour() {
-  hour_ = GOOGLE_LONGLONG(0);
-  clear_has_hour();
+inline void LYCrontab::clear_gohome() {
+  if (gohome_ != NULL) gohome_->::tss::LYCronTime::Clear();
+  clear_has_gohome();
 }
-inline ::google::protobuf::int64 LYCrontab::hour() const {
-  return hour_;
+inline const ::tss::LYCronTime& LYCrontab::gohome() const {
+  return gohome_ != NULL ? *gohome_ : *default_instance_->gohome_;
 }
-inline void LYCrontab::set_hour(::google::protobuf::int64 value) {
-  set_has_hour();
-  hour_ = value;
+inline ::tss::LYCronTime* LYCrontab::mutable_gohome() {
+  set_has_gohome();
+  if (gohome_ == NULL) gohome_ = new ::tss::LYCronTime;
+  return gohome_;
+}
+inline ::tss::LYCronTime* LYCrontab::release_gohome() {
+  clear_has_gohome();
+  ::tss::LYCronTime* temp = gohome_;
+  gohome_ = NULL;
+  return temp;
 }
 
 // optional int32 dom = 4;
