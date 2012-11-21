@@ -39,7 +39,6 @@ class LYRoute;
 class LYSegmentTraffic;
 class LYRoadTraffic;
 class LYCityTraffic;
-class LYCronTime;
 class LYCrontab;
 class LYTrafficSub;
 class LYTrafficPub;
@@ -91,46 +90,6 @@ inline bool LYTrafficSub_LYOprType_Parse(
   return ::google::protobuf::internal::ParseNamedEnum<LYTrafficSub_LYOprType>(
     LYTrafficSub_LYOprType_descriptor(), name, value);
 }
-enum LYTrafficSub_LYPubType {
-  LYTrafficSub_LYPubType_LY_PUB_ADHOC = 1,
-  LYTrafficSub_LYPubType_LY_PUB_EVENT = 2,
-  LYTrafficSub_LYPubType_LY_PUB_CRON = 3
-};
-bool LYTrafficSub_LYPubType_IsValid(int value);
-const LYTrafficSub_LYPubType LYTrafficSub_LYPubType_LYPubType_MIN = LYTrafficSub_LYPubType_LY_PUB_ADHOC;
-const LYTrafficSub_LYPubType LYTrafficSub_LYPubType_LYPubType_MAX = LYTrafficSub_LYPubType_LY_PUB_CRON;
-const int LYTrafficSub_LYPubType_LYPubType_ARRAYSIZE = LYTrafficSub_LYPubType_LYPubType_MAX + 1;
-
-const ::google::protobuf::EnumDescriptor* LYTrafficSub_LYPubType_descriptor();
-inline const ::std::string& LYTrafficSub_LYPubType_Name(LYTrafficSub_LYPubType value) {
-  return ::google::protobuf::internal::NameOfEnum(
-    LYTrafficSub_LYPubType_descriptor(), value);
-}
-inline bool LYTrafficSub_LYPubType_Parse(
-    const ::std::string& name, LYTrafficSub_LYPubType* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<LYTrafficSub_LYPubType>(
-    LYTrafficSub_LYPubType_descriptor(), name, value);
-}
-enum LYTrafficPub_LYPubType {
-  LYTrafficPub_LYPubType_LY_PUB_ADHOC = 1,
-  LYTrafficPub_LYPubType_LY_PUB_EVENT = 2,
-  LYTrafficPub_LYPubType_LY_PUB_CRON = 3
-};
-bool LYTrafficPub_LYPubType_IsValid(int value);
-const LYTrafficPub_LYPubType LYTrafficPub_LYPubType_LYPubType_MIN = LYTrafficPub_LYPubType_LY_PUB_ADHOC;
-const LYTrafficPub_LYPubType LYTrafficPub_LYPubType_LYPubType_MAX = LYTrafficPub_LYPubType_LY_PUB_CRON;
-const int LYTrafficPub_LYPubType_LYPubType_ARRAYSIZE = LYTrafficPub_LYPubType_LYPubType_MAX + 1;
-
-const ::google::protobuf::EnumDescriptor* LYTrafficPub_LYPubType_descriptor();
-inline const ::std::string& LYTrafficPub_LYPubType_Name(LYTrafficPub_LYPubType value) {
-  return ::google::protobuf::internal::NameOfEnum(
-    LYTrafficPub_LYPubType_descriptor(), value);
-}
-inline bool LYTrafficPub_LYPubType_Parse(
-    const ::std::string& name, LYTrafficPub_LYPubType* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<LYTrafficPub_LYPubType>(
-    LYTrafficPub_LYPubType_descriptor(), name, value);
-}
 enum LYOsType {
   LY_ANDROID = 0,
   LY_IOS = 1,
@@ -176,6 +135,26 @@ inline bool LYDirection_Parse(
     const ::std::string& name, LYDirection* value) {
   return ::google::protobuf::internal::ParseNamedEnum<LYDirection>(
     LYDirection_descriptor(), name, value);
+}
+enum LYPubType {
+  LY_PUB_ADHOC = 1,
+  LY_PUB_EVENT = 2,
+  LY_PUB_CRON = 3
+};
+bool LYPubType_IsValid(int value);
+const LYPubType LYPubType_MIN = LY_PUB_ADHOC;
+const LYPubType LYPubType_MAX = LY_PUB_CRON;
+const int LYPubType_ARRAYSIZE = LYPubType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* LYPubType_descriptor();
+inline const ::std::string& LYPubType_Name(LYPubType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    LYPubType_descriptor(), value);
+}
+inline bool LYPubType_Parse(
+    const ::std::string& name, LYPubType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<LYPubType>(
+    LYPubType_descriptor(), name, value);
 }
 enum LYRetCode {
   LY_SUCCESS = 0,
@@ -1048,98 +1027,6 @@ class LYCityTraffic : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class LYCronTime : public ::google::protobuf::Message {
- public:
-  LYCronTime();
-  virtual ~LYCronTime();
-  
-  LYCronTime(const LYCronTime& from);
-  
-  inline LYCronTime& operator=(const LYCronTime& from) {
-    CopyFrom(from);
-    return *this;
-  }
-  
-  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
-    return _unknown_fields_;
-  }
-  
-  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
-    return &_unknown_fields_;
-  }
-  
-  static const ::google::protobuf::Descriptor* descriptor();
-  static const LYCronTime& default_instance();
-  
-  void Swap(LYCronTime* other);
-  
-  // implements Message ----------------------------------------------
-  
-  LYCronTime* New() const;
-  void CopyFrom(const ::google::protobuf::Message& from);
-  void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const LYCronTime& from);
-  void MergeFrom(const LYCronTime& from);
-  void Clear();
-  bool IsInitialized() const;
-  
-  int ByteSize() const;
-  bool MergePartialFromCodedStream(
-      ::google::protobuf::io::CodedInputStream* input);
-  void SerializeWithCachedSizes(
-      ::google::protobuf::io::CodedOutputStream* output) const;
-  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
-  int GetCachedSize() const { return _cached_size_; }
-  private:
-  void SharedCtor();
-  void SharedDtor();
-  void SetCachedSize(int size) const;
-  public:
-  
-  ::google::protobuf::Metadata GetMetadata() const;
-  
-  // nested types ----------------------------------------------------
-  
-  // accessors -------------------------------------------------------
-  
-  // optional int32 minute = 1;
-  inline bool has_minute() const;
-  inline void clear_minute();
-  static const int kMinuteFieldNumber = 1;
-  inline ::google::protobuf::int32 minute() const;
-  inline void set_minute(::google::protobuf::int32 value);
-  
-  // optional int32 hour = 2;
-  inline bool has_hour() const;
-  inline void clear_hour();
-  static const int kHourFieldNumber = 2;
-  inline ::google::protobuf::int32 hour() const;
-  inline void set_hour(::google::protobuf::int32 value);
-  
-  // @@protoc_insertion_point(class_scope:tss.LYCronTime)
- private:
-  inline void set_has_minute();
-  inline void clear_has_minute();
-  inline void set_has_hour();
-  inline void clear_has_hour();
-  
-  ::google::protobuf::UnknownFieldSet _unknown_fields_;
-  
-  ::google::protobuf::int32 minute_;
-  ::google::protobuf::int32 hour_;
-  
-  mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
-  
-  friend void  protobuf_AddDesc_tss_2eproto();
-  friend void protobuf_AssignDesc_tss_2eproto();
-  friend void protobuf_ShutdownFile_tss_2eproto();
-  
-  void InitAsDefaultInstance();
-  static LYCronTime* default_instance_;
-};
-// -------------------------------------------------------------------
-
 class LYCrontab : public ::google::protobuf::Message {
  public:
   LYCrontab();
@@ -1228,21 +1115,19 @@ class LYCrontab : public ::google::protobuf::Message {
   inline ::tss::LYCrontab_LYCronType cron_type() const;
   inline void set_cron_type(::tss::LYCrontab_LYCronType value);
   
-  // optional .tss.LYCronTime gowork = 2;
-  inline bool has_gowork() const;
-  inline void clear_gowork();
-  static const int kGoworkFieldNumber = 2;
-  inline const ::tss::LYCronTime& gowork() const;
-  inline ::tss::LYCronTime* mutable_gowork();
-  inline ::tss::LYCronTime* release_gowork();
+  // optional int64 minute = 2;
+  inline bool has_minute() const;
+  inline void clear_minute();
+  static const int kMinuteFieldNumber = 2;
+  inline ::google::protobuf::int64 minute() const;
+  inline void set_minute(::google::protobuf::int64 value);
   
-  // optional .tss.LYCronTime gohome = 3;
-  inline bool has_gohome() const;
-  inline void clear_gohome();
-  static const int kGohomeFieldNumber = 3;
-  inline const ::tss::LYCronTime& gohome() const;
-  inline ::tss::LYCronTime* mutable_gohome();
-  inline ::tss::LYCronTime* release_gohome();
+  // optional int32 hour = 3;
+  inline bool has_hour() const;
+  inline void clear_hour();
+  static const int kHourFieldNumber = 3;
+  inline ::google::protobuf::int32 hour() const;
+  inline void set_hour(::google::protobuf::int32 value);
   
   // optional int32 dom = 4;
   inline bool has_dom() const;
@@ -1269,10 +1154,10 @@ class LYCrontab : public ::google::protobuf::Message {
  private:
   inline void set_has_cron_type();
   inline void clear_has_cron_type();
-  inline void set_has_gowork();
-  inline void clear_has_gowork();
-  inline void set_has_gohome();
-  inline void clear_has_gohome();
+  inline void set_has_minute();
+  inline void clear_has_minute();
+  inline void set_has_hour();
+  inline void clear_has_hour();
   inline void set_has_dom();
   inline void clear_has_dom();
   inline void set_has_month();
@@ -1282,10 +1167,10 @@ class LYCrontab : public ::google::protobuf::Message {
   
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
   
-  ::tss::LYCronTime* gowork_;
+  ::google::protobuf::int64 minute_;
   int cron_type_;
+  ::google::protobuf::int32 hour_;
   ::google::protobuf::int32 dom_;
-  ::tss::LYCronTime* gohome_;
   ::google::protobuf::int32 month_;
   ::google::protobuf::int32 dow_;
   
@@ -1378,31 +1263,6 @@ class LYTrafficSub : public ::google::protobuf::Message {
     return LYTrafficSub_LYOprType_Parse(name, value);
   }
   
-  typedef LYTrafficSub_LYPubType LYPubType;
-  static const LYPubType LY_PUB_ADHOC = LYTrafficSub_LYPubType_LY_PUB_ADHOC;
-  static const LYPubType LY_PUB_EVENT = LYTrafficSub_LYPubType_LY_PUB_EVENT;
-  static const LYPubType LY_PUB_CRON = LYTrafficSub_LYPubType_LY_PUB_CRON;
-  static inline bool LYPubType_IsValid(int value) {
-    return LYTrafficSub_LYPubType_IsValid(value);
-  }
-  static const LYPubType LYPubType_MIN =
-    LYTrafficSub_LYPubType_LYPubType_MIN;
-  static const LYPubType LYPubType_MAX =
-    LYTrafficSub_LYPubType_LYPubType_MAX;
-  static const int LYPubType_ARRAYSIZE =
-    LYTrafficSub_LYPubType_LYPubType_ARRAYSIZE;
-  static inline const ::google::protobuf::EnumDescriptor*
-  LYPubType_descriptor() {
-    return LYTrafficSub_LYPubType_descriptor();
-  }
-  static inline const ::std::string& LYPubType_Name(LYPubType value) {
-    return LYTrafficSub_LYPubType_Name(value);
-  }
-  static inline bool LYPubType_Parse(const ::std::string& name,
-      LYPubType* value) {
-    return LYTrafficSub_LYPubType_Parse(name, value);
-  }
-  
   // accessors -------------------------------------------------------
   
   // required string city = 1;
@@ -1431,12 +1291,12 @@ class LYTrafficSub : public ::google::protobuf::Message {
   inline ::tss::LYTrafficSub_LYOprType opr_type() const;
   inline void set_opr_type(::tss::LYTrafficSub_LYOprType value);
   
-  // required .tss.LYTrafficSub.LYPubType pub_type = 4;
+  // required .tss.LYPubType pub_type = 4;
   inline bool has_pub_type() const;
   inline void clear_pub_type();
   static const int kPubTypeFieldNumber = 4;
-  inline ::tss::LYTrafficSub_LYPubType pub_type() const;
-  inline void set_pub_type(::tss::LYTrafficSub_LYPubType value);
+  inline tss::LYPubType pub_type() const;
+  inline void set_pub_type(tss::LYPubType value);
   
   // optional int32 expires = 5 [default = 30];
   inline bool has_expires() const;
@@ -1541,31 +1401,6 @@ class LYTrafficPub : public ::google::protobuf::Message {
   
   // nested types ----------------------------------------------------
   
-  typedef LYTrafficPub_LYPubType LYPubType;
-  static const LYPubType LY_PUB_ADHOC = LYTrafficPub_LYPubType_LY_PUB_ADHOC;
-  static const LYPubType LY_PUB_EVENT = LYTrafficPub_LYPubType_LY_PUB_EVENT;
-  static const LYPubType LY_PUB_CRON = LYTrafficPub_LYPubType_LY_PUB_CRON;
-  static inline bool LYPubType_IsValid(int value) {
-    return LYTrafficPub_LYPubType_IsValid(value);
-  }
-  static const LYPubType LYPubType_MIN =
-    LYTrafficPub_LYPubType_LYPubType_MIN;
-  static const LYPubType LYPubType_MAX =
-    LYTrafficPub_LYPubType_LYPubType_MAX;
-  static const int LYPubType_ARRAYSIZE =
-    LYTrafficPub_LYPubType_LYPubType_ARRAYSIZE;
-  static inline const ::google::protobuf::EnumDescriptor*
-  LYPubType_descriptor() {
-    return LYTrafficPub_LYPubType_descriptor();
-  }
-  static inline const ::std::string& LYPubType_Name(LYPubType value) {
-    return LYTrafficPub_LYPubType_Name(value);
-  }
-  static inline bool LYPubType_Parse(const ::std::string& name,
-      LYPubType* value) {
-    return LYTrafficPub_LYPubType_Parse(name, value);
-  }
-  
   // accessors -------------------------------------------------------
   
   // required int32 route_id = 1;
@@ -1583,12 +1418,12 @@ class LYTrafficPub : public ::google::protobuf::Message {
   inline ::tss::LYCityTraffic* mutable_city_traffic();
   inline ::tss::LYCityTraffic* release_city_traffic();
   
-  // optional .tss.LYTrafficPub.LYPubType pub_type = 4;
+  // optional .tss.LYPubType pub_type = 4;
   inline bool has_pub_type() const;
   inline void clear_pub_type();
   static const int kPubTypeFieldNumber = 4;
-  inline ::tss::LYTrafficPub_LYPubType pub_type() const;
-  inline void set_pub_type(::tss::LYTrafficPub_LYPubType value);
+  inline tss::LYPubType pub_type() const;
+  inline void set_pub_type(tss::LYPubType value);
   
   // @@protoc_insertion_point(class_scope:tss.LYTrafficPub)
  private:
@@ -3293,54 +3128,6 @@ LYCityTraffic::mutable_road_traffics() {
 
 // -------------------------------------------------------------------
 
-// LYCronTime
-
-// optional int32 minute = 1;
-inline bool LYCronTime::has_minute() const {
-  return (_has_bits_[0] & 0x00000001u) != 0;
-}
-inline void LYCronTime::set_has_minute() {
-  _has_bits_[0] |= 0x00000001u;
-}
-inline void LYCronTime::clear_has_minute() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void LYCronTime::clear_minute() {
-  minute_ = 0;
-  clear_has_minute();
-}
-inline ::google::protobuf::int32 LYCronTime::minute() const {
-  return minute_;
-}
-inline void LYCronTime::set_minute(::google::protobuf::int32 value) {
-  set_has_minute();
-  minute_ = value;
-}
-
-// optional int32 hour = 2;
-inline bool LYCronTime::has_hour() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void LYCronTime::set_has_hour() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void LYCronTime::clear_has_hour() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void LYCronTime::clear_hour() {
-  hour_ = 0;
-  clear_has_hour();
-}
-inline ::google::protobuf::int32 LYCronTime::hour() const {
-  return hour_;
-}
-inline void LYCronTime::set_hour(::google::protobuf::int32 value) {
-  set_has_hour();
-  hour_ = value;
-}
-
-// -------------------------------------------------------------------
-
 // LYCrontab
 
 // required .tss.LYCrontab.LYCronType cron_type = 1;
@@ -3366,62 +3153,48 @@ inline void LYCrontab::set_cron_type(::tss::LYCrontab_LYCronType value) {
   cron_type_ = value;
 }
 
-// optional .tss.LYCronTime gowork = 2;
-inline bool LYCrontab::has_gowork() const {
+// optional int64 minute = 2;
+inline bool LYCrontab::has_minute() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void LYCrontab::set_has_gowork() {
+inline void LYCrontab::set_has_minute() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void LYCrontab::clear_has_gowork() {
+inline void LYCrontab::clear_has_minute() {
   _has_bits_[0] &= ~0x00000002u;
 }
-inline void LYCrontab::clear_gowork() {
-  if (gowork_ != NULL) gowork_->::tss::LYCronTime::Clear();
-  clear_has_gowork();
+inline void LYCrontab::clear_minute() {
+  minute_ = GOOGLE_LONGLONG(0);
+  clear_has_minute();
 }
-inline const ::tss::LYCronTime& LYCrontab::gowork() const {
-  return gowork_ != NULL ? *gowork_ : *default_instance_->gowork_;
+inline ::google::protobuf::int64 LYCrontab::minute() const {
+  return minute_;
 }
-inline ::tss::LYCronTime* LYCrontab::mutable_gowork() {
-  set_has_gowork();
-  if (gowork_ == NULL) gowork_ = new ::tss::LYCronTime;
-  return gowork_;
-}
-inline ::tss::LYCronTime* LYCrontab::release_gowork() {
-  clear_has_gowork();
-  ::tss::LYCronTime* temp = gowork_;
-  gowork_ = NULL;
-  return temp;
+inline void LYCrontab::set_minute(::google::protobuf::int64 value) {
+  set_has_minute();
+  minute_ = value;
 }
 
-// optional .tss.LYCronTime gohome = 3;
-inline bool LYCrontab::has_gohome() const {
+// optional int32 hour = 3;
+inline bool LYCrontab::has_hour() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
-inline void LYCrontab::set_has_gohome() {
+inline void LYCrontab::set_has_hour() {
   _has_bits_[0] |= 0x00000004u;
 }
-inline void LYCrontab::clear_has_gohome() {
+inline void LYCrontab::clear_has_hour() {
   _has_bits_[0] &= ~0x00000004u;
 }
-inline void LYCrontab::clear_gohome() {
-  if (gohome_ != NULL) gohome_->::tss::LYCronTime::Clear();
-  clear_has_gohome();
+inline void LYCrontab::clear_hour() {
+  hour_ = 0;
+  clear_has_hour();
 }
-inline const ::tss::LYCronTime& LYCrontab::gohome() const {
-  return gohome_ != NULL ? *gohome_ : *default_instance_->gohome_;
+inline ::google::protobuf::int32 LYCrontab::hour() const {
+  return hour_;
 }
-inline ::tss::LYCronTime* LYCrontab::mutable_gohome() {
-  set_has_gohome();
-  if (gohome_ == NULL) gohome_ = new ::tss::LYCronTime;
-  return gohome_;
-}
-inline ::tss::LYCronTime* LYCrontab::release_gohome() {
-  clear_has_gohome();
-  ::tss::LYCronTime* temp = gohome_;
-  gohome_ = NULL;
-  return temp;
+inline void LYCrontab::set_hour(::google::protobuf::int32 value) {
+  set_has_hour();
+  hour_ = value;
 }
 
 // optional int32 dom = 4;
@@ -3604,7 +3377,7 @@ inline void LYTrafficSub::set_opr_type(::tss::LYTrafficSub_LYOprType value) {
   opr_type_ = value;
 }
 
-// required .tss.LYTrafficSub.LYPubType pub_type = 4;
+// required .tss.LYPubType pub_type = 4;
 inline bool LYTrafficSub::has_pub_type() const {
   return (_has_bits_[0] & 0x00000008u) != 0;
 }
@@ -3618,11 +3391,11 @@ inline void LYTrafficSub::clear_pub_type() {
   pub_type_ = 1;
   clear_has_pub_type();
 }
-inline ::tss::LYTrafficSub_LYPubType LYTrafficSub::pub_type() const {
-  return static_cast< ::tss::LYTrafficSub_LYPubType >(pub_type_);
+inline tss::LYPubType LYTrafficSub::pub_type() const {
+  return static_cast< tss::LYPubType >(pub_type_);
 }
-inline void LYTrafficSub::set_pub_type(::tss::LYTrafficSub_LYPubType value) {
-  GOOGLE_DCHECK(::tss::LYTrafficSub_LYPubType_IsValid(value));
+inline void LYTrafficSub::set_pub_type(tss::LYPubType value) {
+  GOOGLE_DCHECK(tss::LYPubType_IsValid(value));
   set_has_pub_type();
   pub_type_ = value;
 }
@@ -3733,7 +3506,7 @@ inline ::tss::LYCityTraffic* LYTrafficPub::release_city_traffic() {
   return temp;
 }
 
-// optional .tss.LYTrafficPub.LYPubType pub_type = 4;
+// optional .tss.LYPubType pub_type = 4;
 inline bool LYTrafficPub::has_pub_type() const {
   return (_has_bits_[0] & 0x00000004u) != 0;
 }
@@ -3747,11 +3520,11 @@ inline void LYTrafficPub::clear_pub_type() {
   pub_type_ = 1;
   clear_has_pub_type();
 }
-inline ::tss::LYTrafficPub_LYPubType LYTrafficPub::pub_type() const {
-  return static_cast< ::tss::LYTrafficPub_LYPubType >(pub_type_);
+inline tss::LYPubType LYTrafficPub::pub_type() const {
+  return static_cast< tss::LYPubType >(pub_type_);
 }
-inline void LYTrafficPub::set_pub_type(::tss::LYTrafficPub_LYPubType value) {
-  GOOGLE_DCHECK(::tss::LYTrafficPub_LYPubType_IsValid(value));
+inline void LYTrafficPub::set_pub_type(tss::LYPubType value) {
+  GOOGLE_DCHECK(tss::LYPubType_IsValid(value));
   set_has_pub_type();
   pub_type_ = value;
 }
@@ -4980,20 +4753,16 @@ inline const EnumDescriptor* GetEnumDescriptor< ::tss::LYTrafficSub_LYOprType>()
   return ::tss::LYTrafficSub_LYOprType_descriptor();
 }
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::tss::LYTrafficSub_LYPubType>() {
-  return ::tss::LYTrafficSub_LYPubType_descriptor();
-}
-template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::tss::LYTrafficPub_LYPubType>() {
-  return ::tss::LYTrafficPub_LYPubType_descriptor();
-}
-template <>
 inline const EnumDescriptor* GetEnumDescriptor< tss::LYOsType>() {
   return tss::LYOsType_descriptor();
 }
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< tss::LYDirection>() {
   return tss::LYDirection_descriptor();
+}
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< tss::LYPubType>() {
+  return tss::LYPubType_descriptor();
 }
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< tss::LYRetCode>() {

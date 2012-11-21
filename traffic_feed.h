@@ -127,7 +127,7 @@ public:
 class OnRouteClientPanorama
 {
     map<string, ClientObservers> map_client_relevant_traffic;
-    LYMsgOnAir hot_traffic_sub;
+//    LYMsgOnAir hot_traffic_sub;
 
   public:
     int SubTraffic (string& adr, LYMsgOnAir& pkg);
@@ -170,7 +170,8 @@ class CronTrafficObserver: public TrafficObserver
 private:
     enum OS_VER{
         IOS = 0,
-        ANDROID = 1
+        ANDROID = 1,
+        WILDCARD = 15
     };
     string s_hex_token;
     OS_VER os_ver;
@@ -181,6 +182,9 @@ private:
     virtual void Register (const string& adr, LYTrafficSub& ts);
     virtual void Unregister ();
 
+//    void setOsVer(OS_VER ov){
+//    	os_ver = ov;
+//    }
     LYTrafficSub & getTrafficSub(){
         return this->traffic_sub;
     }
@@ -214,6 +218,8 @@ class CronClientPanorama
 {
     std::map<string, CronClientObservers> cron_client_relevant_traffic;
     bool inited;
+    LYMsgOnAir hot_traffic_sub;
+    void SubHotTraffic();
 
   public:
     int SubTraffic (string& adr, LYMsgOnAir& pkg);

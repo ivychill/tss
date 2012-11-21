@@ -152,5 +152,5 @@ void CityTrafficPanorama::SetState (const Json::Value& jv_roadset)
     }
 
     //tommy TODO
-    cronclientpanorama.Init();
+//    cronclientpanorama.Init();	//由于Attach已经为从未收到路况的路作订阅，重复订阅已不再需要。
 }

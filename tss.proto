@@ -64,10 +64,6 @@ message LYCityTraffic {
     repeated LYRoadTraffic road_traffics = 3;
 }
 
-message LYCronTime{
-	optional int32 minute = 1;
-	optional int32 hour   = 2;
-}
 message LYCrontab {
     enum LYCronType {
         LY_REP_MINUTE = 1; 
@@ -77,15 +73,21 @@ message LYCrontab {
         LY_REP_DOW    = 16;
     }
 
-    //bitmap，类似linux的crontab
+    //bitmap，类似linux的crontab，从最右边数起。
     required LYCronType cron_type = 1;
-	optional LYCronTime gowork = 2;
-	optional LYCronTime gohome = 3;
+    optional int64 minute  = 2;
+    optional int32 hour    = 3;
     optional int32 dom     = 4;//date of month
     optional int32 month   = 5;
     optional int32 dow     = 6;//day of week
 }
 
+//订阅的发布类型
+enum LYPubType {
+    LY_PUB_ADHOC = 1; //一次性的
+    LY_PUB_EVENT = 2; //事件触发，抑制后实际上是interval timer
+    LY_PUB_CRON = 3; //chronology，类似linux的cron
+}
 
 //发起订阅的消息结构
 message LYTrafficSub {
@@ -94,13 +96,6 @@ message LYTrafficSub {
         LY_SUB_CREATE = 1;
         LY_SUB_DELETE = 2;
         LY_SUB_UPDATE = 3;
-    }
-    
-    //订阅的发布类型
-    enum LYPubType {
-        LY_PUB_ADHOC = 1; //一次性的
-        LY_PUB_EVENT = 2; //事件触发，抑制后实际上是interval timer
-        LY_PUB_CRON = 3; //chronology，类似linux的cron
     }
 
     required string city = 1;
@@ -114,14 +109,6 @@ message LYTrafficSub {
 message LYTrafficPub {
     required int32 route_id = 1;
     required LYCityTraffic city_traffic = 2;
-    
-    //订阅的发布类型
-    enum LYPubType {
-        LY_PUB_ADHOC = 1; //一次性的
-        LY_PUB_EVENT = 2; //事件触发，抑制后实际上是interval timer
-        LY_PUB_CRON = 3; //chronology，类似linux的cron
-    }
-    
     optional LYPubType pub_type = 4;
 }
 

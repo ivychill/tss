@@ -18,6 +18,7 @@ zmq::socket_t* p_skt_client;
 zmq::socket_t* p_skt_cron_client;
 zmq::socket_t* p_skt_apns_client;
 CronSchelder* p_cron_sched;
+CronTrafficObserver *p_hot_traffic_observer;
 
 int main (int argc, char *argv[])
 {

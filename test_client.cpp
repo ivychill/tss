@@ -92,7 +92,7 @@ void TestRequestRoad (zmq::socket_t& skt, std::string* roadarray)
     LYTrafficSub *traffic_sub = pkg.mutable_traffic_sub ();
     traffic_sub->set_city ("娣卞�");
     traffic_sub->set_opr_type (LYTrafficSub::LY_SUB_CREATE);
-     traffic_sub->set_pub_type (LYTrafficSub::LY_PUB_EVENT);
+     traffic_sub->set_pub_type (LY_PUB_EVENT);
     LYRoute *route = traffic_sub->mutable_route ();
     route->set_identity (1);
 

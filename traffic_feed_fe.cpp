@@ -11,6 +11,7 @@ extern CronClientPanorama cronclientpanorama;
 extern DBClientConnection db_client;
 extern VersionManager version_manager;
 extern zmq::socket_t* p_skt_client;
+extern CronTrafficObserver *p_hot_traffic_observer;
 //extern zmq::socket_t* p_skt_apns_client;
 
 //回复成功失败的信息
@@ -109,7 +110,7 @@ int ClientMsgProcessor::ProcessRcvMsg (string& adr, LYMsgOnAir& msg)
         {
             ReturnToClient (LY_SUCCESS);
 
-            if(rcv_msg.traffic_sub().pub_type() == LYTrafficSub::LY_PUB_CRON)
+            if(rcv_msg.traffic_sub().pub_type() == LY_PUB_CRON)
             {
                 LOG4CPLUS_DEBUG (logger, "LY_PUB_CRON operation type: ");
                 cronclientpanorama.SubTraffic(adr, rcv_msg);
@@ -253,14 +254,14 @@ void TrafficObserver::Register (const string& adr, LYTrafficSub& ts)
         relevant_traffic->clear_road_traffics();
     }
 
-    LYTrafficSub::LYPubType pub_type = traffic_sub.pub_type();
+    LYPubType pub_type = traffic_sub.pub_type();
     //LOG4CPLUS_DEBUG (logger, "register pub type: " << pub_type);
 
-    if (pub_type == LYTrafficSub::LY_PUB_ADHOC)
+    if (pub_type == LY_PUB_ADHOC)
     {
     	Unregister ();
     }
-    else if (pub_type == LYTrafficSub::LY_PUB_CRON)
+    else if (pub_type == LY_PUB_CRON)
     {
       	//submit the cron request to cron_worker
     	LOG4CPLUS_DEBUG (logger, "can't reach here ");
@@ -292,6 +293,14 @@ void TrafficObserver::Unregister ()
 int OnRouteClientPanorama::SubTraffic (string& adr, LYMsgOnAir& pkg)
 {
 //    CreateSubscription (adr, hot_traffic_sub);
+	if (p_hot_traffic_observer)
+	{
+		p_hot_traffic_observer->ReplyToClient();
+	}
+	else
+	{
+		LOG4CPLUS_ERROR (logger, "no hot traffic observer");
+	}
     LYTrafficSub traffic_sub = pkg.traffic_sub ();
     LYTrafficSub::LYOprType opr_type = traffic_sub.opr_type ();
     switch (opr_type)
@@ -333,33 +342,34 @@ void ClientObservers::DeleteSubscription (const string& adr, LYMsgOnAir& pkg)
     LOG4CPLUS_DEBUG (logger, "delete subscription, address: " << adr << " identity: " << identity);
 }
 
+//订阅热点路况，被移往CronOnRouteClientPanorama
 void OnRouteClientPanorama::Init ()
 {
-    hot_traffic_sub.set_version (1);
-    hot_traffic_sub.set_from_party (LY_CLIENT);
-    hot_traffic_sub.set_to_party (LY_TSS);
-    hot_traffic_sub.set_msg_type (LY_TRAFFIC_SUB);
-    hot_traffic_sub.set_msg_id (TRAFFIC_PUB_MSG_ID);
-    hot_traffic_sub.set_timestamp (time (NULL));
-    LYTrafficSub *traffic_sub = hot_traffic_sub.mutable_traffic_sub ();
-    traffic_sub->set_city ("深圳");
-    traffic_sub->set_opr_type (LYTrafficSub::LY_SUB_CREATE);
-    traffic_sub->set_pub_type (LYTrafficSub::LY_PUB_EVENT);
-    LYRoute *route = traffic_sub->mutable_route ();
-    route->set_identity (HOT_TRAFFIC_ROUTE_ID);
-
-    vector<string> vec_hot_road = citytrafficpanorama.GetHotRoad ();
-    for (int index = 0; index < vec_hot_road.size(); index++)
-    {
-    	LYSegment *segment = route->add_segments();
-    	segment->set_road(vec_hot_road[index]);
-    	segment->mutable_start()->set_lng(0);
-    	segment->mutable_start()->set_lat(0);
-    	segment->mutable_end()->set_lng(0);
-    	segment->mutable_end()->set_lat(0);
-    }
-
-    CreateSubscription ("*", hot_traffic_sub); //*表示所有的客户端都订阅
+//    hot_traffic_sub.set_version (1);
+//    hot_traffic_sub.set_from_party (LY_CLIENT);
+//    hot_traffic_sub.set_to_party (LY_TSS);
+//    hot_traffic_sub.set_msg_type (LY_TRAFFIC_SUB);
+//    hot_traffic_sub.set_msg_id (TRAFFIC_PUB_MSG_ID);
+//    hot_traffic_sub.set_timestamp (time (NULL));
+//    LYTrafficSub *traffic_sub = hot_traffic_sub.mutable_traffic_sub ();
+//    traffic_sub->set_city ("深圳");
+//    traffic_sub->set_opr_type (LYTrafficSub::LY_SUB_CREATE);
+//    traffic_sub->set_pub_type (LY_PUB_EVENT);
+//    LYRoute *route = traffic_sub->mutable_route ();
+//    route->set_identity (HOT_TRAFFIC_ROUTE_ID);
+//
+//    vector<string> vec_hot_road = citytrafficpanorama.GetHotRoad ();
+//    for (int index = 0; index < vec_hot_road.size(); index++)
+//    {
+//    	LYSegment *segment = route->add_segments();
+//    	segment->set_road(vec_hot_road[index]);
+//    	segment->mutable_start()->set_lng(0);
+//    	segment->mutable_start()->set_lat(0);
+//    	segment->mutable_end()->set_lng(0);
+//    	segment->mutable_end()->set_lat(0);
+//    }
+//
+//    CreateSubscription ("*", hot_traffic_sub); //*表示所有的客户端都订阅
 }
 
 // Add if there does not exist, update if there exists.
