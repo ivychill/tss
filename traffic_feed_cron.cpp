@@ -150,8 +150,17 @@ int CronJob::CalcWaitTime(const LYCrontab& tab)
 //    cout<<"scheduled_hour: "<<scheduled_hour<< " scheduled_min:" <<scheduled_min << endl;
 
     if(tab.has_dow()){
-        int day = isInMask(tab.dow(), today.day_of_week()) ? 0: getScheduled(tab.dow(), today.day_of_week(),7);
-//        std::cout<<"day interval: "<<day<<std::endl;
+        int day_indx = today.day_of_week();
+
+        int day = isInMask(tab.dow(), day_indx) ? day_indx : getScheduled(tab.dow(), day_indx,7);
+//        std::cout<<"day_indx "<< day_indx << " day interval: "<<day<<std::endl;
+
+        if(day < day_indx){
+            day += (7 - day_indx);
+        }
+        if( day >= day_indx){
+            day -= day_indx;
+        }
         scheduled_hour += day * 24;
     }
 

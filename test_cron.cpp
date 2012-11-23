@@ -39,13 +39,13 @@ TEST_F(CronTest, CalcWaitTime) {
     ASSERT_TRUE(CronJob::CalcWaitTime(tab) == 24 * 0);
 
     tab.Clear();
-    dow = 0x1 << (today.day_of_week()+1);
+    dow = 0x1 << ((today.day_of_week()+offset) % 7);
     tab.set_minute(0x1L << now.tm_min);
     tab.set_hour(0x1 << now.tm_hour);
     tab.set_dow(dow);
 
 //    std::cout<<"CronJob::CalcWaitTime(tab): "<<CronJob::CalcWaitTime(tab)<<endl;
-    ASSERT_TRUE(CronJob::CalcWaitTime(tab) == 24 * 60 * 5);
+    ASSERT_TRUE(CronJob::CalcWaitTime(tab) == 24 * 60 * offset);
 
 }
 
