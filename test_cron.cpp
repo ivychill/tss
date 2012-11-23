@@ -44,7 +44,7 @@ TEST_F(CronTest, CalcWaitTime) {
     tab.set_hour(0x1 << now.tm_hour);
     tab.set_dow(dow);
 
-    std::cout<<"CronJob::CalcWaitTime(tab): "<<CronJob::CalcWaitTime(tab)<<endl;
+//    std::cout<<"CronJob::CalcWaitTime(tab): "<<CronJob::CalcWaitTime(tab)<<endl;
     ASSERT_TRUE(CronJob::CalcWaitTime(tab) == 24 * 60 * 5);
 
 }
