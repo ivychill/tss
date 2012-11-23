@@ -93,138 +93,78 @@ void CronJob::ModifyTime(int tm)
 	this->wait_time_ = tm;
 }
 
-bool CronJob::IsInDow(int day_of_week, int dow)
-{
-	int weekmask = dow & 0x7f; //week mask
-//	LOG4CPLUS_DEBUG (logger, "IsInDow dow: "<< weekmask);
-
-#if TSS_TST
-    weekmask = TSS_DOW;
-#endif
-
-	return (weekmask >> day_of_week) & 0x1;
+bool isInMask(long mask, int i){
+    return (mask >> i) & 0x1;
 }
 
-int CronJob::GetDaysInterval(date& today, int dow)
+int getScheduled(long mask, int i, int upbound)
 {
-	int days = 0;
-	int weekmask = dow & 0x7f; //week mask
+    int rtn = i;
 
-#if TSS_TST
-	weekmask = TSS_DOW;
-#endif
+    if(i >= upbound)
+        return -1;
 
-//	LOG4CPLUS_DEBUG (logger, "GetDaysByDow: "<< weekmask);
-	if(0 == weekmask)
-	{
-		return -1;
-	}
+    if(mask == 0)
+        return -1;
 
-	int nextdayinweek = (today.day_of_week() + 1) % DAYS_WEEK; // [0 ~ 6]
+    int next = (i + 1) % upbound;
+    do{
+        rtn++;
+        if(next == upbound){
+            next = 0;
+        }
+    }while( ! ((mask >> next++) & 0x1L ));
 
-	do
-	{
-		days++;
-		if(nextdayinweek == DAYS_WEEK)
-		{
-			nextdayinweek = 0;
-		}
-	}while( !( (weekmask >> nextdayinweek++ ) & 0x1));
-
-//	LOG4CPLUS_DEBUG (logger, "GetDaysInterval: "<< days);
-
-	return days;
+    return rtn % upbound;
 }
-
 int CronJob::CalcWaitTime(const LYCrontab& tab)
 {
     date today(day_clock::local_day());
-    tm n = to_tm(second_clock::local_time());
-    ptime now(today, hours(n.tm_hour)+minutes(n.tm_min)+seconds(n.tm_sec));
+    tm now = to_tm(second_clock::local_time());
+//    ptime now(today, hours(n.tm_hour)+minutes(n.tm_min)+seconds(n.tm_sec));
 
-    //default time
-    int work_hour = 8;
-    int work_min = 0;
-    int home_hour = 18;
-    int home_min = 0;
+    int scheduled_min = 0;
+    int scheduled_hour = 0;
 
-    /*
-    if(tab.has_gowork())
-    {
-        work_hour = tab.gowork().has_hour()  ? tab.gowork().hour(): 8;
-        work_min = tab.gowork().has_minute() ? tab.gowork().minute() : 0;
-        LOG4CPLUS_DEBUG (logger, "gowork: " <<work_hour<< ":"<< work_min);
+    if(tab.has_minute()){
+        long mask = tab.minute();
+//        printf("min mask 0x%lx\n",mask);
+
+        scheduled_min = isInMask(mask, now.tm_min) ? now.tm_min : getScheduled(mask, now.tm_min, 60);
     }
 
-    if(tab.has_gohome())
-    {
-        home_hour = tab.gohome().has_hour()  ? tab.gohome().hour(): 18;
-        home_min = tab.gohome().has_minute() ? tab.gohome().minute() : 0;
-        LOG4CPLUS_DEBUG (logger, "gohome: " <<home_hour<< ":"<< home_min);
-    }
-    */
+    if(tab.has_hour()){
+        int hour;
+        int mask = tab.hour();
 
-	switch(tab.cron_type())
-	{
-
-	case LYCrontab_LYCronType_LY_REP_DOW:
-        {
-            int days = GetDaysInterval(today, tab.dow());
-            // not today job
-            if(! IsInDow(today.day_of_week() ,tab.dow()))
-            {
-                work_hour += days*24;
-                home_hour += days*24;
-            }
-
-            ptime gowork(today, hours(work_hour)+minutes(work_min));
-            ptime gohome(today, hours(home_hour)+minutes(home_min));
-
-            int time_len;  //unit: second
-            time_duration timetowork = gowork - now;
-            time_duration timetohome = gohome - now;
-
-            if(! timetowork.is_negative())
-            {
-                //book the gowork time , negative
-                time_len = timetowork.total_seconds();
-                LOG4CPLUS_INFO (logger, "time to work: "<< time_len/60 <<" min");
-            }
-            else if(! timetohome.is_negative())
-            {
-                time_len = timetohome.total_seconds();
-                LOG4CPLUS_INFO (logger, "time go home: "<< time_len/60 <<" min");
-            }
-            else  //current time is later than today go home, need next work time
-            {
-                //next valid day gowork time
-                time_len = timetowork.total_seconds() + days* 1440 * 60;
-                LOG4CPLUS_INFO (logger, "time go nextday work: "<< time_len/60 <<" min");
-            }
-
-            return time_len/60;
+        if(scheduled_min < now.tm_min){
+            hour = (now.tm_hour + 1)% 24;
         }
-        break;
-	case LYCrontab_LYCronType_LY_REP_MONTH:
-		break;
+        else {
+            hour = now.tm_hour;
+        }
+        scheduled_hour = isInMask(mask, hour)? hour : getScheduled(mask, hour, 24);
+    }
 
+//    cout<<"now.tm_min: "<<now.tm_min<<endl;
+//    cout<<"scheduled_hour: "<<scheduled_hour<< " scheduled_min:" <<scheduled_min << endl;
 
-	case LYCrontab_LYCronType_LY_REP_DOM:
-		break;
+    if(tab.has_dow()){
+        int day = isInMask(tab.dow(), today.day_of_week()) ? 0: getScheduled(tab.dow(), today.day_of_week(),7);
+//        std::cout<<"day interval: "<<day<<std::endl;
+        scheduled_hour += day * 24;
+    }
 
-	case LYCrontab_LYCronType_LY_REP_HOUR:
-		break;
+//    ptime trigtime(today, hours(scheduled_hour) + minutes(scheduled_min));
 
-	case LYCrontab_LYCronType_LY_REP_MINUTE:
-		break;
+    int wait_minutes =  scheduled_hour*60 + scheduled_min - now.tm_hour*60 - now.tm_min;
 
-	default:
-		LOG4CPLUS_DEBUG (logger, "cron type error: "<< tab.cron_type());
+    if(wait_minutes < 0)
+    {
+        LOG4CPLUS_DEBUG(logger, "td negative");
+    }
 
-		break;
-	}
-
-	return -1;
+    return wait_minutes;
 }
 
 template< typename T >
