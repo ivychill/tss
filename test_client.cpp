@@ -116,36 +116,6 @@ struct ContextAndArg
     char *m_argv[2];
 };
 
-//tangkefu modify 
-#if 0
-void DoRecvRoutine(zmq::context_t * ctxt, char* client_identity)
-{
-    zmq::socket_t skt_feed (*ctxt, ZMQ_DEALER);
-    skt_feed.setsockopt (ZMQ_IDENTITY, client_identity, strlen (client_identity));
-
-    skt_feed.connect("tcp://localhost:6001");
-
-    //  Initialize poll set
-    zmq::pollitem_t items [] = {
-        { skt_feed, 0, ZMQ_POLLIN, 0 },
-    };
- 
-    LOG4CPLUS_DEBUG (logger, "DoRecvRoutine: client_identity: " << client_identity);
-
-    while(1)
-    {
-        zmq::poll (&items [0], 1, -1);
-        if (items [0].revents & ZMQ_POLLIN)
-        {
-           RecvPackage (skt_feed);
-           LOG4CPLUS_DEBUG (logger, "DoRecvRoutine reply: client_identity: " << client_identity);
-        }
-
-        boost::this_thread::sleep(boost::posix_time::seconds(1));
-    }
-}
-#endif
-
 void DoSendRoutine(zmq::context_t* ctxt, char* client_identity)
 {
     zmq::socket_t skt_feed (*ctxt, ZMQ_DEALER);
@@ -174,13 +144,7 @@ void DoSendRoutine(zmq::context_t* ctxt, char* client_identity)
         TestRequestRoad (skt_feed, vt_road_hit_none);
 
         boost::this_thread::sleep(boost::posix_time::seconds(1));
-#if 1
-
-        zmq::poll (&items [0], 1, 0);
         int poll_result = (items [0].revents & ZMQ_POLLIN);
-
-
-    //  LOG4CPLUS_DEBUG (logger, ":poll result: " << items[0].revents );
 
         while (poll_result)
         {
@@ -189,8 +153,6 @@ void DoSendRoutine(zmq::context_t* ctxt, char* client_identity)
         }
 
         boost::this_thread::sleep(boost::posix_time::seconds(10));
-#endif
-
     }
 }
 
@@ -207,14 +169,7 @@ void *worker_routine_ex (void *arg)
     sprintf (client_identity, "%s_%u", argv[1], pthread_self());
     LOG4CPLUS_DEBUG (logger, "client_identity: " << client_identity);
 
-#if 0
-    zmq::socket_t skt_feed (*context, ZMQ_DEALER); 
-    skt_feed.setsockopt (ZMQ_IDENTITY, client_identity, strlen (client_identity));
-    skt_feed.connect ("tcp://localhost:6001");
-#endif
-
-    //boost::thread recv_routine(boost::bind(DoRecvRoutine, context, client_identity)); 
-    boost::thread send_routine(boost::bind(DoSendRoutine, context, client_identity));
+   boost::thread send_routine(boost::bind(DoSendRoutine, context, client_identity));
 
     //recv_routine.join();
     send_routine.join();
