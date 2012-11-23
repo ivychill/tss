@@ -245,8 +245,6 @@ private:
 
 public:
     static int CalcWaitTime(const LYCrontab& tab);
-    static int GetDaysInterval(date& today, int dow);
-    static bool IsInDow(int day_of_week, int dow);
 
 	inline int GetWaitTime(){return wait_time_;}
 

@@ -1,6 +1,8 @@
  #started with '#' are comments
 JSON_HOME=/home/chenfeng/jsoncpp-src-0.5.0
 #INC=-I$(JSON_HOME)/include/json
+GTEST_DIR=/home/tangkefu/ci/gtest-1.6.0
+
 LIB=-L$(JSON_HOME)/libs/linux-gcc-4.6 -lzmq -llog4cplus -lprotobuf -ljson_linux-gcc-4.6_libmt
 LIB_ADD = -lmongoclient -lboost_thread -lboost_system -lboost_filesystem -lboost_program_options
 
@@ -11,11 +13,9 @@ OBJ=*.o
 CC=g++
 CC_FLAG=-Wall
 #CC_FLAG=-Wall -D_SANDBOX
-#CC_FLAG=-Wall -D_SANDBOX -include gcc-preinclude.h
+#CC_FLAG=-Wall -D_GTEST
 
-#/libjson_linux-gcc-4.2.1_libmt.a
-
-all: proto traffic_router traffic_forward traffic_feed traffic_apns test_probe test_client test_remote traffic_collect 
+all: proto traffic_router traffic_forward traffic_feed traffic_apns test_probe test_client test_remote traffic_collect test
 
 .cpp.o:
 	@echo "Compile $(OBJ) begin......"
@@ -71,6 +71,11 @@ test_remote: test_remote.o tss.pb.o tss_log.o tss_helper.o tss_helper.h tss.pb.h
 	@echo "Link test_remote begin......"
 	$(CC) $(CC_FLAG) -o $(BIN_PATH)/$@ $^ $(LIB) $(LIB_ADD)
 	@echo "Link test_remote end......"
+
+test:test.o test_cron.o  tss_log.o tss_helper.o traffic_feed_main.o traffic_feed_cron.o traffic_feed_be.o traffic_feed_fe.o tss.pb.o
+	@echo "Link test begin......"
+	$(CC) $(CC_FLAG) -o $(BIN_PATH)/$@ $^ $(LIB_GT) $(LIB) $(LIB_ADD)
+	@echo "Link test end......"
 
 clean:
 	@echo "Removing linked and compiled files......"
