@@ -20,7 +20,6 @@ zmq::socket_t* p_skt_apns_client;
 CronSchelder* p_cron_sched;
 CronTrafficObserver *p_hot_traffic_observer;
 
-#ifndef _GTEST
 int main (int argc, char *argv[])
 {
     GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -146,4 +145,3 @@ int main (int argc, char *argv[])
     google::protobuf::ShutdownProtobufLibrary();
     return 0;
 }
-#endif

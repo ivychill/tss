@@ -38,9 +38,11 @@ static const string k_dir_str[LY_SOUTHEAST + 1] = {
 
 extern Logger logger;
 extern DBClientConnection db_client;
+extern CityTrafficPanorama citytrafficpanorama;
 extern zmq::socket_t* p_skt_apns_client;
 zmq::socket_t* p_cron_server;
 extern CronSchelder* p_cron_sched;
+extern CronTrafficObserver *p_hot_traffic_observer;
 
 const static int k_repeat_period = 5;  // 5 minitue
 const static int k_repeat_time = 2;
@@ -50,8 +52,7 @@ const static int k_repeat_time = 2;
 bool CronJob::operator==(const CronJob& other) const
 {
 	return this->dev_tk_ == other.dev_tk_
-			&& this->route_id_ == other.route_id_
-			&& this->p_observer == other.p_observer;
+			&& this->route_id_ == other.route_id_;
 }
 
 void CronJob::Exec()
@@ -92,78 +93,138 @@ void CronJob::ModifyTime(int tm)
 	this->wait_time_ = tm;
 }
 
-bool isInMask(long mask, int i){
-    return (mask >> i) & 0x1;
-}
-
-int getScheduled(long mask, int i, int upbound)
+bool CronJob::IsInDow(int day_of_week, int dow)
 {
-    int rtn = i;
+	int weekmask = dow & 0x7f; //week mask
+//	LOG4CPLUS_DEBUG (logger, "IsInDow dow: "<< weekmask);
 
-    if(i >= upbound)
-        return -1;
+#if TSS_TST
+    weekmask = TSS_DOW;
+#endif
 
-    if(mask == 0)
-        return -1;
-
-    int next = (i + 1) % upbound;
-    do{
-        rtn++;
-        if(next == upbound){
-            next = 0;
-        }
-    }while( ! ((mask >> next++) & 0x1L ));
-
-    return rtn % upbound;
+	return (weekmask >> day_of_week) & 0x1;
 }
+
+int CronJob::GetDaysInterval(date& today, int dow)
+{
+	int days = 0;
+	int weekmask = dow & 0x7f; //week mask
+
+#if TSS_TST
+	weekmask = TSS_DOW;
+#endif
+
+//	LOG4CPLUS_DEBUG (logger, "GetDaysByDow: "<< weekmask);
+	if(0 == weekmask)
+	{
+		return -1;
+	}
+
+	int nextdayinweek = (today.day_of_week() + 1) % DAYS_WEEK; // [0 ~ 6]
+
+	do
+	{
+		days++;
+		if(nextdayinweek == DAYS_WEEK)
+		{
+			nextdayinweek = 0;
+		}
+	}while( !( (weekmask >> nextdayinweek++ ) & 0x1));
+
+//	LOG4CPLUS_DEBUG (logger, "GetDaysInterval: "<< days);
+
+	return days;
+}
+
 int CronJob::CalcWaitTime(const LYCrontab& tab)
 {
     date today(day_clock::local_day());
-    tm now = to_tm(second_clock::local_time());
-//    ptime now(today, hours(n.tm_hour)+minutes(n.tm_min)+seconds(n.tm_sec));
+    tm n = to_tm(second_clock::local_time());
+    ptime now(today, hours(n.tm_hour)+minutes(n.tm_min)+seconds(n.tm_sec));
 
-    int scheduled_min = 0;
-    int scheduled_hour = 0;
+    //default time
+    int work_hour = 8;
+    int work_min = 0;
+    int home_hour = 18;
+    int home_min = 0;
 
-    if(tab.has_minute()){
-        long mask = tab.minute();
-//        printf("min mask 0x%lx\n",mask);
-
-        scheduled_min = isInMask(mask, now.tm_min) ? now.tm_min : getScheduled(mask, now.tm_min, 60);
-    }
-
-    if(tab.has_hour()){
-        int hour;
-        int mask = tab.hour();
-
-        if(scheduled_min < now.tm_min){
-            hour = (now.tm_hour + 1)% 24;
-        }
-        else {
-            hour = now.tm_hour;
-        }
-        scheduled_hour = isInMask(mask, hour)? hour : getScheduled(mask, hour, 24);
-    }
-
-//    cout<<"now.tm_min: "<<now.tm_min<<endl;
-//    cout<<"scheduled_hour: "<<scheduled_hour<< " scheduled_min:" <<scheduled_min << endl;
-
-    if(tab.has_dow()){
-        int day = isInMask(tab.dow(), today.day_of_week()) ? 0: getScheduled(tab.dow(), today.day_of_week(),7);
-//        std::cout<<"day interval: "<<day<<std::endl;
-        scheduled_hour += day * 24;
-    }
-
-//    ptime trigtime(today, hours(scheduled_hour) + minutes(scheduled_min));
-
-    int wait_minutes =  scheduled_hour*60 + scheduled_min - now.tm_hour*60 - now.tm_min;
-
-    if(wait_minutes < 0)
+    /*
+    if(tab.has_gowork())
     {
-        LOG4CPLUS_DEBUG(logger, "td negative");
+        work_hour = tab.gowork().has_hour()  ? tab.gowork().hour(): 8;
+        work_min = tab.gowork().has_minute() ? tab.gowork().minute() : 0;
+        LOG4CPLUS_DEBUG (logger, "gowork: " <<work_hour<< ":"<< work_min);
     }
 
-    return wait_minutes;
+    if(tab.has_gohome())
+    {
+        home_hour = tab.gohome().has_hour()  ? tab.gohome().hour(): 18;
+        home_min = tab.gohome().has_minute() ? tab.gohome().minute() : 0;
+        LOG4CPLUS_DEBUG (logger, "gohome: " <<home_hour<< ":"<< home_min);
+    }
+    */
+
+	switch(tab.cron_type())
+	{
+
+	case LYCrontab_LYCronType_LY_REP_DOW:
+        {
+            int days = GetDaysInterval(today, tab.dow());
+            // not today job
+            if(! IsInDow(today.day_of_week() ,tab.dow()))
+            {
+                work_hour += days*24;
+                home_hour += days*24;
+            }
+
+            ptime gowork(today, hours(work_hour)+minutes(work_min));
+            ptime gohome(today, hours(home_hour)+minutes(home_min));
+
+            int time_len;  //unit: second
+            time_duration timetowork = gowork - now;
+            time_duration timetohome = gohome - now;
+
+            if(! timetowork.is_negative())
+            {
+                //book the gowork time , negative
+                time_len = timetowork.total_seconds();
+                LOG4CPLUS_INFO (logger, "time to work: "<< time_len/60 <<" min");
+            }
+            else if(! timetohome.is_negative())
+            {
+                time_len = timetohome.total_seconds();
+                LOG4CPLUS_INFO (logger, "time go home: "<< time_len/60 <<" min");
+            }
+            else  //current time is later than today go home, need next work time
+            {
+                //next valid day gowork time
+                time_len = timetowork.total_seconds() + days* 1440 * 60;
+                LOG4CPLUS_INFO (logger, "time go nextday work: "<< time_len/60 <<" min");
+            }
+
+            return time_len/60;
+        }
+        break;
+	case LYCrontab_LYCronType_LY_REP_MONTH:
+		break;
+
+
+	case LYCrontab_LYCronType_LY_REP_DOM:
+		break;
+
+	case LYCrontab_LYCronType_LY_REP_HOUR:
+		break;
+
+	case LYCrontab_LYCronType_LY_REP_MINUTE:
+		break;
+
+	default:
+		LOG4CPLUS_DEBUG (logger, "cron type error: "<< tab.cron_type());
+
+		break;
+	}
+
+	return -1;
 }
 
 template< typename T >
@@ -280,11 +341,11 @@ void CronTrafficObserver::Update (RoadTrafficSubject *sub, bool should_pub)
 
     time_t now = time (NULL);
     time_t ts = sub->GetRoadTraffic().timestamp();
-//    if (now - ts > ROAD_TRAFFIC_TIMEOUT * 60)
-//    {
-//        LOG4CPLUS_INFO (logger, "expired road traffic, road: " << sub->GetRoadTraffic().road() << ", timestamp: " << ::ctime(&ts));
-//    }
-//    else
+    if (now - ts > ROAD_TRAFFIC_TIMEOUT * 60)
+    {
+        LOG4CPLUS_INFO (logger, "expired road traffic, road: " << sub->GetRoadTraffic().road() << ", timestamp: " << ::ctime(&ts));
+    }
+    else
     {
         // only 1 road
         relevant_traffic->clear_road_traffics();
@@ -299,69 +360,71 @@ void CronTrafficObserver::Update (RoadTrafficSubject *sub, bool should_pub)
 
 int CronTrafficObserver::ReplyToClient ()
 {
-    string reply;
-
-    if(LY_TRAFFIC_PUB == snd_msg.msg_type())
+    if(this->os_ver == IOS)
     {
-        const tss::LYTrafficPub& pub = snd_msg.traffic_pub();
-        LOG4CPLUS_DEBUG (logger, "LY_TRAFFIC_PUB: " << pub.city_traffic().road_traffics_size());
-
-        if(pub.has_city_traffic())
+    	string reply;
+        if(LY_TRAFFIC_PUB == snd_msg.msg_type())
         {
-            LOG4CPLUS_DEBUG (logger, "has_city_traffic: ");
+            const tss::LYTrafficPub& pub = snd_msg.traffic_pub();
+            LOG4CPLUS_DEBUG (logger, "LY_TRAFFIC_PUB: " << pub.city_traffic().road_traffics_size());
 
-//                if(pub.city_traffic().road_traffics_size() > 0)
-            for(int rd = 0; rd< pub.city_traffic().road_traffics_size(); rd++)
+            if(pub.has_city_traffic())
             {
-                const LYRoadTraffic&  road = pub.city_traffic().road_traffics(rd);
-                reply += road.road();
+                LOG4CPLUS_DEBUG (logger, "has_city_traffic: ");
 
-                string sg("");
-
-//                    LOG4CPLUS_DEBUG (logger, "send to client msg:" << pub.city_traffic().road_traffics().size());
-                for(int segment = 0; segment < road.segment_traffics_size(); segment++)
+    //                if(pub.city_traffic().road_traffics_size() > 0)
+                for(int rd = 0; rd< pub.city_traffic().road_traffics_size(); rd++)
                 {
-                    const LYSegmentTraffic& sgmt = road.segment_traffics(segment);
-                    sg += sgmt.details();
+                    const LYRoadTraffic&  road = pub.city_traffic().road_traffics(rd);
+                    reply += road.road();
 
-                    if(sgmt.direction() <= tss::LY_SOUTHEAST &&
-                            sgmt.direction() > tss::LY_UNKNOWN)
-                        sg += k_dir_str[sgmt.direction()];
+                    string sg("");
 
-                    sg += "时速";
-                    sg += boost::lexical_cast<string>(sgmt.speed());
-                    sg += "km ";
-                }
+    //                    LOG4CPLUS_DEBUG (logger, "send to client msg:" << pub.city_traffic().road_traffics().size());
+                    for(int segment = 0; segment < road.segment_traffics_size(); segment++)
+                    {
+                        const LYSegmentTraffic& sgmt = road.segment_traffics(segment);
+                        sg += sgmt.details();
 
-                if(reply.size() + sg.size() < MAX_PUSH_LEN)
-                {
-                    reply += sg;
-                }
-                else
-                {
-                    break;
+                        if(sgmt.direction() <= tss::LY_SOUTHEAST &&
+                                sgmt.direction() > tss::LY_UNKNOWN)
+                            sg += k_dir_str[sgmt.direction()];
+
+                        sg += "时速";
+                        sg += boost::lexical_cast<string>(sgmt.speed());
+                        sg += "km ";
+                    }
+
+                    if(reply.size() + sg.size() < MAX_PUSH_LEN)
+                    {
+                        reply += sg;
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
             }
         }
-    }
 
-    LOG4CPLUS_DEBUG (logger, "reply to client "<<reply);
-
-    if(this->os_ver == IOS)
-    {
+        LOG4CPLUS_DEBUG (logger, "reply to client "<<reply);
 //        LOG4CPLUS_DEBUG (logger, "send to apns token: " << dev_token.size());
         LOG4CPLUS_DEBUG (logger, "IOS send to apns msg len: "<<reply.size());
 
         s_sendmore(*p_skt_apns_client, s_hex_token);
         s_send (*p_skt_apns_client, reply);
     }
+    else if (this->os_ver == ANDROID || this->os_ver == WILDCARD)
+    {
+        LOG4CPLUS_INFO (logger, "android/wildcard ReplyToClient: " << this->os_ver);
+        LYTrafficPub* traffic_pub = snd_msg.mutable_traffic_pub();
+        traffic_pub->set_pub_type(LY_PUB_CRON);
+        TrafficObserver::ReplyToClient();
+    }
+
     else
     {
-        LOG4CPLUS_INFO (logger, "android ReplyToClient: " );
-        LYTrafficPub* traffic_pub = snd_msg.mutable_traffic_pub();
-        traffic_pub->set_pub_type(tss::LY_PUB_CRON);
-
-        TrafficObserver::ReplyToClient();
+    	LOG4CPLUS_DEBUG (logger, "unknown os: " << this->os_ver);
     }
 
     return 0;
@@ -370,6 +433,11 @@ int CronTrafficObserver::ReplyToClient ()
 void CronTrafficObserver::Register (const string& adr, LYTrafficSub& ts)
 {
     AttachToTraffic(adr, ts);
+   	if (adr.compare("*") == 0)	//广播，用于热点路况。Added by Chen Feng 2012-11-21
+   	{
+   		this->os_ver = WILDCARD;
+   		p_hot_traffic_observer = this;
+   	}
 
     //record the ts info to db
     char hex_token [DEVICE_TOKEN_SIZE * 2];
@@ -527,6 +595,9 @@ void CronClientPanorama::Init ()
     }
     inited = true;
 
+    p_hot_traffic_observer = NULL;
+    SubHotTraffic();
+
     char byte_token[DEVICE_TOKEN_SIZE];
 
     auto_ptr<DBClientCursor> cursor = db_client.query(dbns, BSONObj());
@@ -563,4 +634,42 @@ void CronClientPanorama::Init ()
             LOG4CPLUS_DEBUG (logger, "no trafficsub");
         }
     }
+}
+
+void CronClientPanorama::SubHotTraffic()
+{
+	hot_traffic_sub.set_version (1);
+	hot_traffic_sub.set_from_party (LY_CLIENT);
+	hot_traffic_sub.set_to_party (LY_TSS);
+	hot_traffic_sub.set_msg_type (LY_TRAFFIC_SUB);
+	hot_traffic_sub.set_msg_id (TRAFFIC_PUB_MSG_ID);
+	hot_traffic_sub.set_timestamp (time (NULL));
+	LYTrafficSub *traffic_sub = hot_traffic_sub.mutable_traffic_sub ();
+	traffic_sub->set_city ("深圳");
+	traffic_sub->set_opr_type (LYTrafficSub::LY_SUB_CREATE);
+	traffic_sub->set_pub_type (LY_PUB_CRON);
+
+	LYRoute *route = traffic_sub->mutable_route ();
+	route->set_identity (HOT_TRAFFIC_ROUTE_ID);
+
+	vector<string> vec_hot_road = citytrafficpanorama.GetHotRoad ();
+	for (int index = 0; index < vec_hot_road.size(); index++)
+	{
+		LYSegment *segment = route->add_segments();
+		segment->set_road(vec_hot_road[index]);
+		segment->mutable_start()->set_lng(0);
+		segment->mutable_start()->set_lat(0);
+		segment->mutable_end()->set_lng(0);
+		segment->mutable_end()->set_lat(0);
+	}
+
+	LYCrontab *cron_tab = traffic_sub->mutable_cron_tab ();
+	cron_tab->set_cron_type (LYCrontab::LY_REP_MINUTE);
+	cron_tab->set_minute (0x0FFFFFFFFFFFFFFF);
+	cron_tab->set_hour(0x00FFFFFF);
+	cron_tab->set_dom(0x7FFFFFFF);
+	cron_tab->set_month(0x00000FFF);
+	cron_tab->set_dow(0x0000007F);
+
+	CreateSubscription ("*", hot_traffic_sub); //*表示所有的客户端都订阅
 }
