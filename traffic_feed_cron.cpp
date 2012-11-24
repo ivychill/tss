@@ -143,7 +143,7 @@ int CronJob::CalcWaitTime(const LYCrontab& tab)
     }
 
     if(tab.has_dow()){
-        int wday = (wait_days + today.day_of_week()) % 7;
+        int wday = (wait_days + today.day_of_week()) % 7;  //[0,..., 6]
 
         wday = getNext(tab.dow(), wday, 7);
 //        std::cout<<"day_indx "<< day_indx << " day interval: "<<day<<std::endl;
@@ -159,10 +159,12 @@ int CronJob::CalcWaitTime(const LYCrontab& tab)
     if(tab.has_dom()){
         int mday = 0;
         date next = today + date_duration(wait_days);
-        mday = getNext(tab.dom(), next.day().as_number(), next.end_of_month().day().as_number());
+        int up = next.end_of_month().day().as_number();
+        mday = getNext(tab.dom(), next.day().as_number()-1, up);
 
+        mday++;//as_number [1,..., 31]
         if(mday < today.day().as_number()){
-            wait_days = mday + today.end_of_month().day().as_number() - today.day().as_number();
+            wait_days = mday + up - today.day().as_number();
         }
         else{
             wait_days = mday - today.day().as_number();
