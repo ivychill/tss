@@ -93,13 +93,9 @@ void CronJob::ModifyTime(int tm)
 	this->wait_time_ = tm;
 }
 
-bool isInMask(long mask, int i){
-    return (mask >> i) & 0x1;
-}
-
-int getScheduled(long mask, int i, int upbound)
+int getNext(long mask, int i, int upbound)
 {
-    int rtn = i;
+    int next = i;
 
     if(i >= upbound)
         return -1;
@@ -107,30 +103,26 @@ int getScheduled(long mask, int i, int upbound)
     if(mask == 0)
         return -1;
 
-    int next = (i + 1) % upbound;
-    do{
-        rtn++;
-        if(next == upbound){
-            next = 0;
-        }
-    }while( ! ((mask >> next++) & 0x1L ));
+    while( ! ((mask >> next) & 0x1L )){
+        next = (++next) % upbound;
+    }
 
-    return rtn % upbound;
+    return next;
 }
+
 int CronJob::CalcWaitTime(const LYCrontab& tab)
 {
     date today(day_clock::local_day());
     tm now = to_tm(second_clock::local_time());
-//    ptime now(today, hours(n.tm_hour)+minutes(n.tm_min)+seconds(n.tm_sec));
 
     int scheduled_min = 0;
     int scheduled_hour = 0;
+    int wait_days = 0;
+    int wait_minutes = 0;
 
     if(tab.has_minute()){
         long mask = tab.minute();
-//        printf("min mask 0x%lx\n",mask);
-
-        scheduled_min = isInMask(mask, now.tm_min) ? now.tm_min : getScheduled(mask, now.tm_min, 60);
+        scheduled_min = getNext(mask, now.tm_min, 60);
     }
 
     if(tab.has_hour()){
@@ -143,34 +135,45 @@ int CronJob::CalcWaitTime(const LYCrontab& tab)
         else {
             hour = now.tm_hour;
         }
-        scheduled_hour = isInMask(mask, hour)? hour : getScheduled(mask, hour, 24);
+        scheduled_hour = getNext(mask, hour, 24);
     }
 
-//    cout<<"now.tm_min: "<<now.tm_min<<endl;
-//    cout<<"scheduled_hour: "<<scheduled_hour<< " scheduled_min:" <<scheduled_min << endl;
+    if(scheduled_hour < now.tm_hour){
+        wait_days++;
+    }
 
     if(tab.has_dow()){
-        int day_indx = today.day_of_week();
+        int wday = (wait_days + today.day_of_week()) % 7;
 
-        int day = isInMask(tab.dow(), day_indx) ? day_indx : getScheduled(tab.dow(), day_indx,7);
+        wday = getNext(tab.dow(), wday, 7);
 //        std::cout<<"day_indx "<< day_indx << " day interval: "<<day<<std::endl;
 
-        if(day < day_indx){
-            day += (7 - day_indx);
+        if(wday < today.day_of_week()){
+            wait_days = wday + 7 - today.day_of_week();
         }
-        if( day >= day_indx){
-            day -= day_indx;
+        else{
+            wait_days = wday - today.day_of_week();
         }
-        scheduled_hour += day * 24;
     }
 
-//    ptime trigtime(today, hours(scheduled_hour) + minutes(scheduled_min));
+    if(tab.has_dom()){
+        int mday = 0;
+        date next = today + date_duration(wait_days);
+        mday = getNext(tab.dom(), next.day().as_number(), next.end_of_month().day().as_number());
 
-    int wait_minutes =  scheduled_hour*60 + scheduled_min - now.tm_hour*60 - now.tm_min;
+        if(mday < today.day().as_number()){
+            wait_days = mday + today.end_of_month().day().as_number() - today.day().as_number();
+        }
+        else{
+            wait_days = mday - today.day().as_number();
+        }
+    }
+
+    wait_minutes = (wait_days*24 + scheduled_hour - now.tm_hour)*60 + scheduled_min - now.tm_min;
 
     if(wait_minutes < 0)
     {
-        LOG4CPLUS_DEBUG(logger, "td negative");
+        LOG4CPLUS_DEBUG(logger, "wait_minutes negative: "<< wait_minutes);
     }
 
     return wait_minutes;
