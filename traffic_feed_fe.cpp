@@ -168,6 +168,12 @@ int ClientMsgProcessor::ProcessRcvMsg (string& adr, LYMsgOnAir& msg)
 
 int TrafficObserver::ReplyToClient ()
 {
+    if (relevant_traffic->road_traffics_size () == 0 )
+    {
+        LOG4CPLUS_DEBUG (logger, "no traffic, don't reply to client: " << address);
+        return 0;
+    }
+
     snd_msg.set_timestamp (time (NULL));
     LOG4CPLUS_DEBUG (logger, "reply to client, address: " << address << ", package:\n" << snd_msg.DebugString ());
     string str_msg;
@@ -201,7 +207,7 @@ void TrafficObserver::Update (RoadTrafficSubject *sub, bool should_pub)
     	}
     }
 
-    if (should_pub && relevant_traffic->road_traffics_size () != 0 )
+    if (should_pub)
     {
         ReplyToClient ();
         last_update = now;
@@ -247,12 +253,9 @@ void TrafficObserver::Register (const string& adr, LYTrafficSub& ts)
     time_t now = time (NULL);
     LOG4CPLUS_DEBUG (logger, "now: " << ::ctime(&now) << ", last update: " << ::ctime(&last_update));
 
-    if (relevant_traffic->road_traffics_size () != 0)
-    {
-        ReplyToClient ();
-        last_update = now;
-        relevant_traffic->clear_road_traffics();
-    }
+    ReplyToClient ();
+    last_update = now;
+    relevant_traffic->clear_road_traffics();
 
     LYPubType pub_type = traffic_sub.pub_type();
     //LOG4CPLUS_DEBUG (logger, "register pub type: " << pub_type);
@@ -348,31 +351,31 @@ void ClientObservers::DeleteSubscription (const string& adr, LYMsgOnAir& pkg)
 //订阅热点路况，被移往CronOnRouteClientPanorama
 void OnRouteClientPanorama::Init ()
 {
-//    hot_traffic_sub.set_version (1);
-//    hot_traffic_sub.set_from_party (LY_CLIENT);
-//    hot_traffic_sub.set_to_party (LY_TSS);
-//    hot_traffic_sub.set_msg_type (LY_TRAFFIC_SUB);
-//    hot_traffic_sub.set_msg_id (TRAFFIC_PUB_MSG_ID);
-//    hot_traffic_sub.set_timestamp (time (NULL));
-//    LYTrafficSub *traffic_sub = hot_traffic_sub.mutable_traffic_sub ();
-//    traffic_sub->set_city ("深圳");
-//    traffic_sub->set_opr_type (LYTrafficSub::LY_SUB_CREATE);
-//    traffic_sub->set_pub_type (LY_PUB_EVENT);
-//    LYRoute *route = traffic_sub->mutable_route ();
-//    route->set_identity (HOT_TRAFFIC_ROUTE_ID);
-//
-//    vector<string> vec_hot_road = citytrafficpanorama.GetHotRoad ();
-//    for (int index = 0; index < vec_hot_road.size(); index++)
-//    {
-//    	LYSegment *segment = route->add_segments();
-//    	segment->set_road(vec_hot_road[index]);
-//    	segment->mutable_start()->set_lng(0);
-//    	segment->mutable_start()->set_lat(0);
-//    	segment->mutable_end()->set_lng(0);
-//    	segment->mutable_end()->set_lat(0);
-//    }
-//
-//    CreateSubscription ("*", hot_traffic_sub); //*表示所有的客户端都订阅
+    hot_traffic_sub.set_version (1);
+    hot_traffic_sub.set_from_party (LY_CLIENT);
+    hot_traffic_sub.set_to_party (LY_TSS);
+    hot_traffic_sub.set_msg_type (LY_TRAFFIC_SUB);
+    hot_traffic_sub.set_msg_id (TRAFFIC_PUB_MSG_ID);
+    hot_traffic_sub.set_timestamp (time (NULL));
+    LYTrafficSub *traffic_sub = hot_traffic_sub.mutable_traffic_sub ();
+    traffic_sub->set_city ("深圳");
+    traffic_sub->set_opr_type (LYTrafficSub::LY_SUB_CREATE);
+    traffic_sub->set_pub_type (LY_PUB_EVENT);
+    LYRoute *route = traffic_sub->mutable_route ();
+    route->set_identity (EVENT_HOT_TRAFFIC_ROUTE_ID);
+
+    vector<string> vec_hot_road = citytrafficpanorama.GetHotRoad ();
+    for (int index = 0; index < vec_hot_road.size(); index++)
+    {
+    	LYSegment *segment = route->add_segments();
+    	segment->set_road(vec_hot_road[index]);
+    	segment->mutable_start()->set_lng(0);
+    	segment->mutable_start()->set_lat(0);
+    	segment->mutable_end()->set_lng(0);
+    	segment->mutable_end()->set_lat(0);
+    }
+
+    CreateSubscription ("*", hot_traffic_sub); //*表示所有的客户端都订阅
 }
 
 // Add if there does not exist, update if there exists.
