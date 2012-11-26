@@ -86,7 +86,8 @@ protected:
   public:
     virtual void Update (RoadTrafficSubject *sub, bool should_pub);
     virtual int ReplyToClient ();
-    void AttachToTraffic(const string& adr, LYTrafficSub& ts);
+    void AttachToTraffic ();
+    void AttachToTraffic (const string& adr, LYTrafficSub& ts);
     virtual void Register (const string& adr, LYTrafficSub& ts);
     virtual void Unregister ();
 
@@ -101,21 +102,26 @@ protected:
         snd_msg.set_msg_type (LY_TRAFFIC_PUB);
     }
 
-    TrafficObserver (const TrafficObserver& obs)
-    {
-        last_update = obs.last_update ;
-        address = obs.address;
-        traffic_sub = obs.traffic_sub;
-        snd_msg = obs.snd_msg;
-        LYTrafficPub* traffic_pub = snd_msg.mutable_traffic_pub();
-        relevant_traffic = traffic_pub->mutable_city_traffic();
-    }
+//    TrafficObserver (const TrafficObserver& obs)
+//    {
+//        last_update = obs.last_update ;
+//        address = obs.address;
+//        traffic_sub = obs.traffic_sub;
+//        snd_msg = obs.snd_msg;
+//        LYTrafficPub* traffic_pub = snd_msg.mutable_traffic_pub();
+//        relevant_traffic = traffic_pub->mutable_city_traffic();
+//    }
 
     virtual ~TrafficObserver(){};
     void SetAddress (string& adr)
     {
         address = adr;
     }
+
+//    void ClearRoadTraffics ()
+//    {
+//    	relevant_traffic->clear_road_traffics();
+//    }
 };
 
 class ClientObservers
@@ -142,7 +148,7 @@ public:
 class OnRouteClientPanorama
 {
     map<string, ClientObservers> map_client_relevant_traffic;
-    LYMsgOnAir hot_traffic_sub;
+//    LYMsgOnAir hot_traffic_sub;
 
   public:
     int SubTraffic (string& adr, LYMsgOnAir& pkg);

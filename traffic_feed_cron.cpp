@@ -372,7 +372,7 @@ int CronTrafficObserver::ReplyToClient ()
 
         s_sendmore(*p_skt_apns_client, s_hex_token);
         s_send (*p_skt_apns_client, reply);
-        relevant_traffic->clear_road_traffics();
+//        relevant_traffic->clear_road_traffics(); //不在这里，而在Update和ReplyToClient之前clear
     }
     else if (this->os_ver == ANDROID || this->os_ver == WILDCARD)
     {
@@ -380,7 +380,7 @@ int CronTrafficObserver::ReplyToClient ()
         LYTrafficPub* traffic_pub = snd_msg.mutable_traffic_pub();
         traffic_pub->set_pub_type(LY_PUB_CRON);
         TrafficObserver::ReplyToClient();
-        relevant_traffic->clear_road_traffics();
+//        relevant_traffic->clear_road_traffics(); //不在这里，而在Update和ReplyToClient之前clear
     }
     else
     {
@@ -389,24 +389,6 @@ int CronTrafficObserver::ReplyToClient ()
 
     return 0;
 }
-
-//int WildcardCronTrafficObserver::ReplyToClient ()
-//{
-//    if (this->os_ver == WILDCARD)
-//    {
-//        LOG4CPLUS_INFO (logger, "wildcard ReplyToClient: " << this->os_ver);
-//        LYTrafficPub* traffic_pub = snd_msg.mutable_traffic_pub();
-//        traffic_pub->set_pub_type(LY_PUB_CRON);
-//        TrafficObserver::ReplyToClient();
-//    }
-//
-//    else
-//    {
-//    	LOG4CPLUS_DEBUG (logger, "unknown os: " << this->os_ver);
-//    }
-//
-//    return 0;
-//}
 
 void CronTrafficObserver::Register (const string& adr, LYTrafficSub& ts)
 {
@@ -516,6 +498,8 @@ void CronClientPanorama::ProcSchedInfo(string& dev_tk, string& route)
         CronTrafficObserver * pobj = (*itr).second.getObs(route_id);
         if(pobj)
         {
+        	//将来可以改进。实际上应该把Attach和Fetch的功能分开，这里需要的仅仅是Fetch。
+        	pobj->AttachToTraffic();
             pobj->ReplyToClient();
         }
         else
@@ -525,7 +509,7 @@ void CronClientPanorama::ProcSchedInfo(string& dev_tk, string& route)
     }
     else
     {
-        LOG4CPLUS_ERROR (logger, "ProcSchedInfo, no find dev : " << dev_tk);
+        LOG4CPLUS_ERROR (logger, "ProcSchedInfo, find no dev : " << dev_tk);
     }
 }
 
