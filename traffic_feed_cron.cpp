@@ -605,6 +605,7 @@ void CronClientPanorama::Init ()
 
 void CronClientPanorama::SubHotTraffic()
 {
+	LOG4CPLUS_DEBUG (logger, "enter SubHotTraffic");
 	hot_traffic_sub.set_version (1);
 	hot_traffic_sub.set_from_party (LY_CLIENT);
 	hot_traffic_sub.set_to_party (LY_TSS);

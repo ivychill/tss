@@ -45,9 +45,9 @@ void RoadTrafficSubject::SetState (const Json::Value& jv_road)
     road_traffic.Clear();
     road_traffic.set_road(jv_road ["rn"].asString());
 
-    LOG4CPLUS_DEBUG (logger, "before set_alias");
+    //LOG4CPLUS_DEBUG (logger, "before set_alias");
     road_traffic.set_alias(jv_road ["alias"].asString());
-    LOG4CPLUS_DEBUG (logger, "after set_alias");
+    //LOG4CPLUS_DEBUG (logger, "after set_alias");
     //int timestamp = TimeStrToInt(jv_road["ts"].asString());
     int timestamp = atoi (jv_road["ts_in_sec"].asString().c_str());
     road_traffic.set_timestamp (timestamp);
