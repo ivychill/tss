@@ -101,6 +101,10 @@ protected:
     }
 
     virtual ~TrafficObserver(){};
+    void SetAddress (string& adr)
+    {
+        address = adr;
+    }
 };
 
 class ClientObservers

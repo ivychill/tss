@@ -1,0 +1,1889 @@
+[DEBUG] [traffic_feed_be.cpp:93] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - hot road:
+[
+   {
+      "name" : "南坪快速"
+   },
+   {
+      "name" : "北环大道"
+   },
+   {
+      "name" : "红荔路"
+   },
+   {
+      "name" : "深南东路"
+   },
+   {
+      "name" : "深南中路"
+   },
+   {
+      "name" : "深南大道"
+   },
+   {
+      "name" : "宝安大道"
+   },
+   {
+      "name" : "滨河大道"
+   },
+   {
+      "name" : "滨海大道"
+   },
+   {
+      "name" : "华强北路"
+   },
+   {
+      "name" : "梅观高速"
+   },
+   {
+      "name" : "皇岗路"
+   },
+   {
+      "name" : "彩田路"
+   },
+   {
+      "name" : "金田路"
+   },
+   {
+      "name" : "新洲路"
+   },
+   {
+      "name" : "香蜜湖路"
+   },
+   {
+      "name" : "福龙路"
+   },
+   {
+      "name" : "沙河西路"
+   },
+   {
+      "name" : "后海大道"
+   },
+   {
+      "name" : "南海大道"
+   },
+   {
+      "name" : "南山大道"
+   },
+   {
+      "name" : "月亮湾大道"
+   },
+   {
+      "name" : "南山创业路"
+   },
+   {
+      "name" : "宝安创业路"
+   },
+   {
+      "name" : "留仙大道"
+   },
+   {
+      "name" : "广深公路"
+   },
+   {
+      "name" : "扳雪岗大道"
+   },
+   {
+      "name" : "布龙公路"
+   }
+]
+ 
+[DEBUG] [traffic_feed_be.cpp:95] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - hot_road_nbr: 28 
+[DEBUG] [traffic_feed_fe.cpp:409] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - version:
+[
+   {
+      "desc" : "指定目的地的途经路况",
+      "download_url" : "http://www.roadclouding.com/data/easyway95.apk",
+      "os_type" : "android",
+      "os_version" : "5.1",
+      "release" : 0,
+      "version" : 2
+   },
+   {
+      "desc" : "指定目的地的途经路况",
+      "download_url" : "https://www.apple.com/itunes/",
+      "os_type" : "ios",
+      "os_version" : "5.1",
+      "release" : 0,
+      "version" : 2
+   }
+]
+ 
+[DEBUG] [traffic_feed_cron.cpp:595] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - enter SubHotTraffic 
+[DEBUG] [traffic_feed_cron.cpp:511] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - insert/update subscription, address:  
+[DEBUG] [traffic_feed_cron.cpp:468] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - insert/update subscription, address: * identity: 255 
+[INFO] [traffic_feed_fe.cpp:280] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - no relevant traffic before ungister 
+[INFO] [traffic_feed_cron.cpp:444] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - db device count: 1 
+[DEBUG] [traffic_feed_cron.cpp:224] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - after Remove size : 0 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 南坪快速 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 北环大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 红荔路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 深南东路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 深南中路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 深南大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 宝安大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 滨河大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 滨海大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 华强北路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 梅观高速 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 皇岗路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 彩田路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 金田路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 新洲路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 香蜜湖路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 福龙路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 沙河西路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 后海大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 南海大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 南山大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 月亮湾大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 南山创业路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 宝安创业路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 留仙大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 广深公路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 扳雪岗大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 布龙公路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - CronTrafficObserver::Update:  
+[INFO] [traffic_feed_cron.cpp:300] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - add road traffic:
+ to observer: * 
+[INFO] [traffic_feed_cron.cpp:404] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - db device count: 1 
+[INFO] [traffic_feed_cron.cpp:434] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - device not register: 2a00000000000000000000000000000071000000000000004300000000000000 
+[DEBUG] [traffic_feed_cron.cpp:273] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - Cron::GenJob->cron wait : 0 minutes 
+[DEBUG] [traffic_feed_cron.cpp:210] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - after push_back JobQueue size : 1 
+[INFO] [traffic_feed_cron.cpp:560] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - Init queue 
+[DEBUG] [traffic_feed_cron.cpp:588] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - no trafficsub 
+[DEBUG] [traffic_feed_fe.cpp:105] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - process package: 
+version: 1
+from_party: LY_CLIENT
+to_party: LY_TSS
+msg_type: LY_CHECKIN
+msg_id: 2000
+timestamp: 1353909920
+snd_id: "356409047732840"
+checkin {
+  device_model: "HTC Desire"
+  os_type: LY_ANDROID
+  os_version: "8"
+  ly_major_release: 2
+  ly_minor_release: 0
+}
+ 
+[DEBUG] [traffic_feed_fe.cpp:42] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - return to client, address: 356409047732840, package:
+version: 1
+from_party: LY_TSS
+to_party: LY_CLIENT
+msg_type: LY_CHECKIN
+msg_id: 2000
+timestamp: 1353909974
+rcv_id: "356409047732840"
+checkin {
+  device_model: "HTC Desire"
+  os_type: LY_ANDROID
+  os_version: "8"
+  ly_major_release: 2
+  ly_minor_release: 0
+  download_url: "http://www.roadclouding.com/data/easyway95.apk"
+  desc: "\346\214\207\345\256\232\347\233\256\347\232\204\345\234\260\347\232\204\351\200\224\347\273\217\350\267\257\345\206\265"
+}
+ 
+[DEBUG] [traffic_feed_fe.cpp:105] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - process package: 
+version: 1
+from_party: LY_CLIENT
+to_party: LY_TSS
+msg_type: LY_TRAFFIC_SUB
+msg_id: 1024
+timestamp: 1353909940
+snd_id: "356409047732840"
+traffic_sub {
+  city: "\346\267\261\345\234\263"
+  route {
+    identity: 1024
+    segments {
+      start {
+        lng: 113.945005
+        lat: 22.550923
+      }
+      end {
+        lng: 113.944969
+        lat: 22.545458
+      }
+      road: "\347\247\221\346\212\200\344\270\255\344\272\214\350\267\257"
+    }
+    segments {
+      start {
+        lng: 113.944969
+        lat: 22.545458
+      }
+      end {
+        lng: 113.941564
+        lat: 22.545524
+      }
+      road: "\346\267\261\345\215\227\345\244\247\351\201\223"
+    }
+    segments {
+      start {
+        lng: 113.941564
+        lat: 22.545524
+      }
+      end {
+        lng: 113.940424
+        lat: 22.545449
+      }
+      road: "\346\267\261\345\215\227\345\244\247\351\201\223"
+    }
+    segments {
+      start {
+        lng: 113.940424
+        lat: 22.545449
+      }
+      end {
+        lng: 113.93772
+        lat: 22.545583
+      }
+      road: "\346\267\261\345\215\227\345\244\247\351\201\223"
+    }
+    segments {
+      start {
+        lng: 113.93772
+        lat: 22.545583
+      }
+      end {
+        lng: 113.938313
+        lat: 22.546125
+      }
+      road: "\346\267\261\345\215\227\345\215\227\346\265\267\347\253\213\344\272\244\346\241\245"
+    }
+    segments {
+      start {
+        lng: 113.938313
+        lat: 22.546125
+      }
+      end {
+        lng: 113.938331
+        lat: 22.544773
+      }
+      road: "\345\215\227\346\265\267\345\244\247\351\201\223"
+    }
+    segments {
+      start {
+        lng: 113.938331
+        lat: 22.544773
+      }
+      end {
+        lng: 113.93842
+        lat: 22.541294
+      }
+      road: "\345\215\227\346\265\267\345\244\247\351\201\223"
+    }
+    segments {
+      start {
+        lng: 113.93842
+        lat: 22.541294
+      }
+      end {
+        lng: 113.935654
+        lat: 22.531955
+      }
+      road: "\345\215\227\346\265\267\345\244\247\351\201\223"
+    }
+    segments {
+      start {
+        lng: 113.935654
+        lat: 22.531955
+      }
+      end {
+        lng: 113.919331
+        lat: 22.483392
+      }
+      road: "\345\215\227\346\265\267\345\244\247\351\201\223"
+    }
+    segments {
+      start {
+        lng: 113.919331
+        lat: 22.483392
+      }
+      end {
+        lng: 113.919493
+        lat: 22.483183
+      }
+      road: "\346\270\257\346\271\276\344\270\200\350\267\257"
+    }
+    segments {
+      start {
+        lng: 113.919493
+        lat: 22.483183
+      }
+      end {
+        lng: 113.919044
+        lat: 22.48234
+      }
+      road: "\347\253\231\345\211\215\350\267\257"
+    }
+  }
+  opr_type: LY_SUB_CREATE
+  pub_type: LY_PUB_EVENT
+}
+ 
+[DEBUG] [traffic_feed_fe.cpp:23] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - return to client, address: 356409047732840, package:
+version: 1
+from_party: LY_TSS
+to_party: LY_CLIENT
+msg_type: LY_RET_CODE
+msg_id: 1024
+timestamp: 1353909974
+rcv_id: "356409047732840"
+ret_code: LY_SUCCESS
+ 
+[DEBUG] [traffic_feed_fe.cpp:298] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - reply hot traffic 
+[INFO] [traffic_feed_cron.cpp:373] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - android/wildcard ReplyToClient: 15 
+[DEBUG] [traffic_feed_fe.cpp:172] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - reply to client, address: 356409047732840, package:
+version: 1
+from_party: LY_TSS
+to_party: LY_CLIENT
+msg_type: LY_TRAFFIC_PUB
+msg_id: 255
+timestamp: 1353909974
+traffic_pub {
+  route_id: 255
+  city_traffic {
+    city: "\346\267\261\345\234\263"
+  }
+  pub_type: LY_PUB_CRON
+}
+ 
+[DEBUG] [traffic_feed_fe.cpp:381] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - insert/update subscription, address:  
+[DEBUG] [traffic_feed_fe.cpp:332] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - insert/update subscription, address: 356409047732840 identity: 1024 
+[INFO] [traffic_feed_fe.cpp:280] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - no relevant traffic before ungister 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 科技中二路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 深南大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 2 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: 深南大道, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 深南大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 2 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: 深南大道, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 深南大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 2 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: 深南大道, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 深南南海立交桥 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 南海大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 2 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: 南海大道, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 南海大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 2 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: 南海大道, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 南海大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 2 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: 南海大道, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 南海大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 2 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: 南海大道, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 港湾一路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - register road: 站前路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:248] [PID:4132] [TID:139921145845632] [2012-11-26 14:06:14] - now: Mon Nov 26 14:06:14 2012
+, last update: Mon Nov 26 14:06:14 2012
+ 
+[DEBUG] [tss_helper.cpp:57] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:04] - road traffic json output:
+[
+   {
+      "_id" : "50b307081e391b6010000001",
+      "crawler_id" : "traffic-crawler-worker-1",
+      "rid" : "R03012",
+      "rn" : "南山大道",
+      "segments" : [
+         {
+            "_id" : "50b307081e391b6010000002",
+            "desc" : "（TEST）前方拥堵：从桃园路到桂庙路，蛇口方向",
+            "dir" : "蛇口方向",
+            "duration" : "224",
+            "e_lat" : "22.529976",
+            "e_lng" : "113.930125",
+            "s_lat" : "22.538141",
+            "s_lng" : "113.931375",
+            "spd" : "15"
+         }
+      ],
+      "ts" : "2012-11-26T06:07:04Z",
+      "ts_in_sec" : "1353910024"
+   },
+   {
+      "_id" : "50b307081e391b6010000003",
+      "crawler_id" : "traffic-crawler-worker-1",
+      "rid" : "S130129",
+      "rn" : "福龙路",
+      "segments" : [
+         {
+            "_id" : "50b307081e391b6010000004",
+            "desc" : "（TEST）拥堵路段：从北环香蜜立交桥北到福龙山隧道南口，方向：北向，预计通行时间：55秒，速度：14km/h",
+            "dir" : "北向",
+            "duration" : "224",
+            "e_lat" : "22.571991",
+            "e_lng" : "114.023589",
+            "s_lat" : "22.565483",
+            "s_lng" : "114.026068",
+            "spd" : "15"
+         }
+      ],
+      "ts" : "2012-11-26T06:07:04Z",
+      "ts_in_sec" : "1353910024"
+   }
+]
+ 
+[DEBUG] [traffic_feed_be.cpp:145] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:04] - road_traffic_nbr: 2 
+[DEBUG] [traffic_feed_be.cpp:58] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:04] - road segment number: 1 
+[DEBUG] [tss_helper.cpp:111] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:04] - direction string: 蛇口方向, direction: 0 
+[DEBUG] [traffic_feed_be.cpp:75] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:04] - set road traffic:
+ road: "\345\215\227\345\261\261\345\244\247\351\201\223"
+timestamp: 1353910024
+segment_traffics {
+  segment {
+    start {
+      lng: 113.931375
+      lat: 22.538141
+    }
+    end {
+      lng: 113.930125
+      lat: 22.529976
+    }
+  }
+  timestamp: 1353910024
+  direction: LY_UNKNOWN
+  speed: 15
+  details: "\357\274\210TEST\357\274\211\345\211\215\346\226\271\346\213\245\345\240\265\357\274\232\344\273\216\346\241\203\345\233\255\350\267\257\345\210\260\346\241\202\345\272\231\350\267\257\357\274\214\350\233\207\345\217\243\346\226\271\345\220\221"
+}
+alias: ""
+href: "R03012"
+ 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:04] - CronTrafficObserver::Update:  
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:04] - add road traffic:
+road: "\345\215\227\345\261\261\345\244\247\351\201\223"
+timestamp: 1353910024
+segment_traffics {
+  segment {
+    start {
+      lng: 113.931375
+      lat: 22.538141
+    }
+    end {
+      lng: 113.930125
+      lat: 22.529976
+    }
+  }
+  timestamp: 1353910024
+  direction: LY_UNKNOWN
+  speed: 15
+  details: "\357\274\210TEST\357\274\211\345\211\215\346\226\271\346\213\245\345\240\265\357\274\232\344\273\216\346\241\203\345\233\255\350\267\257\345\210\260\346\241\202\345\272\231\350\267\257\357\274\214\350\233\207\345\217\243\346\226\271\345\220\221"
+}
+alias: ""
+href: "R03012"
+ to observer: * 
+[DEBUG] [traffic_feed_be.cpp:58] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:04] - road segment number: 1 
+[DEBUG] [tss_helper.cpp:111] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:04] - direction string: 北向, direction: 3 
+[DEBUG] [traffic_feed_be.cpp:75] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:04] - set road traffic:
+ road: "\347\246\217\351\276\231\350\267\257"
+timestamp: 1353910024
+segment_traffics {
+  segment {
+    start {
+      lng: 114.026068
+      lat: 22.565483
+    }
+    end {
+      lng: 114.023589
+      lat: 22.571991
+    }
+  }
+  timestamp: 1353910024
+  direction: LY_NORTH
+  speed: 15
+  details: "\357\274\210TEST\357\274\211\346\213\245\345\240\265\350\267\257\346\256\265\357\274\232\344\273\216\345\214\227\347\216\257\351\246\231\350\234\234\347\253\213\344\272\244\346\241\245\345\214\227\345\210\260\347\246\217\351\276\231\345\261\261\351\232\247\351\201\223\345\215\227\345\217\243\357\274\214\346\226\271\345\220\221\357\274\232\345\214\227\345\220\221\357\274\214\351\242\204\350\256\241\351\200\232\350\241\214\346\227\266\351\227\264\357\274\23255\347\247\222\357\274\214\351\200\237\345\272\246\357\274\23214km/h"
+}
+alias: ""
+href: "S130129"
+ 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:04] - CronTrafficObserver::Update:  
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:04] - add road traffic:
+road: "\347\246\217\351\276\231\350\267\257"
+timestamp: 1353910024
+segment_traffics {
+  segment {
+    start {
+      lng: 114.026068
+      lat: 22.565483
+    }
+    end {
+      lng: 114.023589
+      lat: 22.571991
+    }
+  }
+  timestamp: 1353910024
+  direction: LY_NORTH
+  speed: 15
+  details: "\357\274\210TEST\357\274\211\346\213\245\345\240\265\350\267\257\346\256\265\357\274\232\344\273\216\345\214\227\347\216\257\351\246\231\350\234\234\347\253\213\344\272\244\346\241\245\345\214\227\345\210\260\347\246\217\351\276\231\345\261\261\351\232\247\351\201\223\345\215\227\345\217\243\357\274\214\346\226\271\345\220\221\357\274\232\345\214\227\345\220\221\357\274\214\351\242\204\350\256\241\351\200\232\350\241\214\346\227\266\351\227\264\357\274\23255\347\247\222\357\274\214\351\200\237\345\272\246\357\274\23214km/h"
+}
+alias: ""
+href: "S130129"
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:105] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - process package: 
+version: 1
+from_party: LY_CLIENT
+to_party: LY_TSS
+msg_type: LY_TRAFFIC_SUB
+msg_id: 1024
+timestamp: 1353910021
+snd_id: "356409047732840"
+traffic_sub {
+  city: "\346\267\261\345\234\263"
+  route {
+    identity: 1024
+    segments {
+      start {
+        lng: 113.908974
+        lat: 22.575395
+      }
+      end {
+        lng: 113.909693
+        lat: 22.574386
+      }
+      road: "\345\273\272\345\256\211\344\270\200\350\267\257\344\270\200\345\267\267"
+    }
+    segments {
+      start {
+        lng: 113.909693
+        lat: 22.574386
+      }
+      end {
+        lng: 113.905929
+        lat: 22.571249
+      }
+      road: "S359"
+    }
+    segments {
+      start {
+        lng: 113.905929
+        lat: 22.571249
+      }
+      end {
+        lng: 113.903584
+        lat: 22.570373
+      }
+      road: "\345\210\233\344\270\232\350\267\257\347\253\213\344\272\244\346\241\245"
+    }
+    segments {
+      start {
+        lng: 113.903584
+        lat: 22.570373
+      }
+      end {
+        lng: 113.905327
+        lat: 22.568462
+      }
+      road: "\345\210\233\344\270\232\350\267\257\347\253\213\344\272\244\346\241\245"
+    }
+    segments {
+      start {
+        lng: 113.905327
+        lat: 22.568462
+      }
+      end {
+        lng: 113.906423
+        lat: 22.567311
+      }
+      road: "G107"
+    }
+    segments {
+      start {
+        lng: 113.906423
+        lat: 22.567311
+      }
+      end {
+        lng: 113.910178
+        lat: 22.564366
+      }
+      road: "G107"
+    }
+    segments {
+      start {
+        lng: 113.910178
+        lat: 22.564366
+      }
+      end {
+        lng: 113.918442
+        lat: 22.555646
+      }
+      road: "G107"
+    }
+    segments {
+      start {
+        lng: 113.918442
+        lat: 22.555646
+      }
+      end {
+        lng: 113.920832
+        lat: 22.549555
+      }
+      road: "G107"
+    }
+    segments {
+      start {
+        lng: 113.920832
+        lat: 22.549555
+      }
+      end {
+        lng: 113.921011
+        lat: 22.547686
+      }
+      road: "G107"
+    }
+    segments {
+      start {
+        lng: 113.921011
+        lat: 22.547686
+      }
+      end {
+        lng: 113.924407
+        lat: 22.546835
+      }
+      road: "\345\211\215\346\265\267\350\267\257"
+    }
+    segments {
+      start {
+        lng: 113.924407
+        lat: 22.546835
+      }
+      end {
+        lng: 113.926158
+        lat: 22.546209
+      }
+      road: "\346\267\261\345\215\227\345\244\247\351\201\223"
+    }
+    segments {
+      start {
+        lng: 113.926158
+        lat: 22.546209
+      }
+      end {
+        lng: 113.929249
+        lat: 22.54585
+      }
+      road: "\346\267\261\345\215\227\345\244\247\351\201\223"
+    }
+    segments {
+      start {
+        lng: 113.929249
+        lat: 22.54585
+      }
+      end {
+        lng: 113.928593
+        lat: 22.52396
+      }
+      road: "\345\215\227\345\261\261\345\244\247\351\201\223"
+    }
+    segments {
+      start {
+        lng: 113.928593
+        lat: 22.52396
+      }
+      end {
+        lng: 113.93312
+        lat: 22.52073
+      }
+      road: "\345\210\233\344\270\232\350\267\257"
+    }
+    segments {
+      start {
+        lng: 113.93312
+        lat: 22.52073
+      }
+      end {
+        lng: 113.919331
+        lat: 22.483392
+      }
+      road: "\345\215\227\346\265\267\345\244\247\351\201\223"
+    }
+    segments {
+      start {
+        lng: 113.919331
+        lat: 22.483392
+      }
+      end {
+        lng: 113.919493
+        lat: 22.483183
+      }
+      road: "\346\270\257\346\271\276\344\270\200\350\267\257"
+    }
+    segments {
+      start {
+        lng: 113.919493
+        lat: 22.483183
+      }
+      end {
+        lng: 113.919044
+        lat: 22.48234
+      }
+      road: "\347\253\231\345\211\215\350\267\257"
+    }
+  }
+  opr_type: LY_SUB_CREATE
+  pub_type: LY_PUB_EVENT
+}
+ 
+[DEBUG] [traffic_feed_fe.cpp:23] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - return to client, address: 356409047732840, package:
+version: 1
+from_party: LY_TSS
+to_party: LY_CLIENT
+msg_type: LY_RET_CODE
+msg_id: 1024
+timestamp: 1353910032
+rcv_id: "356409047732840"
+ret_code: LY_SUCCESS
+ 
+[DEBUG] [traffic_feed_fe.cpp:298] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - reply hot traffic 
+[INFO] [traffic_feed_cron.cpp:373] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - android/wildcard ReplyToClient: 15 
+[DEBUG] [traffic_feed_fe.cpp:172] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - reply to client, address: 356409047732840, package:
+version: 1
+from_party: LY_TSS
+to_party: LY_CLIENT
+msg_type: LY_TRAFFIC_PUB
+msg_id: 255
+timestamp: 1353910032
+traffic_pub {
+  route_id: 255
+  city_traffic {
+    city: "\346\267\261\345\234\263"
+    road_traffics {
+      road: "\347\246\217\351\276\231\350\267\257"
+      timestamp: 1353910024
+      segment_traffics {
+        segment {
+          start {
+            lng: 114.026068
+            lat: 22.565483
+          }
+          end {
+            lng: 114.023589
+            lat: 22.571991
+          }
+        }
+        timestamp: 1353910024
+        direction: LY_NORTH
+        speed: 15
+        details: "\357\274\210TEST\357\274\211\346\213\245\345\240\265\350\267\257\346\256\265\357\274\232\344\273\216\345\214\227\347\216\257\351\246\231\350\234\234\347\253\213\344\272\244\346\241\245\345\214\227\345\210\260\347\246\217\351\276\231\345\261\261\351\232\247\351\201\223\345\215\227\345\217\243\357\274\214\346\226\271\345\220\221\357\274\232\345\214\227\345\220\221\357\274\214\351\242\204\350\256\241\351\200\232\350\241\214\346\227\266\351\227\264\357\274\23255\347\247\222\357\274\214\351\200\237\345\272\246\357\274\23214km/h"
+      }
+      alias: ""
+      href: "S130129"
+    }
+  }
+  pub_type: LY_PUB_CRON
+}
+ 
+[DEBUG] [traffic_feed_fe.cpp:381] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - insert/update subscription, address:  
+[DEBUG] [traffic_feed_fe.cpp:332] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - insert/update subscription, address: 356409047732840 identity: 1024 
+[DEBUG] [traffic_feed_fe.cpp:275] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - clear relevant traffic:
+city: "\346\267\261\345\234\263"
+ 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - unregister road: 科技中二路 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - unregister road: 深南大道 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - unregister road: 深南大道 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - unregister road: 深南大道 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - unregister road: 深南南海立交桥 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - unregister road: 南海大道 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - unregister road: 南海大道 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - unregister road: 南海大道 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - unregister road: 南海大道 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - unregister road: 港湾一路 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - unregister road: 站前路 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - register road: 建安一路一巷 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - register road: S359 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - register road: 创业路立交桥 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - register road: 创业路立交桥 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - expired road traffic, road: 创业路立交桥, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - register road: G107 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - register road: G107 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - expired road traffic, road: G107, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - register road: G107 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - expired road traffic, road: G107, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - register road: G107 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - expired road traffic, road: G107, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - register road: G107 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - expired road traffic, road: G107, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - register road: 前海路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - register road: 深南大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - set_observers size: 2 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - expired road traffic, road: 深南大道, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - register road: 深南大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - set_observers size: 2 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - expired road traffic, road: 深南大道, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - register road: 南山大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - set_observers size: 2 
+[DEBUG] [traffic_feed_fe.cpp:200] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - add road traffic:
+road: "\345\215\227\345\261\261\345\244\247\351\201\223"
+timestamp: 1353910024
+segment_traffics {
+  segment {
+    start {
+      lng: 113.931375
+      lat: 22.538141
+    }
+    end {
+      lng: 113.930125
+      lat: 22.529976
+    }
+  }
+  timestamp: 1353910024
+  direction: LY_UNKNOWN
+  speed: 15
+  details: "\357\274\210TEST\357\274\211\345\211\215\346\226\271\346\213\245\345\240\265\357\274\232\344\273\216\346\241\203\345\233\255\350\267\257\345\210\260\346\241\202\345\272\231\350\267\257\357\274\214\350\233\207\345\217\243\346\226\271\345\220\221"
+}
+alias: ""
+href: "R03012"
+ to observer: 356409047732840 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - register road: 创业路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - expired road traffic, road: , timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - register road: 南海大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - set_observers size: 2 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - expired road traffic, road: 南海大道, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - register road: 港湾一路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - expired road traffic, road: 港湾一路, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - register road: 站前路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - expired road traffic, road: 站前路, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:248] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - now: Mon Nov 26 14:07:12 2012
+, last update: Mon Nov 26 14:07:12 2012
+ 
+[DEBUG] [traffic_feed_fe.cpp:172] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:12] - reply to client, address: 356409047732840, package:
+version: 1
+from_party: LY_TSS
+to_party: LY_CLIENT
+msg_type: LY_TRAFFIC_PUB
+msg_id: 255
+timestamp: 1353910032
+traffic_pub {
+  route_id: 1024
+  city_traffic {
+    city: "\346\267\261\345\234\263"
+    road_traffics {
+      road: "\345\215\227\345\261\261\345\244\247\351\201\223"
+      timestamp: 1353910024
+      segment_traffics {
+        segment {
+          start {
+            lng: 113.931375
+            lat: 22.538141
+          }
+          end {
+            lng: 113.930125
+            lat: 22.529976
+          }
+        }
+        timestamp: 1353910024
+        direction: LY_UNKNOWN
+        speed: 15
+        details: "\357\274\210TEST\357\274\211\345\211\215\346\226\271\346\213\245\345\240\265\357\274\232\344\273\216\346\241\203\345\233\255\350\267\257\345\210\260\346\241\202\345\272\231\350\267\257\357\274\214\350\233\207\345\217\243\346\226\271\345\220\221"
+      }
+      alias: ""
+      href: "R03012"
+    }
+  }
+}
+ 
+[DEBUG] [traffic_feed_cron.cpp:68] [PID:4132] [TID:139921086936832] [2012-11-26 14:07:14] - CronJob::Do left_time: 0 
+[INFO] [traffic_feed_main.cpp:139] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - feed_main receive cron msg:  
+[DEBUG] [traffic_feed_cron.cpp:486] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - ProcSchedInfo, route_id : 255 
+[INFO] [traffic_feed_cron.cpp:373] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - android/wildcard ReplyToClient: 15 
+[DEBUG] [traffic_feed_fe.cpp:172] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - reply to client, address: *, package:
+version: 1
+from_party: LY_TSS
+to_party: LY_CLIENT
+msg_type: LY_TRAFFIC_PUB
+msg_id: 255
+timestamp: 1353910034
+traffic_pub {
+  route_id: 255
+  city_traffic {
+    city: "\346\267\261\345\234\263"
+    road_traffics {
+      road: "\347\246\217\351\276\231\350\267\257"
+      timestamp: 1353910024
+      segment_traffics {
+        segment {
+          start {
+            lng: 114.026068
+            lat: 22.565483
+          }
+          end {
+            lng: 114.023589
+            lat: 22.571991
+          }
+        }
+        timestamp: 1353910024
+        direction: LY_NORTH
+        speed: 15
+        details: "\357\274\210TEST\357\274\211\346\213\245\345\240\265\350\267\257\346\256\265\357\274\232\344\273\216\345\214\227\347\216\257\351\246\231\350\234\234\347\253\213\344\272\244\346\241\245\345\214\227\345\210\260\347\246\217\351\276\231\345\261\261\351\232\247\351\201\223\345\215\227\345\217\243\357\274\214\346\226\271\345\220\221\357\274\232\345\214\227\345\220\221\357\274\214\351\242\204\350\256\241\351\200\232\350\241\214\346\227\266\351\227\264\357\274\23255\347\247\222\357\274\214\351\200\237\345\272\246\357\274\23214km/h"
+      }
+      alias: ""
+      href: "S130129"
+    }
+  }
+  pub_type: LY_PUB_CRON
+}
+ 
+[DEBUG] [traffic_feed_fe.cpp:105] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - process package: 
+version: 1
+from_party: LY_CLIENT
+to_party: LY_TSS
+msg_type: LY_TRAFFIC_SUB
+msg_id: 1024
+timestamp: 1353910023
+snd_id: "356409047732840"
+traffic_sub {
+  city: "\346\267\261\345\234\263"
+  route {
+    identity: 1024
+    segments {
+      start {
+        lng: 113.908974
+        lat: 22.575395
+      }
+      end {
+        lng: 113.909693
+        lat: 22.574386
+      }
+      road: "\345\273\272\345\256\211\344\270\200\350\267\257\344\270\200\345\267\267"
+    }
+    segments {
+      start {
+        lng: 113.909693
+        lat: 22.574386
+      }
+      end {
+        lng: 113.905929
+        lat: 22.571249
+      }
+      road: "S359"
+    }
+    segments {
+      start {
+        lng: 113.905929
+        lat: 22.571249
+      }
+      end {
+        lng: 113.903584
+        lat: 22.570373
+      }
+      road: "\345\210\233\344\270\232\350\267\257\347\253\213\344\272\244\346\241\245"
+    }
+    segments {
+      start {
+        lng: 113.903584
+        lat: 22.570373
+      }
+      end {
+        lng: 113.905327
+        lat: 22.568462
+      }
+      road: "\345\210\233\344\270\232\350\267\257\347\253\213\344\272\244\346\241\245"
+    }
+    segments {
+      start {
+        lng: 113.905327
+        lat: 22.568462
+      }
+      end {
+        lng: 113.906423
+        lat: 22.567311
+      }
+      road: "G107"
+    }
+    segments {
+      start {
+        lng: 113.906423
+        lat: 22.567311
+      }
+      end {
+        lng: 113.910178
+        lat: 22.564366
+      }
+      road: "G107"
+    }
+    segments {
+      start {
+        lng: 113.910178
+        lat: 22.564366
+      }
+      end {
+        lng: 113.918442
+        lat: 22.555646
+      }
+      road: "G107"
+    }
+    segments {
+      start {
+        lng: 113.918442
+        lat: 22.555646
+      }
+      end {
+        lng: 113.920832
+        lat: 22.549555
+      }
+      road: "G107"
+    }
+    segments {
+      start {
+        lng: 113.920832
+        lat: 22.549555
+      }
+      end {
+        lng: 113.921011
+        lat: 22.547686
+      }
+      road: "G107"
+    }
+    segments {
+      start {
+        lng: 113.921011
+        lat: 22.547686
+      }
+      end {
+        lng: 113.924407
+        lat: 22.546835
+      }
+      road: "\345\211\215\346\265\267\350\267\257"
+    }
+    segments {
+      start {
+        lng: 113.924407
+        lat: 22.546835
+      }
+      end {
+        lng: 113.926158
+        lat: 22.546209
+      }
+      road: "\346\267\261\345\215\227\345\244\247\351\201\223"
+    }
+    segments {
+      start {
+        lng: 113.926158
+        lat: 22.546209
+      }
+      end {
+        lng: 113.929249
+        lat: 22.54585
+      }
+      road: "\346\267\261\345\215\227\345\244\247\351\201\223"
+    }
+    segments {
+      start {
+        lng: 113.929249
+        lat: 22.54585
+      }
+      end {
+        lng: 113.928593
+        lat: 22.52396
+      }
+      road: "\345\215\227\345\261\261\345\244\247\351\201\223"
+    }
+    segments {
+      start {
+        lng: 113.928593
+        lat: 22.52396
+      }
+      end {
+        lng: 113.93312
+        lat: 22.52073
+      }
+      road: "\345\210\233\344\270\232\350\267\257"
+    }
+    segments {
+      start {
+        lng: 113.93312
+        lat: 22.52073
+      }
+      end {
+        lng: 113.919331
+        lat: 22.483392
+      }
+      road: "\345\215\227\346\265\267\345\244\247\351\201\223"
+    }
+    segments {
+      start {
+        lng: 113.919331
+        lat: 22.483392
+      }
+      end {
+        lng: 113.919493
+        lat: 22.483183
+      }
+      road: "\346\270\257\346\271\276\344\270\200\350\267\257"
+    }
+    segments {
+      start {
+        lng: 113.919493
+        lat: 22.483183
+      }
+      end {
+        lng: 113.919044
+        lat: 22.48234
+      }
+      road: "\347\253\231\345\211\215\350\267\257"
+    }
+  }
+  opr_type: LY_SUB_CREATE
+  pub_type: LY_PUB_EVENT
+}
+ 
+[DEBUG] [traffic_feed_fe.cpp:23] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - return to client, address: 356409047732840, package:
+version: 1
+from_party: LY_TSS
+to_party: LY_CLIENT
+msg_type: LY_RET_CODE
+msg_id: 1024
+timestamp: 1353910034
+rcv_id: "356409047732840"
+ret_code: LY_SUCCESS
+ 
+[DEBUG] [traffic_feed_fe.cpp:298] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - reply hot traffic 
+[INFO] [traffic_feed_cron.cpp:373] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - android/wildcard ReplyToClient: 15 
+[DEBUG] [traffic_feed_fe.cpp:172] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - reply to client, address: 356409047732840, package:
+version: 1
+from_party: LY_TSS
+to_party: LY_CLIENT
+msg_type: LY_TRAFFIC_PUB
+msg_id: 255
+timestamp: 1353910034
+traffic_pub {
+  route_id: 255
+  city_traffic {
+    city: "\346\267\261\345\234\263"
+    road_traffics {
+      road: "\347\246\217\351\276\231\350\267\257"
+      timestamp: 1353910024
+      segment_traffics {
+        segment {
+          start {
+            lng: 114.026068
+            lat: 22.565483
+          }
+          end {
+            lng: 114.023589
+            lat: 22.571991
+          }
+        }
+        timestamp: 1353910024
+        direction: LY_NORTH
+        speed: 15
+        details: "\357\274\210TEST\357\274\211\346\213\245\345\240\265\350\267\257\346\256\265\357\274\232\344\273\216\345\214\227\347\216\257\351\246\231\350\234\234\347\253\213\344\272\244\346\241\245\345\214\227\345\210\260\347\246\217\351\276\231\345\261\261\351\232\247\351\201\223\345\215\227\345\217\243\357\274\214\346\226\271\345\220\221\357\274\232\345\214\227\345\220\221\357\274\214\351\242\204\350\256\241\351\200\232\350\241\214\346\227\266\351\227\264\357\274\23255\347\247\222\357\274\214\351\200\237\345\272\246\357\274\23214km/h"
+      }
+      alias: ""
+      href: "S130129"
+    }
+  }
+  pub_type: LY_PUB_CRON
+}
+ 
+[DEBUG] [traffic_feed_fe.cpp:381] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - insert/update subscription, address:  
+[DEBUG] [traffic_feed_fe.cpp:332] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - insert/update subscription, address: 356409047732840 identity: 1024 
+[DEBUG] [traffic_feed_fe.cpp:275] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - clear relevant traffic:
+city: "\346\267\261\345\234\263"
+ 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - unregister road: 建安一路一巷 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - unregister road: S359 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - unregister road: 创业路立交桥 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - unregister road: 创业路立交桥 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - unregister road: G107 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - unregister road: G107 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - unregister road: G107 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - unregister road: G107 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - unregister road: G107 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - unregister road: 前海路 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - unregister road: 深南大道 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - unregister road: 深南大道 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - unregister road: 南山大道 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - unregister road: 创业路 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - unregister road: 南海大道 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - unregister road: 港湾一路 
+[DEBUG] [traffic_feed_fe.cpp:288] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - unregister road: 站前路 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - register road: 建安一路一巷 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - expired road traffic, road: 建安一路一巷, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - register road: S359 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - expired road traffic, road: S359, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - register road: 创业路立交桥 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - expired road traffic, road: 创业路立交桥, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - register road: 创业路立交桥 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - expired road traffic, road: 创业路立交桥, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - register road: G107 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - expired road traffic, road: G107, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - register road: G107 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - expired road traffic, road: G107, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - register road: G107 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - expired road traffic, road: G107, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - register road: G107 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - expired road traffic, road: G107, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - register road: G107 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - expired road traffic, road: G107, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - register road: 前海路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - expired road traffic, road: 前海路, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - register road: 深南大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - set_observers size: 2 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - expired road traffic, road: 深南大道, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - register road: 深南大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - set_observers size: 2 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - expired road traffic, road: 深南大道, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - register road: 南山大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - set_observers size: 2 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - expired road traffic, road: 南山大道, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - register road: 创业路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - expired road traffic, road: 创业路, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - register road: 南海大道 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - set_observers size: 2 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - expired road traffic, road: 南海大道, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - register road: 港湾一路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - expired road traffic, road: 港湾一路, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:238] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - register road: 站前路 
+[DEBUG] [traffic_feed_be.cpp:14] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - set_observers size: 1 
+[INFO] [traffic_feed_fe.cpp:191] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - expired road traffic, road: 站前路, timestamp: Thu Jan  1 07:00:00 1970
+ 
+[DEBUG] [traffic_feed_fe.cpp:248] [PID:4132] [TID:139921145845632] [2012-11-26 14:07:14] - now: Mon Nov 26 14:07:14 2012
+, last update: Mon Nov 26 14:07:14 2012
+ 
+[DEBUG] [tss_helper.cpp:57] [PID:4132] [TID:139921145845632] [2012-11-26 14:08:04] - road traffic json output:
+[
+   {
+      "_id" : "50b307441e391b6010000005",
+      "crawler_id" : "traffic-crawler-worker-1",
+      "rid" : "R03012",
+      "rn" : "南山大道",
+      "segments" : [
+         {
+            "_id" : "50b307441e391b6010000006",
+            "desc" : "（TEST）前方拥堵：从桃园路到桂庙路，蛇口方向",
+            "dir" : "蛇口方向",
+            "duration" : "224",
+            "e_lat" : "22.529976",
+            "e_lng" : "113.930125",
+            "s_lat" : "22.538141",
+            "s_lng" : "113.931375",
+            "spd" : "15"
+         }
+      ],
+      "ts" : "2012-11-26T06:08:04Z",
+      "ts_in_sec" : "1353910084"
+   },
+   {
+      "_id" : "50b307441e391b6010000007",
+      "crawler_id" : "traffic-crawler-worker-1",
+      "rid" : "S130129",
+      "rn" : "福龙路",
+      "segments" : [
+         {
+            "_id" : "50b307441e391b6010000008",
+            "desc" : "（TEST）拥堵路段：从北环香蜜立交桥北到福龙山隧道南口，方向：北向，预计通行时间：55秒，速度：14km/h",
+            "dir" : "北向",
+            "duration" : "224",
+            "e_lat" : "22.571991",
+            "e_lng" : "114.023589",
+            "s_lat" : "22.565483",
+            "s_lng" : "114.026068",
+            "spd" : "15"
+         }
+      ],
+      "ts" : "2012-11-26T06:08:04Z",
+      "ts_in_sec" : "1353910084"
+   }
+]
+ 
+[DEBUG] [traffic_feed_be.cpp:145] [PID:4132] [TID:139921145845632] [2012-11-26 14:08:04] - road_traffic_nbr: 2 
+[DEBUG] [traffic_feed_be.cpp:58] [PID:4132] [TID:139921145845632] [2012-11-26 14:08:04] - road segment number: 1 
+[DEBUG] [tss_helper.cpp:111] [PID:4132] [TID:139921145845632] [2012-11-26 14:08:04] - direction string: 蛇口方向, direction: 0 
+[DEBUG] [traffic_feed_be.cpp:75] [PID:4132] [TID:139921145845632] [2012-11-26 14:08:04] - set road traffic:
+ road: "\345\215\227\345\261\261\345\244\247\351\201\223"
+timestamp: 1353910084
+segment_traffics {
+  segment {
+    start {
+      lng: 113.931375
+      lat: 22.538141
+    }
+    end {
+      lng: 113.930125
+      lat: 22.529976
+    }
+  }
+  timestamp: 1353910084
+  direction: LY_UNKNOWN
+  speed: 15
+  details: "\357\274\210TEST\357\274\211\345\211\215\346\226\271\346\213\245\345\240\265\357\274\232\344\273\216\346\241\203\345\233\255\350\267\257\345\210\260\346\241\202\345\272\231\350\267\257\357\274\214\350\233\207\345\217\243\346\226\271\345\220\221"
+}
+alias: ""
+href: "R03012"
+ 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:08:04] - CronTrafficObserver::Update:  
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:08:04] - add road traffic:
+road: "\345\215\227\345\261\261\345\244\247\351\201\223"
+timestamp: 1353910084
+segment_traffics {
+  segment {
+    start {
+      lng: 113.931375
+      lat: 22.538141
+    }
+    end {
+      lng: 113.930125
+      lat: 22.529976
+    }
+  }
+  timestamp: 1353910084
+  direction: LY_UNKNOWN
+  speed: 15
+  details: "\357\274\210TEST\357\274\211\345\211\215\346\226\271\346\213\245\345\240\265\357\274\232\344\273\216\346\241\203\345\233\255\350\267\257\345\210\260\346\241\202\345\272\231\350\267\257\357\274\214\350\233\207\345\217\243\346\226\271\345\220\221"
+}
+alias: ""
+href: "R03012"
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:200] [PID:4132] [TID:139921145845632] [2012-11-26 14:08:04] - add road traffic:
+road: "\345\215\227\345\261\261\345\244\247\351\201\223"
+timestamp: 1353910084
+segment_traffics {
+  segment {
+    start {
+      lng: 113.931375
+      lat: 22.538141
+    }
+    end {
+      lng: 113.930125
+      lat: 22.529976
+    }
+  }
+  timestamp: 1353910084
+  direction: LY_UNKNOWN
+  speed: 15
+  details: "\357\274\210TEST\357\274\211\345\211\215\346\226\271\346\213\245\345\240\265\357\274\232\344\273\216\346\241\203\345\233\255\350\267\257\345\210\260\346\241\202\345\272\231\350\267\257\357\274\214\350\233\207\345\217\243\346\226\271\345\220\221"
+}
+alias: ""
+href: "R03012"
+ to observer: 356409047732840 
+[DEBUG] [traffic_feed_fe.cpp:172] [PID:4132] [TID:139921145845632] [2012-11-26 14:08:04] - reply to client, address: 356409047732840, package:
+version: 1
+from_party: LY_TSS
+to_party: LY_CLIENT
+msg_type: LY_TRAFFIC_PUB
+msg_id: 255
+timestamp: 1353910084
+traffic_pub {
+  route_id: 1024
+  city_traffic {
+    city: "\346\267\261\345\234\263"
+    road_traffics {
+      road: "\345\215\227\345\261\261\345\244\247\351\201\223"
+      timestamp: 1353910084
+      segment_traffics {
+        segment {
+          start {
+            lng: 113.931375
+            lat: 22.538141
+          }
+          end {
+            lng: 113.930125
+            lat: 22.529976
+          }
+        }
+        timestamp: 1353910084
+        direction: LY_UNKNOWN
+        speed: 15
+        details: "\357\274\210TEST\357\274\211\345\211\215\346\226\271\346\213\245\345\240\265\357\274\232\344\273\216\346\241\203\345\233\255\350\267\257\345\210\260\346\241\202\345\272\231\350\267\257\357\274\214\350\233\207\345\217\243\346\226\271\345\220\221"
+      }
+      alias: ""
+      href: "R03012"
+    }
+  }
+}
+ 
+[DEBUG] [traffic_feed_be.cpp:58] [PID:4132] [TID:139921145845632] [2012-11-26 14:08:04] - road segment number: 1 
+[DEBUG] [tss_helper.cpp:111] [PID:4132] [TID:139921145845632] [2012-11-26 14:08:04] - direction string: 北向, direction: 3 
+[DEBUG] [traffic_feed_be.cpp:75] [PID:4132] [TID:139921145845632] [2012-11-26 14:08:04] - set road traffic:
+ road: "\347\246\217\351\276\231\350\267\257"
+timestamp: 1353910084
+segment_traffics {
+  segment {
+    start {
+      lng: 114.026068
+      lat: 22.565483
+    }
+    end {
+      lng: 114.023589
+      lat: 22.571991
+    }
+  }
+  timestamp: 1353910084
+  direction: LY_NORTH
+  speed: 15
+  details: "\357\274\210TEST\357\274\211\346\213\245\345\240\265\350\267\257\346\256\265\357\274\232\344\273\216\345\214\227\347\216\257\351\246\231\350\234\234\347\253\213\344\272\244\346\241\245\345\214\227\345\210\260\347\246\217\351\276\231\345\261\261\351\232\247\351\201\223\345\215\227\345\217\243\357\274\214\346\226\271\345\220\221\357\274\232\345\214\227\345\220\221\357\274\214\351\242\204\350\256\241\351\200\232\350\241\214\346\227\266\351\227\264\357\274\23255\347\247\222\357\274\214\351\200\237\345\272\246\357\274\23214km/h"
+}
+alias: ""
+href: "S130129"
+ 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:08:04] - CronTrafficObserver::Update:  
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:08:04] - add road traffic:
+road: "\347\246\217\351\276\231\350\267\257"
+timestamp: 1353910084
+segment_traffics {
+  segment {
+    start {
+      lng: 114.026068
+      lat: 22.565483
+    }
+    end {
+      lng: 114.023589
+      lat: 22.571991
+    }
+  }
+  timestamp: 1353910084
+  direction: LY_NORTH
+  speed: 15
+  details: "\357\274\210TEST\357\274\211\346\213\245\345\240\265\350\267\257\346\256\265\357\274\232\344\273\216\345\214\227\347\216\257\351\246\231\350\234\234\347\253\213\344\272\244\346\241\245\345\214\227\345\210\260\347\246\217\351\276\231\345\261\261\351\232\247\351\201\223\345\215\227\345\217\243\357\274\214\346\226\271\345\220\221\357\274\232\345\214\227\345\220\221\357\274\214\351\242\204\350\256\241\351\200\232\350\241\214\346\227\266\351\227\264\357\274\23255\347\247\222\357\274\214\351\200\237\345\272\246\357\274\23214km/h"
+}
+alias: ""
+href: "S130129"
+ to observer: * 
+[DEBUG] [traffic_feed_cron.cpp:68] [PID:4132] [TID:139921086936832] [2012-11-26 14:08:14] - CronJob::Do left_time: 4 
+[DEBUG] [tss_helper.cpp:57] [PID:4132] [TID:139921145845632] [2012-11-26 14:09:04] - road traffic json output:
+[
+   {
+      "_id" : "50b307801e391b6010000009",
+      "crawler_id" : "traffic-crawler-worker-1",
+      "rid" : "R03012",
+      "rn" : "南山大道",
+      "segments" : [
+         {
+            "_id" : "50b307801e391b601000000a",
+            "desc" : "（TEST）前方拥堵：从桃园路到桂庙路，蛇口方向",
+            "dir" : "蛇口方向",
+            "duration" : "224",
+            "e_lat" : "22.529976",
+            "e_lng" : "113.930125",
+            "s_lat" : "22.538141",
+            "s_lng" : "113.931375",
+            "spd" : "15"
+         }
+      ],
+      "ts" : "2012-11-26T06:09:04Z",
+      "ts_in_sec" : "1353910144"
+   },
+   {
+      "_id" : "50b307801e391b601000000b",
+      "crawler_id" : "traffic-crawler-worker-1",
+      "rid" : "S130129",
+      "rn" : "福龙路",
+      "segments" : [
+         {
+            "_id" : "50b307801e391b601000000c",
+            "desc" : "（TEST）拥堵路段：从北环香蜜立交桥北到福龙山隧道南口，方向：北向，预计通行时间：55秒，速度：14km/h",
+            "dir" : "北向",
+            "duration" : "224",
+            "e_lat" : "22.571991",
+            "e_lng" : "114.023589",
+            "s_lat" : "22.565483",
+            "s_lng" : "114.026068",
+            "spd" : "15"
+         }
+      ],
+      "ts" : "2012-11-26T06:09:04Z",
+      "ts_in_sec" : "1353910144"
+   }
+]
+ 
+[DEBUG] [traffic_feed_be.cpp:145] [PID:4132] [TID:139921145845632] [2012-11-26 14:09:04] - road_traffic_nbr: 2 
+[DEBUG] [traffic_feed_be.cpp:58] [PID:4132] [TID:139921145845632] [2012-11-26 14:09:04] - road segment number: 1 
+[DEBUG] [tss_helper.cpp:111] [PID:4132] [TID:139921145845632] [2012-11-26 14:09:04] - direction string: 蛇口方向, direction: 0 
+[DEBUG] [traffic_feed_be.cpp:75] [PID:4132] [TID:139921145845632] [2012-11-26 14:09:04] - set road traffic:
+ road: "\345\215\227\345\261\261\345\244\247\351\201\223"
+timestamp: 1353910144
+segment_traffics {
+  segment {
+    start {
+      lng: 113.931375
+      lat: 22.538141
+    }
+    end {
+      lng: 113.930125
+      lat: 22.529976
+    }
+  }
+  timestamp: 1353910144
+  direction: LY_UNKNOWN
+  speed: 15
+  details: "\357\274\210TEST\357\274\211\345\211\215\346\226\271\346\213\245\345\240\265\357\274\232\344\273\216\346\241\203\345\233\255\350\267\257\345\210\260\346\241\202\345\272\231\350\267\257\357\274\214\350\233\207\345\217\243\346\226\271\345\220\221"
+}
+alias: ""
+href: "R03012"
+ 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:09:04] - CronTrafficObserver::Update:  
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:09:04] - add road traffic:
+road: "\345\215\227\345\261\261\345\244\247\351\201\223"
+timestamp: 1353910144
+segment_traffics {
+  segment {
+    start {
+      lng: 113.931375
+      lat: 22.538141
+    }
+    end {
+      lng: 113.930125
+      lat: 22.529976
+    }
+  }
+  timestamp: 1353910144
+  direction: LY_UNKNOWN
+  speed: 15
+  details: "\357\274\210TEST\357\274\211\345\211\215\346\226\271\346\213\245\345\240\265\357\274\232\344\273\216\346\241\203\345\233\255\350\267\257\345\210\260\346\241\202\345\272\231\350\267\257\357\274\214\350\233\207\345\217\243\346\226\271\345\220\221"
+}
+alias: ""
+href: "R03012"
+ to observer: * 
+[DEBUG] [traffic_feed_fe.cpp:200] [PID:4132] [TID:139921145845632] [2012-11-26 14:09:04] - add road traffic:
+road: "\345\215\227\345\261\261\345\244\247\351\201\223"
+timestamp: 1353910144
+segment_traffics {
+  segment {
+    start {
+      lng: 113.931375
+      lat: 22.538141
+    }
+    end {
+      lng: 113.930125
+      lat: 22.529976
+    }
+  }
+  timestamp: 1353910144
+  direction: LY_UNKNOWN
+  speed: 15
+  details: "\357\274\210TEST\357\274\211\345\211\215\346\226\271\346\213\245\345\240\265\357\274\232\344\273\216\346\241\203\345\233\255\350\267\257\345\210\260\346\241\202\345\272\231\350\267\257\357\274\214\350\233\207\345\217\243\346\226\271\345\220\221"
+}
+alias: ""
+href: "R03012"
+ to observer: 356409047732840 
+[DEBUG] [traffic_feed_fe.cpp:172] [PID:4132] [TID:139921145845632] [2012-11-26 14:09:04] - reply to client, address: 356409047732840, package:
+version: 1
+from_party: LY_TSS
+to_party: LY_CLIENT
+msg_type: LY_TRAFFIC_PUB
+msg_id: 255
+timestamp: 1353910144
+traffic_pub {
+  route_id: 1024
+  city_traffic {
+    city: "\346\267\261\345\234\263"
+    road_traffics {
+      road: "\345\215\227\345\261\261\345\244\247\351\201\223"
+      timestamp: 1353910144
+      segment_traffics {
+        segment {
+          start {
+            lng: 113.931375
+            lat: 22.538141
+          }
+          end {
+            lng: 113.930125
+            lat: 22.529976
+          }
+        }
+        timestamp: 1353910144
+        direction: LY_UNKNOWN
+        speed: 15
+        details: "\357\274\210TEST\357\274\211\345\211\215\346\226\271\346\213\245\345\240\265\357\274\232\344\273\216\346\241\203\345\233\255\350\267\257\345\210\260\346\241\202\345\272\231\350\267\257\357\274\214\350\233\207\345\217\243\346\226\271\345\220\221"
+      }
+      alias: ""
+      href: "R03012"
+    }
+  }
+}
+ 
+[DEBUG] [traffic_feed_be.cpp:58] [PID:4132] [TID:139921145845632] [2012-11-26 14:09:04] - road segment number: 1 
+[DEBUG] [tss_helper.cpp:111] [PID:4132] [TID:139921145845632] [2012-11-26 14:09:04] - direction string: 北向, direction: 3 
+[DEBUG] [traffic_feed_be.cpp:75] [PID:4132] [TID:139921145845632] [2012-11-26 14:09:04] - set road traffic:
+ road: "\347\246\217\351\276\231\350\267\257"
+timestamp: 1353910144
+segment_traffics {
+  segment {
+    start {
+      lng: 114.026068
+      lat: 22.565483
+    }
+    end {
+      lng: 114.023589
+      lat: 22.571991
+    }
+  }
+  timestamp: 1353910144
+  direction: LY_NORTH
+  speed: 15
+  details: "\357\274\210TEST\357\274\211\346\213\245\345\240\265\350\267\257\346\256\265\357\274\232\344\273\216\345\214\227\347\216\257\351\246\231\350\234\234\347\253\213\344\272\244\346\241\245\345\214\227\345\210\260\347\246\217\351\276\231\345\261\261\351\232\247\351\201\223\345\215\227\345\217\243\357\274\214\346\226\271\345\220\221\357\274\232\345\214\227\345\220\221\357\274\214\351\242\204\350\256\241\351\200\232\350\241\214\346\227\266\351\227\264\357\274\23255\347\247\222\357\274\214\351\200\237\345\272\246\357\274\23214km/h"
+}
+alias: ""
+href: "S130129"
+ 
+[INFO] [traffic_feed_cron.cpp:294] [PID:4132] [TID:139921145845632] [2012-11-26 14:09:04] - CronTrafficObserver::Update:  
+[DEBUG] [traffic_feed_cron.cpp:311] [PID:4132] [TID:139921145845632] [2012-11-26 14:09:04] - add road traffic:
+road: "\347\246\217\351\276\231\350\267\257"
+timestamp: 1353910144
+segment_traffics {
+  segment {
+    start {
+      lng: 114.026068
+      lat: 22.565483
+    }
+    end {
+      lng: 114.023589
+      lat: 22.571991
+    }
+  }
+  timestamp: 1353910144
+  direction: LY_NORTH
+  speed: 15
+  details: "\357\274\210TEST\357\274\211\346\213\245\345\240\265\350\267\257\346\256\265\357\274\232\344\273\216\345\214\227\347\216\257\351\246\231\350\234\234\347\253\213\344\272\244\346\241\245\345\214\227\345\210\260\347\246\217\351\276\231\345\261\261\351\232\247\351\201\223\345\215\227\345\217\243\357\274\214\346\226\271\345\220\221\357\274\232\345\214\227\345\220\221\357\274\214\351\242\204\350\256\241\351\200\232\350\241\214\346\227\266\351\227\264\357\274\23255\347\247\222\357\274\214\351\200\237\345\272\246\357\274\23214km/h"
+}
+alias: ""
+href: "S130129"
+ to observer: * 

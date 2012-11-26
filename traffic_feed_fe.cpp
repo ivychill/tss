@@ -293,14 +293,17 @@ void TrafficObserver::Unregister ()
 int OnRouteClientPanorama::SubTraffic (string& adr, LYMsgOnAir& pkg)
 {
 //    CreateSubscription (adr, hot_traffic_sub);
-	if (p_hot_traffic_observer)
-	{
-		p_hot_traffic_observer->ReplyToClient();
-	}
-	else
-	{
-		LOG4CPLUS_ERROR (logger, "no hot traffic observer");
-	}
+    if (p_hot_traffic_observer)
+    {
+        LOG4CPLUS_DEBUG (logger, "reply hot traffic");
+        CronTrafficObserver hot_traffic_observer(*p_hot_traffic_observer);
+        hot_traffic_observer.SetAddress(adr);
+        hot_traffic_observer.ReplyToClient();
+    }
+    else
+    {
+        LOG4CPLUS_ERROR (logger, "no hot traffic observer");
+    }
     LYTrafficSub traffic_sub = pkg.traffic_sub ();
     LYTrafficSub::LYOprType opr_type = traffic_sub.opr_type ();
     switch (opr_type)
