@@ -301,15 +301,23 @@ void CronTrafficObserver::Update (RoadTrafficSubject *sub, bool should_pub)
     }
     else
     {
-        // only 1 road
-        relevant_traffic->clear_road_traffics();
+        last_update = now;
+        LYRoadTraffic& traffic =  sub->GetRoadTraffic();
+
+        LOG4CPLUS_DEBUG (logger, "add road traffic:\n" << sub->GetRoadTraffic().DebugString() << " to observer: " << address);
+
+        for(int i = 0; i < relevant_traffic->road_traffics_size(); ++i)
+        {
+            if( relevant_traffic->road_traffics(i).road() == traffic.road())
+            {
+                *(relevant_traffic->mutable_road_traffics(i)) = traffic;
+                return;
+            }
+        }
 
         LYRoadTraffic *rdtf = relevant_traffic->add_road_traffics();
         *rdtf = sub->GetRoadTraffic();
     }
-
-    LOG4CPLUS_DEBUG (logger, "add road traffic:\n" << sub->GetRoadTraffic().DebugString() << " to observer: " << address);
-    last_update = now;
 }
 
 int CronTrafficObserver::ReplyToClient ()
