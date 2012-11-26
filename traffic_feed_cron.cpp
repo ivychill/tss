@@ -79,7 +79,7 @@ void CronJob::Renew()
 {
 	if(this->repeate_time_--)
 	{
-		this->wait_time_ += k_repeat_period;
+		this->wait_time_ = min(CalcWaitTime(this->tab), k_repeat_period);
 	}
 	else
 	{
