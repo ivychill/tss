@@ -375,6 +375,9 @@ int CronTrafficObserver::ReplyToClient ()
 
         s_sendmore(*p_skt_apns_client, s_hex_token);
         s_send (*p_skt_apns_client, reply);
+
+        relevant_traffic->Clear();
+
     }
     else if (this->os_ver == ANDROID || this->os_ver == WILDCARD)
     {
@@ -382,6 +385,8 @@ int CronTrafficObserver::ReplyToClient ()
         LYTrafficPub* traffic_pub = snd_msg.mutable_traffic_pub();
         traffic_pub->set_pub_type(LY_PUB_CRON);
         TrafficObserver::ReplyToClient();
+
+        relevant_traffic->Clear();
     }
 
     else
