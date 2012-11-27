@@ -36,7 +36,6 @@ void RoadTrafficSubject::Notify (TrafficObserver *obs)
 
 void RoadTrafficSubject::SetRoad (string& road)
 {
-    road_traffic.Clear();
     road_traffic.set_road(road);
 }
 

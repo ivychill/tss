@@ -500,6 +500,7 @@ void CronClientPanorama::ProcSchedInfo(string& dev_tk, string& route)
         {
         	//将来可以改进。实际上应该把Attach和Fetch的功能分开，这里需要的仅仅是Fetch。
         	pobj->AttachToTraffic();
+        	LOG4CPLUS_DEBUG (logger, "relevant traffic\n" + pobj->GetRelevantTraffic()->DebugString());
             pobj->ReplyToClient();
         }
         else

@@ -25,7 +25,7 @@ int ClientMsgProcessor::ReturnToClient (LYRetCode ret_code)
     string str_msg;
     if (!snd_msg.SerializeToString (&str_msg))
     {
-        LOG4CPLUS_ERROR (logger, "Failed to write relevant city traffic.");
+        LOG4CPLUS_ERROR (logger, "Failed to serialize return code.");
         return -1;
     }
 
@@ -43,7 +43,7 @@ int ClientMsgProcessor::ReturnToClient (LYCheckin checkin)
     string str_msg;
     if (!snd_msg.SerializeToString (&str_msg))
     {
-        LOG4CPLUS_ERROR (logger, "Failed to write relevant city traffic.");
+        LOG4CPLUS_ERROR (logger, "Failed to serialize checkin.");
         return -1;
     }
 
@@ -223,6 +223,8 @@ void TrafficObserver::Update (RoadTrafficSubject *sub, bool should_pub)
 
 void TrafficObserver::AttachToTraffic()
 {
+	LOG4CPLUS_DEBUG (logger, "AttachToTraffic, address: " << address << "\ntraffic_sub" << traffic_sub.DebugString());
+
     LYRoute route = traffic_sub.route();
     LYTrafficPub* traffic_pub = snd_msg.mutable_traffic_pub();
     traffic_pub->set_route_id (route.identity());
@@ -305,8 +307,9 @@ int OnRouteClientPanorama::SubTraffic (string& adr, LYMsgOnAir& pkg)
 //    CreateSubscription (adr, hot_traffic_sub);
     if (p_hot_traffic_observer)
     {
-        LOG4CPLUS_DEBUG (logger, "reply hot traffic");
+    	LOG4CPLUS_DEBUG (logger, "relevant traffic\n" + p_hot_traffic_observer->GetRelevantTraffic()->DebugString());
         CronTrafficObserver hot_traffic_observer(*p_hot_traffic_observer);
+        LOG4CPLUS_DEBUG (logger, "reply hot traffic\n" + p_hot_traffic_observer->GetRelevantTraffic()->DebugString());
         hot_traffic_observer.SetAddress(adr);
         hot_traffic_observer.ReplyToClient();
     }

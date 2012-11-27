@@ -118,6 +118,11 @@ protected:
         address = adr;
     }
 
+    LYCityTraffic* GetRelevantTraffic ()
+    {
+    	return relevant_traffic;
+    }
+
 //    void ClearRoadTraffics ()
 //    {
 //    	relevant_traffic->clear_road_traffics();
