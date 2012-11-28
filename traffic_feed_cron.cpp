@@ -292,9 +292,10 @@ void CronSchelder::DelJob(const string& adr, LYTrafficSub& ts, CronTrafficObserv
 void CronTrafficObserver::Update (RoadTrafficSubject *sub, bool should_pub)
 {
     LOG4CPLUS_INFO (logger, "CronTrafficObserver::Update: ");
+    LYRoadTraffic& road_traffic = sub->GetRoadTraffic();
 
     time_t now = time (NULL);
-    time_t ts = sub->GetRoadTraffic().timestamp();
+    time_t ts = road_traffic.timestamp();
     if (now - ts > ROAD_TRAFFIC_TIMEOUT * 60)
     {
         LOG4CPLUS_INFO (logger, "expired road traffic, road: " << sub->GetRoadTraffic().road() << ", timestamp: " << ::ctime(&ts));
@@ -302,15 +303,13 @@ void CronTrafficObserver::Update (RoadTrafficSubject *sub, bool should_pub)
     else
     {
         last_update = now;
-        LYRoadTraffic& traffic =  sub->GetRoadTraffic();
-
-        LOG4CPLUS_DEBUG (logger, "add road traffic:\n" << sub->GetRoadTraffic().DebugString() << " to observer: " << address);
+        LOG4CPLUS_DEBUG (logger, "add road traffic:\n" << road_traffic.DebugString() << " to observer: " << address);
 
         for(int i = 0; i < relevant_traffic->road_traffics_size(); ++i)
         {
-            if( relevant_traffic->road_traffics(i).road() == traffic.road())
+            if( relevant_traffic->road_traffics(i).road() == road_traffic.road())
             {
-                *(relevant_traffic->mutable_road_traffics(i)) = traffic;
+                *(relevant_traffic->mutable_road_traffics(i)) = road_traffic;
                 return;
             }
         }
@@ -334,7 +333,6 @@ int CronTrafficObserver::ReplyToClient ()
             {
                 LOG4CPLUS_DEBUG (logger, "has_city_traffic: ");
 
-    //                if(pub.city_traffic().road_traffics_size() > 0)
                 for(int rd = 0; rd< pub.city_traffic().road_traffics_size(); rd++)
                 {
                     const LYRoadTraffic&  road = pub.city_traffic().road_traffics(rd);
@@ -342,7 +340,6 @@ int CronTrafficObserver::ReplyToClient ()
 
                     string sg("");
 
-    //                    LOG4CPLUS_DEBUG (logger, "send to client msg:" << pub.city_traffic().road_traffics().size());
                     for(int segment = 0; segment < road.segment_traffics_size(); segment++)
                     {
                         const LYSegmentTraffic& sgmt = road.segment_traffics(segment);
@@ -375,9 +372,7 @@ int CronTrafficObserver::ReplyToClient ()
 
         s_sendmore(*p_skt_apns_client, s_hex_token);
         s_send (*p_skt_apns_client, reply);
-
-        relevant_traffic->Clear();
-
+//        relevant_traffic->clear_road_traffics(); //不在这里，而在Update和ReplyToClient之前clear
     }
     else if (this->os_ver == ANDROID || this->os_ver == WILDCARD)
     {
@@ -385,10 +380,8 @@ int CronTrafficObserver::ReplyToClient ()
         LYTrafficPub* traffic_pub = snd_msg.mutable_traffic_pub();
         traffic_pub->set_pub_type(LY_PUB_CRON);
         TrafficObserver::ReplyToClient();
-
-        relevant_traffic->Clear();
+//        relevant_traffic->clear_road_traffics(); //不在这里，而在Update和ReplyToClient之前clear
     }
-
     else
     {
     	LOG4CPLUS_DEBUG (logger, "unknown os: " << this->os_ver);
@@ -505,6 +498,9 @@ void CronClientPanorama::ProcSchedInfo(string& dev_tk, string& route)
         CronTrafficObserver * pobj = (*itr).second.getObs(route_id);
         if(pobj)
         {
+        	//将来可以改进。实际上应该把Attach和Fetch的功能分开，这里需要的仅仅是Fetch。
+        	pobj->AttachToTraffic();
+        	LOG4CPLUS_DEBUG (logger, "relevant traffic\n" + pobj->GetRelevantTraffic()->DebugString());
             pobj->ReplyToClient();
         }
         else
@@ -514,7 +510,7 @@ void CronClientPanorama::ProcSchedInfo(string& dev_tk, string& route)
     }
     else
     {
-        LOG4CPLUS_ERROR (logger, "ProcSchedInfo, no find dev : " << dev_tk);
+        LOG4CPLUS_ERROR (logger, "ProcSchedInfo, find no dev : " << dev_tk);
     }
 }
 
@@ -618,7 +614,7 @@ void CronClientPanorama::SubHotTraffic()
 	traffic_sub->set_pub_type (LY_PUB_CRON);
 
 	LYRoute *route = traffic_sub->mutable_route ();
-	route->set_identity (HOT_TRAFFIC_ROUTE_ID);
+	route->set_identity (CRON_HOT_TRAFFIC_ROUTE_ID);
 
 	vector<string> vec_hot_road = citytrafficpanorama.GetHotRoad ();
 	for (int index = 0; index < vec_hot_road.size(); index++)

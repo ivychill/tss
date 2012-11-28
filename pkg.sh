@@ -3,5 +3,6 @@
 #make
 tar -czvf tss.tar.gz README *.sh bin etc tss.json*
 scp tss.tar.gz chenfeng@roadcloud:~/tss
+#scp install.sh chenfeng@roadcloud:~/tss
 #scp tss.tar.gz tss@roadcloud:~
 #scp install.sh tss@roadcloud:~

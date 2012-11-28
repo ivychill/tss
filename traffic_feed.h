@@ -26,7 +26,8 @@
 #define CLIENT_REQUEST_TIMEOUT 30 //minute
 #define UPDATE_INTERVAL 120 //second
 #define TRAFFIC_PUB_MSG_ID 255
-#define HOT_TRAFFIC_ROUTE_ID 255
+#define CRON_HOT_TRAFFIC_ROUTE_ID 255
+#define EVENT_HOT_TRAFFIC_ROUTE_ID 254
 using namespace std;
 using namespace tss;
 //#include <google/protobuf/repeated_field.h>
@@ -85,7 +86,8 @@ protected:
   public:
     virtual void Update (RoadTrafficSubject *sub, bool should_pub);
     virtual int ReplyToClient ();
-    void AttachToTraffic(const string& adr, LYTrafficSub& ts);
+    void AttachToTraffic ();
+    void AttachToTraffic (const string& adr, LYTrafficSub& ts);
     virtual void Register (const string& adr, LYTrafficSub& ts);
     virtual void Unregister ();
 
@@ -100,11 +102,31 @@ protected:
         snd_msg.set_msg_type (LY_TRAFFIC_PUB);
     }
 
+//    TrafficObserver (const TrafficObserver& obs)
+//    {
+//        last_update = obs.last_update ;
+//        address = obs.address;
+//        traffic_sub = obs.traffic_sub;
+//        snd_msg = obs.snd_msg;
+//        LYTrafficPub* traffic_pub = snd_msg.mutable_traffic_pub();
+//        relevant_traffic = traffic_pub->mutable_city_traffic();
+//    }
+
     virtual ~TrafficObserver(){};
     void SetAddress (string& adr)
     {
         address = adr;
     }
+
+    LYCityTraffic* GetRelevantTraffic ()
+    {
+    	return relevant_traffic;
+    }
+
+//    void ClearRoadTraffics ()
+//    {
+//    	relevant_traffic->clear_road_traffics();
+//    }
 };
 
 class ClientObservers
@@ -171,7 +193,7 @@ using namespace boost::gregorian;
 
 class CronTrafficObserver: public TrafficObserver
 {
-private:
+  protected:
     enum OS_VER{
         IOS = 0,
         ANDROID = 1,
@@ -186,14 +208,19 @@ private:
     virtual void Register (const string& adr, LYTrafficSub& ts);
     virtual void Unregister ();
 
-//    void setOsVer(OS_VER ov){
-//    	os_ver = ov;
-//    }
     LYTrafficSub & getTrafficSub(){
         return this->traffic_sub;
     }
     CronTrafficObserver ():os_ver(ANDROID){}
 };
+
+//热点路况的observer，要重载ReplyToClient，不要在发送后清除路况
+//class WildcardCronTrafficObserver: public CronTrafficObserver
+//{
+//  public:
+//    virtual void Update (RoadTrafficSubject *sub, bool should_pub);
+//    virtual int ReplyToClient ();
+//};
 
 class CronClientObservers: public ClientObservers
 {

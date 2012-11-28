@@ -25,7 +25,7 @@ int ClientMsgProcessor::ReturnToClient (LYRetCode ret_code)
     string str_msg;
     if (!snd_msg.SerializeToString (&str_msg))
     {
-        LOG4CPLUS_ERROR (logger, "Failed to write relevant city traffic.");
+        LOG4CPLUS_ERROR (logger, "Failed to serialize return code.");
         return -1;
     }
 
@@ -43,7 +43,7 @@ int ClientMsgProcessor::ReturnToClient (LYCheckin checkin)
     string str_msg;
     if (!snd_msg.SerializeToString (&str_msg))
     {
-        LOG4CPLUS_ERROR (logger, "Failed to write relevant city traffic.");
+        LOG4CPLUS_ERROR (logger, "Failed to serialize checkin.");
         return -1;
     }
 
@@ -168,6 +168,12 @@ int ClientMsgProcessor::ProcessRcvMsg (string& adr, LYMsgOnAir& msg)
 
 int TrafficObserver::ReplyToClient ()
 {
+    if (relevant_traffic->road_traffics_size () == 0 )
+    {
+        LOG4CPLUS_DEBUG (logger, "no traffic, don't reply to client: " << address);
+        return 0;
+    }
+
     snd_msg.set_timestamp (time (NULL));
     LOG4CPLUS_DEBUG (logger, "reply to client, address: " << address << ", package:\n" << snd_msg.DebugString ());
     string str_msg;
@@ -201,7 +207,7 @@ void TrafficObserver::Update (RoadTrafficSubject *sub, bool should_pub)
     	}
     }
 
-    if (should_pub && relevant_traffic->road_traffics_size () != 0 )
+    if (should_pub)
     {
         ReplyToClient ();
         last_update = now;
@@ -215,14 +221,15 @@ void TrafficObserver::Update (RoadTrafficSubject *sub, bool should_pub)
     */
 }
 
-void TrafficObserver::AttachToTraffic(const string& adr, LYTrafficSub& ts)
+void TrafficObserver::AttachToTraffic()
 {
-    address = adr;
-    traffic_sub = ts;
+	LOG4CPLUS_DEBUG (logger, "AttachToTraffic, address: " << address << "\ntraffic_sub" << traffic_sub.DebugString());
+
     LYRoute route = traffic_sub.route();
     LYTrafficPub* traffic_pub = snd_msg.mutable_traffic_pub();
     traffic_pub->set_route_id (route.identity());
     relevant_traffic = traffic_pub->mutable_city_traffic();
+
     if (relevant_traffic->road_traffics_size () != 0)
     {
         LOG4CPLUS_WARN (logger, "there exists relevant traffic before register: " << relevant_traffic->DebugString());
@@ -240,6 +247,14 @@ void TrafficObserver::AttachToTraffic(const string& adr, LYTrafficSub& ts)
     }
 }
 
+void TrafficObserver::AttachToTraffic(const string& adr, LYTrafficSub& ts)
+{
+    address = adr;
+    traffic_sub = ts;
+
+    AttachToTraffic();
+}
+
 void TrafficObserver::Register (const string& adr, LYTrafficSub& ts)
 {
     this->AttachToTraffic(adr, ts);
@@ -247,12 +262,9 @@ void TrafficObserver::Register (const string& adr, LYTrafficSub& ts)
     time_t now = time (NULL);
     LOG4CPLUS_DEBUG (logger, "now: " << ::ctime(&now) << ", last update: " << ::ctime(&last_update));
 
-    if (relevant_traffic->road_traffics_size () != 0)
-    {
-        ReplyToClient ();
-        last_update = now;
-        relevant_traffic->clear_road_traffics();
-    }
+    ReplyToClient ();
+    last_update = now;
+    relevant_traffic->clear_road_traffics();
 
     LYPubType pub_type = traffic_sub.pub_type();
     //LOG4CPLUS_DEBUG (logger, "register pub type: " << pub_type);
@@ -295,8 +307,9 @@ int OnRouteClientPanorama::SubTraffic (string& adr, LYMsgOnAir& pkg)
 //    CreateSubscription (adr, hot_traffic_sub);
     if (p_hot_traffic_observer)
     {
-        LOG4CPLUS_DEBUG (logger, "reply hot traffic");
+    	LOG4CPLUS_DEBUG (logger, "relevant traffic\n" + p_hot_traffic_observer->GetRelevantTraffic()->DebugString());
         CronTrafficObserver hot_traffic_observer(*p_hot_traffic_observer);
+        LOG4CPLUS_DEBUG (logger, "reply hot traffic\n" + p_hot_traffic_observer->GetRelevantTraffic()->DebugString());
         hot_traffic_observer.SetAddress(adr);
         hot_traffic_observer.ReplyToClient();
     }
@@ -359,7 +372,7 @@ void OnRouteClientPanorama::Init ()
 //    traffic_sub->set_opr_type (LYTrafficSub::LY_SUB_CREATE);
 //    traffic_sub->set_pub_type (LY_PUB_EVENT);
 //    LYRoute *route = traffic_sub->mutable_route ();
-//    route->set_identity (HOT_TRAFFIC_ROUTE_ID);
+//    route->set_identity (EVENT_HOT_TRAFFIC_ROUTE_ID);
 //
 //    vector<string> vec_hot_road = citytrafficpanorama.GetHotRoad ();
 //    for (int index = 0; index < vec_hot_road.size(); index++)
