@@ -1,5 +1,0 @@
-1..4
-ok 1 CalcWaitTime 
-ok 2 CalcWaitTime_dow 
-ok 3 CalcWaitTime_dom 
-ok 4 CalcWaitTime_dom_next_mon 

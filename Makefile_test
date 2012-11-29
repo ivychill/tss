@@ -12,7 +12,7 @@ OBJ=*.o
 CC=g++
 #CC_FLAG=-Wall
 #CC_FLAG=-Wall -D_SANDBOX
-CC_FLAG=-Wall -D_GTEST $(INC)
+CC_FLAG=-Wall -Wl,-rpath /home/tangkefu/ci/jsoncpp-src-0.5.0/libs -D_GTEST $(INC)
 
 all:test 
 
