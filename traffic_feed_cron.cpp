@@ -79,7 +79,10 @@ void CronJob::Renew()
 {
 	if(this->repeate_time_--)
 	{
-		this->wait_time_ = min(CalcWaitTime(this->tab), k_repeat_period);
+	    if(CalcWaitTime(this->tab) > 0)
+	        this->wait_time_ = min(CalcWaitTime(this->tab), k_repeat_period);
+	    else
+	        this->wait_time_ = k_repeat_period;
 	}
 	else
 	{
@@ -374,17 +377,35 @@ int CronTrafficObserver::ReplyToClient ()
         s_send (*p_skt_apns_client, reply);
 //        relevant_traffic->clear_road_traffics(); //不在这里，而在Update和ReplyToClient之前clear
     }
-    else if (this->os_ver == ANDROID || this->os_ver == WILDCARD)
+    else if (this->os_ver == ANDROID )
     {
-        LOG4CPLUS_INFO (logger, "android/wildcard ReplyToClient: " << this->os_ver);
+        LOG4CPLUS_INFO (logger, "android ReplyToClient: " << this->os_ver);
+        LYTrafficPub* traffic_pub = snd_msg.mutable_traffic_pub();
+        traffic_pub->set_pub_type(LY_PUB_CRON);
+
+        if (relevant_traffic->road_traffics_size () == 0 )
+        {
+           LOG4CPLUS_DEBUG (logger, "no traffic, don't reply to client: " << address);
+           //add fake for notify
+           LYRoadTraffic *rdtf = relevant_traffic->add_road_traffics();
+           string *p = rdtf->mutable_desc();
+           string tips = "提醒你关注上下班路况";
+           *p = tips;
+           rdtf->set_road("路云：");
+        }
+
+        TrafficObserver::ReplyToClient();
+    }
+    else if(this->os_ver == WILDCARD)
+    {
+        LOG4CPLUS_INFO (logger, "wildcard ReplyToClient: " << this->os_ver);
         LYTrafficPub* traffic_pub = snd_msg.mutable_traffic_pub();
         traffic_pub->set_pub_type(LY_PUB_CRON);
         TrafficObserver::ReplyToClient();
-//        relevant_traffic->clear_road_traffics(); //不在这里，而在Update和ReplyToClient之前clear
     }
     else
     {
-    	LOG4CPLUS_DEBUG (logger, "unknown os: " << this->os_ver);
+        LOG4CPLUS_DEBUG (logger, "unknown os: " << this->os_ver);
     }
 
     return 0;
