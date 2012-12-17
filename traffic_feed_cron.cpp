@@ -79,10 +79,7 @@ void CronJob::Renew()
 {
 	if(this->repeate_time_--)
 	{
-	    if(CalcWaitTime(this->tab) > 0)
-	        this->wait_time_ = min(CalcWaitTime(this->tab), k_repeat_period);
-	    else
-	        this->wait_time_ = k_repeat_period;
+        this->wait_time_ = min(CalcWaitTime(this->tab) + 1, k_repeat_period);
 	}
 	else
 	{
@@ -391,7 +388,7 @@ int CronTrafficObserver::ReplyToClient ()
            string *p = rdtf->mutable_desc();
            string tips = "提醒你关注上下班路况";
            *p = tips;
-           rdtf->set_road("路云：");
+           rdtf->set_road("路云提醒你关注上下班路况");
         }
 
         TrafficObserver::ReplyToClient();
