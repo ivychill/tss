@@ -139,7 +139,11 @@ int CronJob::CalcWaitTime(const LYCrontab& tab)
     }
 
     if(scheduled_hour < now.tm_hour){
-        wait_days++;
+        wait_days = 1;
+    }
+    if(scheduled_hour == now.tm_hour && scheduled_min < now.tm_min)
+    {
+        wait_days = 1;
     }
 
     if(tab.has_dow()){
@@ -382,7 +386,6 @@ int CronTrafficObserver::ReplyToClient ()
 
         if (relevant_traffic->road_traffics_size () == 0 )
         {
-           LOG4CPLUS_DEBUG (logger, "no traffic, don't reply to client: " << address);
            //add fake for notify
            LYRoadTraffic *rdtf = relevant_traffic->add_road_traffics();
            string *p = rdtf->mutable_desc();
