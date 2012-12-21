@@ -220,15 +220,15 @@ int main (int argc, char *argv[])
             					LOG4CPLUS_INFO (logger, "inactive client: " << it->first);
             				}
             			}
-            			LOG4CPLUS_INFO (logger, "active V1 client number: " << route_adapter.size ());
             		}
+            		LOG4CPLUS_INFO (logger, "active V2 client number: " << route_adapter.size ());
             	}
 
             	else
             	{
             		LOG4CPLUS_INFO (logger, "request from  V1 client, address: " << client_addr);
             		set_address.insert(client_addr);
-            		LOG4CPLUS_INFO (logger, "active client number: " << set_address.size ());
+            		LOG4CPLUS_INFO (logger, "active V1 client number: " << set_address.size ());
             	}
 
             	if (::tss::LY_TC == rcv_msg.to_party ())
