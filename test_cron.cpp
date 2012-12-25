@@ -1,4 +1,4 @@
-#include "../gtest-1.6.0/include/gtest.h"
+#include "gtest-1.6.0/include/gtest.h"
 #include "traffic_feed.h"
 
 using namespace std;

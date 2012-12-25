@@ -1,11 +1,10 @@
  #started with '#' are comments
 JSON_HOME=/home/chenfeng/jsoncpp-src-0.5.0
-#INC=-I$(JSON_HOME)/include/json
-GTEST_DIR=/home/tangkefu/ci/gtest-1.6.0
-
+CI_HOME=/home/tangkefu/ci
+INC=-I$(CI_HOME)
 LIB=-L$(JSON_HOME)/libs/linux-gcc-4.6 -lzmq -llog4cplus -lprotobuf -ljson_linux-gcc-4.6_libmt
 LIB_ADD = -lmongoclient -lboost_thread -lboost_system -lboost_filesystem -lboost_program_options
-LIB_GTEST=-L$(GTEST_DIR)/lib -lgtest
+LIB_GTEST=-L$(CI_HOME)/gtest-1.6.0/lib -lgtest
 BIN_PATH=bin
 PRG=test_client test_remote test 
 OBJ=*.o
@@ -13,7 +12,7 @@ OBJ=*.o
 CC=g++
 #CC_FLAG=-Wall
 #CC_FLAG=-Wall -D_SANDBOX
-CC_FLAG=-Wall -D_GTEST
+CC_FLAG=-Wall -Wl,-rpath /home/tangkefu/ci/jsoncpp-src-0.5.0/libs/linux-gcc-4.6 -D_GTEST $(INC)
 
 all:test 
 
